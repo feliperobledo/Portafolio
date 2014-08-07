@@ -130,6 +130,8 @@ int main(void)
    TestVariant();
 
    getchar();
+
+   //This is a test comment
 }
 
 
