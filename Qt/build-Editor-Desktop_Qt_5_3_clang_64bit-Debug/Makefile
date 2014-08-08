@@ -553,7 +553,9 @@ mainwindow.o: ../Editor/mainwindow.cpp ../Editor/mainwindow.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QWindow \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qwindow.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QOpenGLFunctions \
-		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglfunctions.h
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglfunctions.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QHBoxLayout \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qboxlayout.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../Editor/mainwindow.cpp
 
 worldwindow.o: ../Editor/worldwindow.cpp ../Editor/worldwindow.h \

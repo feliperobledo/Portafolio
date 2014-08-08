@@ -12,6 +12,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "worldwindow.h"
+#include <QHBoxLayout>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -21,8 +22,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     m_WorldScreen = new WorldWindow();
     QWidget* screenWidget = this->createWindowContainer(m_WorldScreen,m_Ui->WorldFrame);
-    m_WorldScreen->initialize();
 
+    m_Ui->WorldFrame->setLayout(new QHBoxLayout);
+    m_Ui->WorldFrame->layout()->addWidget(screenWidget);
     //ui->horizontalLayout_2->addWidget(screenWidget);
 }
 

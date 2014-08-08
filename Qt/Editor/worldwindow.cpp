@@ -22,7 +22,7 @@
 // -----------------------------------------------------------------------------
 WorldWindow::WorldWindow(QWindow *parent) :
     QWindow(parent),
-    m_GLFunctions(),
+    QOpenGLFunctions(),
     m_UpdatePending(false),
     m_Animating(false),
     m_Context(0),
@@ -35,33 +35,27 @@ WorldWindow::WorldWindow(QWindow *parent) :
 
 WorldWindow::~WorldWindow()
 {
-    if(m_PaintDevice != 0)
-    {
-        delete m_PaintDevice;
-    }
+
 }
 
 // -----------------------------------------------------------------------------
 void WorldWindow::initialize()
+{
+
+}
+
+
+void WorldWindow::render()
 {
     if(m_PaintDevice == 0)
     {
         m_PaintDevice = new QOpenGLPaintDevice;
     }
 
-    if(m_Context == 0)
-    {
-        m_Context = new QOpenGLContext;
-    }
-}
-
-
-void WorldWindow::render()
-{
     //Clear the screen before any rendering
-    m_GLFunctions.glClear(GL_COLOR_BUFFER_BIT |
-                          GL_DEPTH_BUFFER_BIT |
-                          GL_STENCIL_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT |
+            GL_DEPTH_BUFFER_BIT |
+            GL_STENCIL_BUFFER_BIT);
 
     //Make sure the device is as big as the screen
     m_PaintDevice->setSize(this->size());
@@ -71,14 +65,19 @@ void WorldWindow::render()
     render(&painter);
 }
 
-void WorldWindow::render(QPainter* painter)
+void WorldWindow::render(QPainter*)
 {
 
 }
 
 void WorldWindow::setAnimating(bool animating)
 {
+    m_Animating = animating;
 
+    if(animating == true)
+    {
+        this->renderLater();
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -94,19 +93,66 @@ void WorldWindow::renderLater()
 
 void WorldWindow::renderNow()
 {
+    if (!isExposed())
+        return;
 
+    bool needsInitialize = false;
+
+    if (!m_Context)
+    {
+        m_Context = new QOpenGLContext(this);
+        m_Context->setFormat(requestedFormat());
+        m_Context->create();
+
+        needsInitialize = true;
+    }
+
+    m_Context->makeCurrent(this);
+
+    if (needsInitialize)
+    {
+        initializeOpenGLFunctions();
+        initialize();
+    }
+
+    render();
+
+    m_Context->swapBuffers(this);
+
+    if (m_Animating)
+    {
+        renderLater();
+    }
 }
 
 // -----------------------------------------------------------------------------
 
-bool WorldWindow::event(QEvent *)
+bool WorldWindow::event(QEvent * event)
 {
-    return false;
+    switch(event->type())
+    {
+
+    case QEvent::UpdateRequest:
+    {
+        m_UpdatePending = false;
+        renderNow();
+        return true;
+    }
+    default:
+    {
+        return QWindow::event(event);
+    }
+
+    }
 }
 
 void WorldWindow::exposeEvent(QExposeEvent *)
 {
-
+    //Only render if the editor is exposed
+    if(this->isExposed())
+    {
+        renderNow();
+    }
 }
 
 // -----------------------------------------------------------------------------

@@ -22,7 +22,7 @@ class QOpenGLPaintDevice;
 class QEvent;
 class QExposeEvent;
 
-class WorldWindow : public QWindow
+class WorldWindow : public QWindow, protected QOpenGLFunctions
 {
     Q_OBJECT
 public:
@@ -50,7 +50,6 @@ private:
     bool m_UpdatePending;
     bool m_Animating;
 
-    QOpenGLFunctions   m_GLFunctions;
     QOpenGLContext*    m_Context;
     QOpenGLPaintDevice* m_PaintDevice;
 
