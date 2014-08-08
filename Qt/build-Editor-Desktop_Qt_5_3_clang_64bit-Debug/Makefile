@@ -12,13 +12,13 @@ MAKEFILE      = Makefile
 
 CC            = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang
 CXX           = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++
-DEFINES       = -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -mmacosx-version-min=10.6 -Wall -W -fPIE $(DEFINES)
 CXXFLAGS      = -pipe -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -mmacosx-version-min=10.6 -Wall -W -fPIE $(DEFINES)
-INCPATH       = -I/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/macx-clang -I../Editor -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/AGL.framework/Headers -I. -I. -F/Volumes/LaCie/Qt/5.3/clang_64/lib
+INCPATH       = -I/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/macx-clang -I../Editor -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtOpenGL.framework/Versions/5/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/AGL.framework/Headers -I. -I. -F/Volumes/LaCie/Qt/5.3/clang_64/lib
 LINK          = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++
 LFLAGS        = -headerpad_max_install_names -Wl,-syslibroot,/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -mmacosx-version-min=10.6
-LIBS          = $(SUBLIBS) -F/Volumes/LaCie/Qt/5.3/clang_64/lib -framework QtWidgets -framework QtGui -framework QtCore -framework OpenGL -framework AGL 
+LIBS          = $(SUBLIBS) -F/Volumes/LaCie/Qt/5.3/clang_64/lib -framework QtOpenGL -framework QtWidgets -framework QtGui -framework QtCore -framework OpenGL -framework AGL 
 AR            = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cq
 RANLIB        = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib -s
 QMAKE         = /Volumes/LaCie/Qt/5.3/clang_64/bin/qmake
@@ -46,10 +46,14 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../Editor/main.cpp \
-		../Editor/mainwindow.cpp moc_mainwindow.cpp
+		../Editor/mainwindow.cpp \
+		../Editor/worldwindow.cpp moc_mainwindow.cpp \
+		moc_worldwindow.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
-		moc_mainwindow.o
+		worldwindow.o \
+		moc_mainwindow.o \
+		moc_worldwindow.o
 DIST          = /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/spec_pre.prf \
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/qdevice.pri \
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/device_config.prf \
@@ -145,6 +149,7 @@ DIST          = /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/spec_pre.prf \
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/qt_config.prf \
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/macx-clang/qmake.conf \
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/spec_post.prf \
+		../Editor/.qmake.stash \
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/exclusive_builds.prf \
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/default_pre.prf \
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/mac/default_pre.prf \
@@ -166,7 +171,8 @@ DIST          = /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/spec_pre.prf \
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/yacc.prf \
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/lex.prf \
 		../Editor/Editor.pro ../Editor/main.cpp \
-		../Editor/mainwindow.cpp
+		../Editor/mainwindow.cpp \
+		../Editor/worldwindow.cpp
 QMAKE_TARGET  = Editor
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = Editor.app/Contents/MacOS/Editor
@@ -305,6 +311,7 @@ Makefile: ../Editor/Editor.pro /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/macx-clang
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/qt_config.prf \
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/macx-clang/qmake.conf \
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/exclusive_builds.prf \
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/default_pre.prf \
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/mac/default_pre.prf \
@@ -326,6 +333,7 @@ Makefile: ../Editor/Editor.pro /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/macx-clang
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/yacc.prf \
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/lex.prf \
 		../Editor/Editor.pro \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtOpenGL.framework/QtOpenGL.prl \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/QtWidgets.prl \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/QtGui.prl \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/QtCore.prl
@@ -425,6 +433,7 @@ Makefile: ../Editor/Editor.pro /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/macx-clang
 /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/qt_config.prf:
 /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/macx-clang/qmake.conf:
 /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/exclusive_builds.prf:
 /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/default_pre.prf:
 /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/mac/default_pre.prf:
@@ -446,6 +455,7 @@ Makefile: ../Editor/Editor.pro /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/macx-clang
 /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/yacc.prf:
 /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/lex.prf:
 ../Editor/Editor.pro:
+/Volumes/LaCie/Qt/5.3/clang_64/lib/QtOpenGL.framework/QtOpenGL.prl:
 /Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/QtWidgets.prl:
 /Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/QtGui.prl:
 /Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/QtCore.prl:
@@ -468,7 +478,7 @@ Editor.app/Contents/Info.plist:
 	@sed -e "s,@SHORT_VERSION@,1.0,g" -e "s,@TYPEINFO@,????,g" -e "s,@ICON@,,g" -e "s,@BUNDLEIDENTIFIER@,com.example.Editor,g" -e "s,@EXECUTABLE@,Editor,g" -e "s,@TYPEINFO@,????,g" /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/macx-clang/Info.plist.app >Editor.app/Contents/Info.plist
 dist: 
 	@test -d .tmp/Editor1.0.0 || mkdir -p .tmp/Editor1.0.0
-	$(COPY_FILE) --parents $(DIST) .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/mainwindow.h .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/main.cpp ../Editor/mainwindow.cpp .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/mainwindow.ui .tmp/Editor1.0.0/ && (cd `dirname .tmp/Editor1.0.0` && $(TAR) Editor1.0.0.tar Editor1.0.0 && $(COMPRESS) Editor1.0.0.tar) && $(MOVE) `dirname .tmp/Editor1.0.0`/Editor1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/Editor1.0.0
+	$(COPY_FILE) --parents $(DIST) .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/mainwindow.h ../Editor/worldwindow.h .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/main.cpp ../Editor/mainwindow.cpp ../Editor/worldwindow.cpp .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/mainwindow.ui .tmp/Editor1.0.0/ && (cd `dirname .tmp/Editor1.0.0` && $(TAR) Editor1.0.0.tar Editor1.0.0 && $(COMPRESS) Editor1.0.0.tar) && $(MOVE) `dirname .tmp/Editor1.0.0`/Editor1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/Editor1.0.0
 
 
 clean:compiler_clean 
@@ -493,13 +503,20 @@ compiler_objective_c_make_all:
 compiler_objective_c_clean:
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_mainwindow.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_worldwindow.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_worldwindow.cpp
 moc_mainwindow.cpp: /Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMainWindow \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmainwindow.h \
 		../Editor/mainwindow.h
-	/Volumes/LaCie/Qt/5.3/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -I/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/macx-clang -I/Users/feliperobledo/Portafolio/Qt/Editor -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Headers -I. -F/Volumes/LaCie/Qt/5.3/clang_64/lib ../Editor/mainwindow.h -o moc_mainwindow.cpp
+	/Volumes/LaCie/Qt/5.3/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -I/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/macx-clang -I/Users/feliperobledo/Portafolio/Qt/Editor -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtOpenGL.framework/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Headers -I. -F/Volumes/LaCie/Qt/5.3/clang_64/lib ../Editor/mainwindow.h -o moc_mainwindow.cpp
+
+moc_worldwindow.cpp: /Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QWindow \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qwindow.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QOpenGLFunctions \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglfunctions.h \
+		../Editor/worldwindow.h
+	/Volumes/LaCie/Qt/5.3/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -I/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/macx-clang -I/Users/feliperobledo/Portafolio/Qt/Editor -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtOpenGL.framework/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Headers -I. -F/Volumes/LaCie/Qt/5.3/clang_64/lib ../Editor/worldwindow.h -o moc_worldwindow.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -531,11 +548,38 @@ main.o: ../Editor/main.cpp ../Editor/mainwindow.h \
 mainwindow.o: ../Editor/mainwindow.cpp ../Editor/mainwindow.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMainWindow \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmainwindow.h \
-		ui_mainwindow.h
+		ui_mainwindow.h \
+		../Editor/worldwindow.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QWindow \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qwindow.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QOpenGLFunctions \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglfunctions.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../Editor/mainwindow.cpp
+
+worldwindow.o: ../Editor/worldwindow.cpp ../Editor/worldwindow.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QWindow \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qwindow.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QOpenGLFunctions \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglfunctions.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QCoreApplication \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qcoreapplication.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QPainter \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qpainter.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QOpenGLContext \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglcontext.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QOpenGLPaintDevice \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglpaintdevice.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QEvent \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qcoreevent.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QExposeEvent \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qevent.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o worldwindow.o ../Editor/worldwindow.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
+
+moc_worldwindow.o: moc_worldwindow.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_worldwindow.o moc_worldwindow.cpp
 
 ####### Install
 
