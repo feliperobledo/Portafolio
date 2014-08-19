@@ -41,7 +41,7 @@ WorldWindow::~WorldWindow()
 // -----------------------------------------------------------------------------
 void WorldWindow::initialize()
 {
-
+    this->glClearColor(0.2,0.2,0.2,1);
 }
 
 
@@ -68,6 +68,14 @@ void WorldWindow::render()
 void WorldWindow::render(QPainter*)
 {
 
+    glBegin(GL_TRIANGLES);
+        glColor3f(1,0,0);
+        glVertex3f( 0.0,  0.5,  0.0);
+        glColor3f(0,1,0);
+        glVertex3f(-0.5, -0.5,  0.0);
+        glColor3f(0,0,1);
+        glVertex3f( 0.5, -0.5,  0.0);
+    glEnd();
 }
 
 void WorldWindow::setAnimating(bool animating)
@@ -132,16 +140,16 @@ bool WorldWindow::event(QEvent * event)
     switch(event->type())
     {
 
-    case QEvent::UpdateRequest:
-    {
-        m_UpdatePending = false;
-        renderNow();
-        return true;
-    }
-    default:
-    {
-        return QWindow::event(event);
-    }
+        case QEvent::UpdateRequest:
+        {
+            m_UpdatePending = false;
+            renderNow();
+            return true;
+        }
+        default:
+        {
+            return QWindow::event(event);
+        }
 
     }
 }
