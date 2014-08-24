@@ -15,10 +15,13 @@
 
 #include <QWindow>
 #include <QOpenGLFunctions>
+#include <vector>
+
 
 class QPainter;
 class QOpenGLContext;
 class QOpenGLPaintDevice;
+class QOpenGLShaderProgram;
 class QEvent;
 class QExposeEvent;
 
@@ -52,6 +55,12 @@ private:
 
     QOpenGLContext*    m_Context;
     QOpenGLPaintDevice* m_PaintDevice;
+    QOpenGLShaderProgram* m_SProgram;
+    GLuint m_ProgramObject;
+
+    GLint m_posAttr;
+    GLint m_colAttr;
+    GLint m_matrixUniform;
 
 };
 

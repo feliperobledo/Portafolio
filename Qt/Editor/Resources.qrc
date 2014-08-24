@@ -1,0 +1,4 @@
+<RCC>
+    <qresource prefix="/shaders"/>
+    <qresource prefix="/models"/>
+</RCC>

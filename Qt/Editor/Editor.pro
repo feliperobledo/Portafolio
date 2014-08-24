@@ -23,3 +23,6 @@ FORMS    += mainwindow.ui
 
 OTHER_FILES += \
     GLnotes.txt
+
+RESOURCES += \
+    Resources.qrc

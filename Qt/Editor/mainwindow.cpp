@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     m_WorldScreen = new WorldWindow();
     QWidget* screenWidget = this->createWindowContainer(m_WorldScreen,m_Ui->WorldFrame);
+    m_WorldScreen->initialize();
+    m_WorldScreen->setAnimating(true);
 
     m_Ui->WorldFrame->setLayout(new QHBoxLayout);
     m_Ui->WorldFrame->layout()->addWidget(screenWidget);
