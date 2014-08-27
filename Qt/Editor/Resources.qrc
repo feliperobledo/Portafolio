@@ -1,4 +1,6 @@
 <RCC>
-    <qresource prefix="/shaders"/>
-    <qresource prefix="/models"/>
+    <qresource prefix="/">
+        <file>Resources/Shaders/vs_sample.vsh</file>
+        <file>Resources/Shaders/sample.fsh</file>
+    </qresource>
 </RCC>

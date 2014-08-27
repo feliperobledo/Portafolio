@@ -8,12 +8,22 @@
 //  Reproduction or disclosure of this file or its contents without
 //  the prior written consent of DigiPen Institute of Technology is
 //  prohibited.
+//
+//  CURRENT NOTES:
+//  - When going to full screen, the editor cannot close
+//  - Think about adding code that detects for online shader compilation, and
+//      create shader objects accordingly to the machine's specs.
+//
+//
+//
+//
 // -----------------------------------------------------------------------------
 
 #include "worldwindow.h"
 #include <QCoreApplication>
 #include <QScreen>
 #include <QPainter>
+#include <qopengl.h>
 #include <QOpenGLContext>
 #include <QOpenGLPaintDevice>
 #include <QEvent>
@@ -45,6 +55,8 @@ WorldWindow::WorldWindow(QWindow *parent) :
     m_Context = new QOpenGLContext(this);
     m_Context->setFormat(requestedFormat());
     m_Context->create();
+
+
 }
 
 WorldWindow::~WorldWindow()
@@ -59,25 +71,17 @@ void WorldWindow::initialize()
     m_Context->makeCurrent(this);
     initializeOpenGLFunctions();
 
-    const char *vertexShaderSource =
-        "attribute vec4 aPosition;          \n"
-        "attribute vec4 aColor;             \n"
-        "varying lowp vec4 color;           \n"
-        "void main() {                      \n"
-        "   color = aColor;                 \n"
-        "   gl_Position = aPosition;        \n"
-        "}                                  \n";
-
-    const char *fragmentShaderSource =
-        "varying lowp vec4 color;                              \n"
-        "void main() {                                         \n"
-        "   gl_FragColor = color;                              \n"
-        "}                                                     \n";
-
     //Create shader program and load, attach and bind shaders
     m_SProgram = new QOpenGLShaderProgram(this);
-    m_SProgram->addShaderFromSourceCode(QOpenGLShader::Vertex,vertexShaderSource);
-    m_SProgram->addShaderFromSourceCode(QOpenGLShader::Fragment,fragmentShaderSource);
+
+    m_SProgram->addShaderFromSourceFile(QOpenGLShader::Vertex,
+                                        QString(":/Resources/Shaders/vs_sample.vsh"));
+
+    m_SProgram->addShaderFromSourceFile(QOpenGLShader::Fragment,
+                                        QString(":/Resources/Shaders/sample.fsh"));
+
+    //An optimization to the above would be to load shader in binary format with
+    //  glShaderBinary();
 
     //Linking occurs once all shaders have been attahced
     if(!m_SProgram->link())
@@ -85,21 +89,31 @@ void WorldWindow::initialize()
         qDebug() << QString("could not link");
     }
 
+    //To check if the program will work with the current state of the GL
+    //state machine, use the following line on the shader program
+    //glValidateProgram(m_SProgram->programId());
+    //The documentation states that it is slow, so it should not be used
+    //  during a release build. It should only be used during debugging
+    //  stages.
+
+    //Use this to check if this version of GL ES 2.0 supports online shader
+    //  compilation
+    //glGetBooleanv(GL_SHADER_COMPILER,);
+
     //Let's store the index of each of the program's attributes
     m_posAttr = m_SProgram->attributeLocation("aPosition");
-    qDebug() << m_posAttr;
-
     m_colAttr = m_SProgram->attributeLocation("aColor");
+
+    //init the device where we will paint
+    //For some reason, I need to initialize this here.
+    // TODO: look into why laters
+    m_PaintDevice = new QOpenGLPaintDevice();
 }
 
 
 void WorldWindow::render()
 {
     qDebug() << "render()";
-    if(m_PaintDevice == 0)
-    {
-        m_PaintDevice = new QOpenGLPaintDevice;
-    }
 
     //make this the current context
     m_Context->makeCurrent(this);
@@ -112,6 +126,10 @@ void WorldWindow::render()
     //Make sure the device is as big as the screen
     //Set the viewport
     m_PaintDevice->setSize(this->size());
+
+    //Set coordinate plane to upper left hand
+    glViewport(this->size().width(), this->size().height(),
+               this->size().width(), this->size().height());
 
     //Make the painter to draw on the surface
     QPainter painter(m_PaintDevice);
@@ -126,9 +144,9 @@ void WorldWindow::render(QPainter*)
 
     GLfloat vVertices[] =
     {
-        0.0f, 0.5f,
-        -0.5f, -0.5f,
-        0.5f, -0.5f
+        0.0f, 0.75f,
+        -0.75f, -0.75f,
+        0.75f, -0.75f
     };
 
     GLfloat vColors[] =
@@ -140,17 +158,17 @@ void WorldWindow::render(QPainter*)
 
     m_SProgram->bind();
 
-    QMatrix4x4 matrix;
-    matrix.perspective(60.0f, 4.0f/3.0f, 0.1f, 100.0f);
-    m_SProgram->setUniformValue(m_matrixUniform, matrix);
+    //QMatrix4x4 matrix;
+    //matrix.perspective(60.0f, 4.0f/3.0f, 0.1f, 100.0f);
+    //m_SProgram->setUniformValue(m_matrixUniform, matrix);
 
-    //Load the vertex data
+    //Load the vertex data to specific indexes in the shader program
     glVertexAttribPointer(m_posAttr, 2, GL_FLOAT, GL_FALSE, 0, vVertices);
     glVertexAttribPointer(m_colAttr, 3, GL_FLOAT, GL_FALSE, 0, vColors);
 
     //Enable the vertex attribute array
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(m_posAttr);
+    glEnableVertexAttribArray(m_colAttr);
 
     //Draw
     glDrawArrays(GL_TRIANGLES,0,3);
@@ -227,5 +245,31 @@ void WorldWindow::exposeEvent(QExposeEvent *)
         renderNow();
     }
 }
+
+// -----------------------------------------------------------------------------
+
+void Debug_QueryShaderCompiler()
+{
+    GLboolean shaderCompiler;
+    GLint numBinaryFormats;
+    GLint *formats;
+
+    /*
+    //Determine if a shader compiler is available
+    glGetBooleanv(GL_SHADER_COMPILER,&shaderCompiler);
+
+    //Determine binary format available
+    glGetIntegerv(GL_NUM_SHADER_BINARY_FORMATS,&numBinaryFormats);
+    formats = new int[numBinaryFormats];
+
+    glGetIntegerv(GL_SHADER_BINARY_FORMATS,formats);
+
+    qDebug() << formats;
+
+    delete [] formats;
+    */
+}
+
+
 
 // -----------------------------------------------------------------------------

@@ -47,12 +47,16 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../Editor/main.cpp \
 		../Editor/mainwindow.cpp \
-		../Editor/worldwindow.cpp qrc_Resources.cpp \
+		../Editor/worldwindow.cpp \
+		../Editor/objectfactory.cpp \
+		../Editor/objectmanager.cpp qrc_Resources.cpp \
 		moc_mainwindow.cpp \
 		moc_worldwindow.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		worldwindow.o \
+		objectfactory.o \
+		objectmanager.o \
 		qrc_Resources.o \
 		moc_mainwindow.o \
 		moc_worldwindow.o
@@ -174,7 +178,9 @@ DIST          = /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/spec_pre.prf \
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/lex.prf \
 		../Editor/Editor.pro ../Editor/main.cpp \
 		../Editor/mainwindow.cpp \
-		../Editor/worldwindow.cpp
+		../Editor/worldwindow.cpp \
+		../Editor/objectfactory.cpp \
+		../Editor/objectmanager.cpp
 QMAKE_TARGET  = Editor
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = Editor.app/Contents/MacOS/Editor
@@ -482,7 +488,7 @@ Editor.app/Contents/Info.plist:
 	@sed -e "s,@SHORT_VERSION@,1.0,g" -e "s,@TYPEINFO@,????,g" -e "s,@ICON@,,g" -e "s,@BUNDLEIDENTIFIER@,com.example.Editor,g" -e "s,@EXECUTABLE@,Editor,g" -e "s,@TYPEINFO@,????,g" /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/macx-clang/Info.plist.app >Editor.app/Contents/Info.plist
 dist: 
 	@test -d .tmp/Editor1.0.0 || mkdir -p .tmp/Editor1.0.0
-	$(COPY_FILE) --parents $(DIST) .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/Resources.qrc .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/mainwindow.h ../Editor/worldwindow.h .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/main.cpp ../Editor/mainwindow.cpp ../Editor/worldwindow.cpp .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/mainwindow.ui .tmp/Editor1.0.0/ && (cd `dirname .tmp/Editor1.0.0` && $(TAR) Editor1.0.0.tar Editor1.0.0 && $(COMPRESS) Editor1.0.0.tar) && $(MOVE) `dirname .tmp/Editor1.0.0`/Editor1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/Editor1.0.0
+	$(COPY_FILE) --parents $(DIST) .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/Resources.qrc .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/mainwindow.h ../Editor/worldwindow.h ../Editor/IComponent.h ../Editor/ComponentTypes.h ../Editor/objectfactory.h ../Editor/objectmanager.h .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/main.cpp ../Editor/mainwindow.cpp ../Editor/worldwindow.cpp ../Editor/objectfactory.cpp ../Editor/objectmanager.cpp .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/mainwindow.ui .tmp/Editor1.0.0/ && (cd `dirname .tmp/Editor1.0.0` && $(TAR) Editor1.0.0.tar Editor1.0.0 && $(COMPRESS) Editor1.0.0.tar) && $(MOVE) `dirname .tmp/Editor1.0.0`/Editor1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/Editor1.0.0
 
 
 clean:compiler_clean 
@@ -508,7 +514,9 @@ compiler_objective_c_clean:
 compiler_rcc_make_all: qrc_Resources.cpp
 compiler_rcc_clean:
 	-$(DEL_FILE) qrc_Resources.cpp
-qrc_Resources.cpp: ../Editor/Resources.qrc
+qrc_Resources.cpp: ../Editor/Resources.qrc \
+		../Editor/Resources/Shaders/vs_sample.vsh \
+		../Editor/Resources/Shaders/sample.fsh
 	/Volumes/LaCie/Qt/5.3/clang_64/bin/rcc -name Resources ../Editor/Resources.qrc -o qrc_Resources.cpp
 
 compiler_moc_header_make_all: moc_mainwindow.cpp moc_worldwindow.cpp
@@ -577,6 +585,7 @@ worldwindow.o: ../Editor/worldwindow.cpp ../Editor/worldwindow.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qscreen.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QPainter \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qpainter.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qopengl.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QOpenGLContext \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglcontext.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QOpenGLPaintDevice \
@@ -590,6 +599,12 @@ worldwindow.o: ../Editor/worldwindow.cpp ../Editor/worldwindow.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QMatrix \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qmatrix.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o worldwindow.o ../Editor/worldwindow.cpp
+
+objectfactory.o: ../Editor/objectfactory.cpp ../Editor/objectfactory.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o objectfactory.o ../Editor/objectfactory.cpp
+
+objectmanager.o: ../Editor/objectmanager.cpp ../Editor/objectmanager.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o objectmanager.o ../Editor/objectmanager.cpp
 
 qrc_Resources.o: qrc_Resources.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_Resources.o qrc_Resources.cpp

@@ -14,10 +14,16 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    worldwindow.cpp
+    worldwindow.cpp \
+    objectfactory.cpp \
+    objectmanager.cpp
 
 HEADERS  += mainwindow.h \
-    worldwindow.h
+    worldwindow.h \
+    IComponent.h \
+    ComponentTypes.h \
+    objectfactory.h \
+    objectmanager.h
 
 FORMS    += mainwindow.ui
 
