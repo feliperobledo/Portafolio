@@ -5,9 +5,7 @@
 //#endif
 
 varying vec4 color;
-//uniform mat4 uModelToWorldMat;
-//uniform mat4 uWorldToViewMat;
-//uniform mat4 uViewToPerspMat;
+uniform mat4 u_modelPersp_matrix;
 
 void main()
 {

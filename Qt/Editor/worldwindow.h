@@ -16,6 +16,7 @@
 #include <QWindow>
 #include <QOpenGLFunctions>
 #include <vector>
+#include <QMatrix4x4>
 
 
 class QPainter;
@@ -27,27 +28,12 @@ class QExposeEvent;
 
 // -----------------------------------------------------------------------------
 
-#define VERTEX_POS_SIZE 3
-#define VERTEX_NORMAL_SIZE 3
-#define VERTEX_TEXCOORD0_SIZE 2
-#define VERTEX_TEXCOORD1_SIZE 2
+#define VERTEX_POS_SIZE 3      //x,y,z
+#define VERTEX_COLOR_SIZE 4    //r,g,b,a
 
-// x, y and z // x, y and z // s and t
-// s and t
 #define VERTEX_POS_INDX 0
-#define VERTEX_NORMAL_INDX 1
-#define VERTEX_TEXCOORD0_INDX 2
-#define VERTEX_TEXCOORD1_INDX 3
+#define VERTEX_COLOR_INDX 3
 
-// the following 4 defines are used to determine location of various array
-// attributes if vertex data is are stored as an array of structures
-#define VERTEX_POS_OFFSET 0
-#define VERTEX_NORMAL_OFFSET 3
-#define VERTEX_TEXCOORD0_OFFSET 6
-#define VERTEX_TEXCOORD1_OFFSET 8
-
-#define VERTEX_ATTRIB_SIZE VERTEX_POS_SIZE + \ VERTEX_NORMAL_SIZE + \
-VERTEX_TEXCOORD0_SIZE + \ VERTEX_TEXCOORD1_SIZE
 
 //Here we use the Array of structures model, where all data is stored in one
 //array.
@@ -97,7 +83,13 @@ private:
 
     GLint m_posAttr;
     GLint m_colAttr;
-    GLint m_matrixUniform;
+    GLint m_modelToPerspUni;
+
+    float m_yRot;
+    QMatrix4x4 m_modelToWorld;
+    QMatrix4x4 m_worldToView;
+    QMatrix4x4 m_viewToPerps;
+    QMatrix4x4 m_modelToPersp;
 
 private:
     void Debug_QueryShaderCompiler();
