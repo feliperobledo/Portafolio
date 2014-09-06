@@ -16,14 +16,31 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     worldwindow.cpp \
     objectfactory.cpp \
-    objectmanager.cpp
+    ISerializer.cpp \
+    mymodelserializer.cpp \
+    transform.cpp \
+    model.cpp \
+    externalinitializer.cpp \
+    composite.cpp \
+    worlddatabase.cpp \
+    archetypedatabase.cpp \
+    idatamodel.cpp
 
 HEADERS  += mainwindow.h \
     worldwindow.h \
     IComponent.h \
     ComponentTypes.h \
     objectfactory.h \
-    objectmanager.h
+    ISerializer.h \
+    mymodelserializer.h \
+    transform.h \
+    model.h \
+    BypassGL.h \
+    externalinitializer.h \
+    composite.h \
+    worlddatabase.h \
+    archetypedatabase.h \
+    idatamodel.h
 
 FORMS    += mainwindow.ui
 

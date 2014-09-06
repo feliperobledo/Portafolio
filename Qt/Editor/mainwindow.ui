@@ -29,10 +29,10 @@
    <widget class="QFrame" name="WorldFrame">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>110</x>
       <y>10</y>
-      <width>776</width>
-      <height>521</height>
+      <width>681</width>
+      <height>411</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -46,6 +46,19 @@
     </property>
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>80</y>
+      <width>114</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
     </property>
    </widget>
   </widget>
@@ -71,5 +84,25 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>CreateEmpty()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>51</x>
+     <y>142</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>73</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>CreateEmpty()</slot>
+ </slots>
 </ui>

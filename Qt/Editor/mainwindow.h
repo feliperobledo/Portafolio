@@ -13,8 +13,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMultiHash>
+#include <QVector>
+#include <QString>
 
 class WorldWindow;
+class IDataModel;
+class Composite;
 
 namespace Ui {
 class MainWindow;
@@ -25,12 +30,32 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    typedef QMultiHash<QString,IDataModel*> Databases;
+
     explicit MainWindow(QWidget *parent = 0);
+
+    void Initialize();
+    void InitDatabases();
+
     ~MainWindow();
+
+public slots:
+    void CreateEmpty(void);
+    void WorldObjectRequest();
+
+signals:
+    void SendWorldObjects(QVector<Composite*>*);
 
 private:
     Ui::MainWindow* m_Ui;
     WorldWindow* m_WorldScreen;
+    Databases m_DataModels;
+
+private:
+    IDataModel* DataModel(const QString& name);
+    const IDataModel* DataModel(const QString& name) const;
+
+
 };
 
 #endif // MAINWINDOW_H

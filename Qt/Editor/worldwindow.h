@@ -15,9 +15,11 @@
 
 #include <QWindow>
 #include <QOpenGLFunctions>
-#include <vector>
+#include <QVector>
 #include <QMatrix4x4>
+#include "BypassGL.h"
 
+// -----------------------------------------------------------------------------
 
 class QPainter;
 class QOpenGLContext;
@@ -28,29 +30,23 @@ class QExposeEvent;
 
 // -----------------------------------------------------------------------------
 
+class Composite;
+class Model;
+
+// -----------------------------------------------------------------------------
+
 #define VERTEX_POS_SIZE 3      //x,y,z
 #define VERTEX_COLOR_SIZE 4    //r,g,b,a
 
 #define VERTEX_POS_INDX 0
 #define VERTEX_COLOR_INDX 3
 
-
-//Here we use the Array of structures model, where all data is stored in one
-//array.
-struct VertexAttributes
-{
-    //use GL_HALF_FLOAT_OES for normals, binormals, tangent vectors, UV
-    //  note that the above may not be possible
-    //use GL_UNSIGNED_BYTE for color
-    //can use GL_FIXED for vertex positions
-    std::vector<float> m_VertData;
-};
-
 // -----------------------------------------------------------------------------
 
 class WorldWindow : public QWindow, protected QOpenGLFunctions
 {
     Q_OBJECT
+
 public:
     explicit WorldWindow(QWindow* parent = 0);
     ~WorldWindow();
@@ -73,6 +69,7 @@ protected:
     void exposeEvent(QExposeEvent *);
 
 private:
+    QOpenGLFunctions* m_SelfMethods;
     bool m_UpdatePending;
     bool m_Animating;
 
@@ -91,9 +88,20 @@ private:
     QMatrix4x4 m_viewToPerps;
     QMatrix4x4 m_modelToPersp;
 
+    QOpenGL_ m_glMask;
+
+    QVector<Model*> m_Models;
+
+    QVector<Composite *>* m_WorldObjects;
+
+public slots:
+    void receiveWorldData(QVector<Composite *>*);
+
+signals:
+    void requestWorldData();
+
 private:
     void Debug_QueryShaderCompiler();
-
 };
 
 #endif // WORLDWINDOW_H
