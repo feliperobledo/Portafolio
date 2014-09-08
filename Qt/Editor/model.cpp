@@ -106,13 +106,13 @@ void Model::DrawPrep()
     m_glMethods->glBindBuffer(GL_ARRAY_BUFFER,vboIDs[0]);
     m_glMethods->glBufferData(GL_ARRAY_BUFFER,
                  vtxStride * m_glData->m_vertCount,
-                 &(m_glData->m_VertData[0]),
+                 (m_glData->m_VertData.data()),
                  GL_STATIC_DRAW);
 
     m_glMethods->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,vboIDs[1]);
     m_glMethods->glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                  m_glData->m_indicesCount * sizeof(GLushort),
-                 &(m_glData->m_Indices[0]),
+                 (m_glData->m_Indices.data()),
                  GL_STATIC_DRAW);
 }
 
