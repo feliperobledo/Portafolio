@@ -2,12 +2,15 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1024</width>
+    <height>656</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -29,10 +32,10 @@
    <widget class="QFrame" name="WorldFrame">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>10</y>
-      <width>681</width>
-      <height>411</height>
+      <x>20</x>
+      <y>20</y>
+      <width>512</width>
+      <height>512</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -51,15 +54,38 @@
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>80</y>
+      <x>20</x>
+      <y>540</y>
       <width>114</width>
       <height>32</height>
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>EmptyObject</string>
     </property>
+   </widget>
+   <widget class="Inspector" name="ObjInspector">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>20</y>
+      <width>271</width>
+      <height>511</height>
+     </rect>
+    </property>
+    <property name="widgetResizable">
+     <bool>true</bool>
+    </property>
+    <widget class="QWidget" name="scrollAreaWidgetContents">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>269</width>
+       <height>509</height>
+      </rect>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -67,7 +93,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1024</width>
      <height>22</height>
     </rect>
    </property>
@@ -83,6 +109,14 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>Inspector</class>
+   <extends>QScrollArea</extends>
+   <header>inspector.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

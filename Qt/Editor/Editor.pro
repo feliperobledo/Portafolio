@@ -24,7 +24,12 @@ SOURCES += main.cpp\
     composite.cpp \
     worlddatabase.cpp \
     archetypedatabase.cpp \
-    idatamodel.cpp
+    idatamodel.cpp \
+    compositehandle.cpp \
+    inspector.cpp \
+    handlesystem.cpp \
+    inspectorcomponent.cpp \
+    componentmetadatabase.cpp
 
 HEADERS  += mainwindow.h \
     worldwindow.h \
@@ -40,7 +45,12 @@ HEADERS  += mainwindow.h \
     composite.h \
     worlddatabase.h \
     archetypedatabase.h \
-    idatamodel.h
+    idatamodel.h \
+    compositehandle.h \
+    inspector.h \
+    handlesystem.h \
+    inspectorcomponent.h \
+    componentmetadatabase.h
 
 FORMS    += mainwindow.ui
 

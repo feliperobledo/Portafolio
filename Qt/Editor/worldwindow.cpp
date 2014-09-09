@@ -106,6 +106,8 @@ void WorldWindow::initialize()
 
     glFrontFace(GL_CCW);
     glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
 
     m_SelfMethods = dynamic_cast<QOpenGLFunctions*>(this);
 }
@@ -142,11 +144,13 @@ void WorldWindow::render(QPainter*)
 //-----------------------------------------------------------------------------
 
     //Setting matrix data
+
     m_modelToWorld.setToIdentity();
     m_modelToWorld.translate(0.0f,0.0f,-10.0);
     m_modelToWorld.rotate(m_yRot,QVector3D(0.0f,1.0f,0.0f));
     m_modelToWorld.rotate(m_yRot,QVector3D(1.0f,0.0f,0.0f));
     m_modelToWorld.scale(3);
+
     //qDebug() << m_modelToWorld;
 
     m_yRot += 0.5f;
@@ -185,6 +189,7 @@ void WorldWindow::render(QPainter*)
     GLuint offset = 0;
     GLuint numOfIndeces = 36;
 
+    //Tells GL how to interpret the data in the vertex buffer
     glVertexAttribPointer(m_posAttr,
                           VERTEX_POS_SIZE,
                           GL_FLOAT,
@@ -202,8 +207,7 @@ void WorldWindow::render(QPainter*)
 
 //-----------------------------------------------------------------------------
     //Have graphics card draw what is attached to the VBOs
-    glEnable(GL_CULL_FACE);
-
+    //);z
     if(m_WorldObjects)
     {
         int objectsSize = (*m_WorldObjects).size();
@@ -297,7 +301,6 @@ bool WorldWindow::event(QEvent * event)
         {
             return QWindow::event(event);
         }
-
     }
 }
 

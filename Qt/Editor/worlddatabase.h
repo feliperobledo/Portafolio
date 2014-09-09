@@ -25,6 +25,7 @@ public:
     void NewComposite();
 
     void Remove(const Composite* address);
+    Composite* GetLastCreated(void);
 
     const ObjectList* WorldObjects() const;
     ObjectList* WorldObjects();

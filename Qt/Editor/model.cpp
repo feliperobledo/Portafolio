@@ -13,7 +13,7 @@ struct GLData
     unsigned m_indicesCount;
     GLuint m_vboIDs[VBO_ID_COUNT];
     QVector<GLfloat> m_VertData;
-    QVector<GLuint> m_Indices;
+    QVector<GLushort> m_Indices;
 };
 
 // -----------------------------------------------------------------------------
@@ -71,7 +71,7 @@ void Model::Initialize(const char*)
 
     //going to have to implement the bridge pattern here
     ExternalInitializer bridge;
-    bridge.SerializeData(this,":/modelResources/Models/mod_sample_cube.mod");
+    //bridge.SerializeData(this,":/modelResources/Models/mod_sample_cube.mod");
 
 }
 
@@ -111,7 +111,7 @@ void Model::DrawPrep()
 
     m_glMethods->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,vboIDs[1]);
     m_glMethods->glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 m_glData->m_indicesCount * sizeof(GLushort),
+                 m_glData->m_Indices.size() * sizeof(GLushort),
                  (m_glData->m_Indices.data()),
                  GL_STATIC_DRAW);
 }
@@ -119,7 +119,7 @@ void Model::DrawPrep()
 void Model::Draw()
 {
     glDrawElements(GL_TRIANGLES,
-                   m_glData->m_indicesCount,
+                   m_glData->m_Indices.size(),
                    GL_UNSIGNED_SHORT,
                    0);
 }

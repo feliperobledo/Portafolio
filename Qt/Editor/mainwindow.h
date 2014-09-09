@@ -12,6 +12,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "handlesystem.h"
 #include <QMainWindow>
 #include <QMultiHash>
 #include <QVector>
@@ -49,6 +50,7 @@ signals:
 private:
     Ui::MainWindow* m_Ui;
     WorldWindow* m_WorldScreen;
+    HandleSystem m_HandleSys;
     Databases m_DataModels;
 
 private:

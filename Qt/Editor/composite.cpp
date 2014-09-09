@@ -8,13 +8,14 @@ void Composite::Initialize()
     {
         iter.value()->Initialize("");
     }
+    m_Name = "NewObject";
 }
 
 void Composite::Free()
 {
     //Barebone deletion instructions
     //Should look into a memory manager optimization in the future
-    qDebug() << "Composite::Free";
+    qDebug() << "Composite::Free";    
     if(!m_ComponentList.empty())
     {
         Components::iterator iter = m_ComponentList.begin();

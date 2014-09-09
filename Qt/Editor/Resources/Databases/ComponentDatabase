@@ -1,0 +1,6 @@
+Transform
+{
+	Position = Vec3
+	Scale = Vec3
+	Rotation = Quaternion
+}

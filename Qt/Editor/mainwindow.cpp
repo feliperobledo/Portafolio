@@ -15,6 +15,7 @@
 #include "worlddatabase.h"
 #include "idatamodel.h"
 #include "archetypedatabase.h"
+#include "componentmetadatabase.h"
 #include "composite.h"
 #include <QHBoxLayout>
 #include <QMetaObject>
@@ -30,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::Initialize()
 {
     m_Ui->setupUi(this);
+    m_Ui->ObjInspector->Initialize();
 
     m_WorldScreen = new WorldWindow();
     QWidget* screenWidget = this->createWindowContainer(m_WorldScreen,m_Ui->WorldFrame);
@@ -41,6 +43,8 @@ void MainWindow::Initialize()
 
     //Init all databases
     InitDatabases();
+
+    //Init other systems
 }
 
 MainWindow::~MainWindow()
@@ -67,6 +71,7 @@ void MainWindow::InitDatabases()
     //Let's hard code some databases for now
     m_DataModels.insert(QString("World"),new WorldDatabase);
     m_DataModels.insert(QString("Archetypes"),new ArchetypeDatabase);
+    m_DataModels.insert(QString("Components"), new ComponentMetaDatabase);
 
     Databases::iterator iter = m_DataModels.begin();
     for(;iter != m_DataModels.end(); ++iter)
@@ -92,6 +97,8 @@ void MainWindow::CreateEmpty(void)
     if(world)
     {
         world->NewComposite();
+        m_HandleSys.HandleNew( world->GetLastCreated() );
+        m_Ui->ObjInspector->ReceiveNew(m_HandleSys.GetHandle());
     }
 }
 

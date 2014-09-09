@@ -1,0 +1,2 @@
+Vec3 = QVector3
+Quaternion = QVector3

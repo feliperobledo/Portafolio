@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>Resources/Shaders/vs_sample.vsh</file>
         <file>Resources/Shaders/sample.fsh</file>
+        <file>Resources/Databases/ComponentDatabase</file>
+        <file>Resources/Databases/ConversionTypes</file>
     </qresource>
 </RCC>

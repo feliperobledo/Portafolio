@@ -57,9 +57,16 @@ SOURCES       = ../Editor/main.cpp \
 		../Editor/composite.cpp \
 		../Editor/worlddatabase.cpp \
 		../Editor/archetypedatabase.cpp \
-		../Editor/idatamodel.cpp qrc_Resources.cpp \
+		../Editor/idatamodel.cpp \
+		../Editor/compositehandle.cpp \
+		../Editor/inspector.cpp \
+		../Editor/handlesystem.cpp \
+		../Editor/inspectorcomponent.cpp \
+		../Editor/componentmetadatabase.cpp qrc_Resources.cpp \
 		moc_mainwindow.cpp \
-		moc_worldwindow.cpp
+		moc_worldwindow.cpp \
+		moc_inspector.cpp \
+		moc_inspectorcomponent.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		worldwindow.o \
@@ -73,9 +80,16 @@ OBJECTS       = main.o \
 		worlddatabase.o \
 		archetypedatabase.o \
 		idatamodel.o \
+		compositehandle.o \
+		inspector.o \
+		handlesystem.o \
+		inspectorcomponent.o \
+		componentmetadatabase.o \
 		qrc_Resources.o \
 		moc_mainwindow.o \
-		moc_worldwindow.o
+		moc_worldwindow.o \
+		moc_inspector.o \
+		moc_inspectorcomponent.o
 DIST          = /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/spec_pre.prf \
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/qdevice.pri \
 		/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/device_config.prf \
@@ -204,7 +218,12 @@ DIST          = /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/features/spec_pre.prf \
 		../Editor/composite.cpp \
 		../Editor/worlddatabase.cpp \
 		../Editor/archetypedatabase.cpp \
-		../Editor/idatamodel.cpp
+		../Editor/idatamodel.cpp \
+		../Editor/compositehandle.cpp \
+		../Editor/inspector.cpp \
+		../Editor/handlesystem.cpp \
+		../Editor/inspectorcomponent.cpp \
+		../Editor/componentmetadatabase.cpp
 QMAKE_TARGET  = Editor
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = Editor.app/Contents/MacOS/Editor
@@ -512,7 +531,7 @@ Editor.app/Contents/Info.plist:
 	@sed -e "s,@SHORT_VERSION@,1.0,g" -e "s,@TYPEINFO@,????,g" -e "s,@ICON@,,g" -e "s,@BUNDLEIDENTIFIER@,com.example.Editor,g" -e "s,@EXECUTABLE@,Editor,g" -e "s,@TYPEINFO@,????,g" /Volumes/LaCie/Qt/5.3/clang_64/mkspecs/macx-clang/Info.plist.app >Editor.app/Contents/Info.plist
 dist: 
 	@test -d .tmp/Editor1.0.0 || mkdir -p .tmp/Editor1.0.0
-	$(COPY_FILE) --parents $(DIST) .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/Resources.qrc .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/mainwindow.h ../Editor/worldwindow.h ../Editor/IComponent.h ../Editor/ComponentTypes.h ../Editor/objectfactory.h ../Editor/ISerializer.h ../Editor/mymodelserializer.h ../Editor/transform.h ../Editor/model.h ../Editor/BypassGL.h ../Editor/externalinitializer.h ../Editor/composite.h ../Editor/worlddatabase.h ../Editor/archetypedatabase.h ../Editor/idatamodel.h .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/main.cpp ../Editor/mainwindow.cpp ../Editor/worldwindow.cpp ../Editor/objectfactory.cpp ../Editor/ISerializer.cpp ../Editor/mymodelserializer.cpp ../Editor/transform.cpp ../Editor/model.cpp ../Editor/externalinitializer.cpp ../Editor/composite.cpp ../Editor/worlddatabase.cpp ../Editor/archetypedatabase.cpp ../Editor/idatamodel.cpp .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/mainwindow.ui .tmp/Editor1.0.0/ && (cd `dirname .tmp/Editor1.0.0` && $(TAR) Editor1.0.0.tar Editor1.0.0 && $(COMPRESS) Editor1.0.0.tar) && $(MOVE) `dirname .tmp/Editor1.0.0`/Editor1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/Editor1.0.0
+	$(COPY_FILE) --parents $(DIST) .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/Resources.qrc .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/mainwindow.h ../Editor/worldwindow.h ../Editor/IComponent.h ../Editor/ComponentTypes.h ../Editor/objectfactory.h ../Editor/ISerializer.h ../Editor/mymodelserializer.h ../Editor/transform.h ../Editor/model.h ../Editor/BypassGL.h ../Editor/externalinitializer.h ../Editor/composite.h ../Editor/worlddatabase.h ../Editor/archetypedatabase.h ../Editor/idatamodel.h ../Editor/compositehandle.h ../Editor/inspector.h ../Editor/handlesystem.h ../Editor/inspectorcomponent.h ../Editor/componentmetadatabase.h .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/main.cpp ../Editor/mainwindow.cpp ../Editor/worldwindow.cpp ../Editor/objectfactory.cpp ../Editor/ISerializer.cpp ../Editor/mymodelserializer.cpp ../Editor/transform.cpp ../Editor/model.cpp ../Editor/externalinitializer.cpp ../Editor/composite.cpp ../Editor/worlddatabase.cpp ../Editor/archetypedatabase.cpp ../Editor/idatamodel.cpp ../Editor/compositehandle.cpp ../Editor/inspector.cpp ../Editor/handlesystem.cpp ../Editor/inspectorcomponent.cpp ../Editor/componentmetadatabase.cpp .tmp/Editor1.0.0/ && $(COPY_FILE) --parents ../Editor/mainwindow.ui .tmp/Editor1.0.0/ && (cd `dirname .tmp/Editor1.0.0` && $(TAR) Editor1.0.0.tar Editor1.0.0 && $(COMPRESS) Editor1.0.0.tar) && $(MOVE) `dirname .tmp/Editor1.0.0`/Editor1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/Editor1.0.0
 
 
 clean:compiler_clean 
@@ -539,17 +558,25 @@ compiler_rcc_make_all: qrc_Resources.cpp
 compiler_rcc_clean:
 	-$(DEL_FILE) qrc_Resources.cpp
 qrc_Resources.cpp: ../Editor/Resources.qrc \
+		../Editor/Resources/Databases/ComponentDatabase \
+		../Editor/Resources/Databases/ConversionTypes \
 		../Editor/Resources/Shaders/vs_sample.vsh \
 		../Editor/Resources/Shaders/sample.fsh
 	/Volumes/LaCie/Qt/5.3/clang_64/bin/rcc -name Resources ../Editor/Resources.qrc -o qrc_Resources.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_worldwindow.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_worldwindow.cpp moc_inspector.cpp moc_inspectorcomponent.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_worldwindow.cpp
-moc_mainwindow.cpp: /Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMainWindow \
+	-$(DEL_FILE) moc_mainwindow.cpp moc_worldwindow.cpp moc_inspector.cpp moc_inspectorcomponent.cpp
+moc_mainwindow.cpp: ../Editor/handlesystem.h \
+		../Editor/compositehandle.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QString \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qstring.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMainWindow \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmainwindow.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QMultiHash \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qhash.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QVector \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qvector.h \
 		../Editor/mainwindow.h
 	/Volumes/LaCie/Qt/5.3/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -I/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/macx-clang -I/Users/feliperobledo/Portafolio/Qt/Editor -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtOpenGL.framework/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Headers -I. -F/Volumes/LaCie/Qt/5.3/clang_64/lib ../Editor/mainwindow.h -o moc_mainwindow.cpp
 
@@ -565,12 +592,41 @@ moc_worldwindow.cpp: /Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions
 		../Editor/worldwindow.h
 	/Volumes/LaCie/Qt/5.3/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -I/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/macx-clang -I/Users/feliperobledo/Portafolio/Qt/Editor -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtOpenGL.framework/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Headers -I. -F/Volumes/LaCie/Qt/5.3/clang_64/lib ../Editor/worldwindow.h -o moc_worldwindow.cpp
 
+moc_inspector.cpp: /Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QVector \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qvector.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QPointer \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qpointer.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QScrollArea \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qscrollarea.h \
+		../Editor/compositehandle.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QString \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qstring.h \
+		../Editor/inspector.h
+	/Volumes/LaCie/Qt/5.3/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -I/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/macx-clang -I/Users/feliperobledo/Portafolio/Qt/Editor -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtOpenGL.framework/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Headers -I. -F/Volumes/LaCie/Qt/5.3/clang_64/lib ../Editor/inspector.h -o moc_inspector.cpp
+
+moc_inspectorcomponent.cpp: /Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QWidget \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qwidget.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QString \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qstring.h \
+		../Editor/inspectorcomponent.h
+	/Volumes/LaCie/Qt/5.3/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -I/Volumes/LaCie/Qt/5.3/clang_64/mkspecs/macx-clang -I/Users/feliperobledo/Portafolio/Qt/Editor -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtOpenGL.framework/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Headers -I/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Headers -I. -F/Volumes/LaCie/Qt/5.3/clang_64/lib ../Editor/inspectorcomponent.h -o moc_inspectorcomponent.cpp
+
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
 compiler_uic_make_all: ui_mainwindow.h
 compiler_uic_clean:
 	-$(DEL_FILE) ui_mainwindow.h
-ui_mainwindow.h: ../Editor/mainwindow.ui
+ui_mainwindow.h: ../Editor/mainwindow.ui \
+		../Editor/inspector.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QVector \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qvector.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QPointer \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qpointer.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QScrollArea \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qscrollarea.h \
+		../Editor/compositehandle.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QString \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qstring.h
 	/Volumes/LaCie/Qt/5.3/clang_64/bin/uic ../Editor/mainwindow.ui -o ui_mainwindow.h
 
 compiler_rez_source_make_all:
@@ -586,34 +642,47 @@ compiler_clean: compiler_rcc_clean compiler_moc_header_clean compiler_uic_clean
 ####### Compile
 
 main.o: ../Editor/main.cpp ../Editor/mainwindow.h \
+		../Editor/handlesystem.h \
+		../Editor/compositehandle.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QString \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qstring.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMainWindow \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmainwindow.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QMultiHash \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qhash.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QVector \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qvector.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QApplication \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qapplication.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../Editor/main.cpp
 
 mainwindow.o: ../Editor/mainwindow.cpp ../Editor/mainwindow.h \
+		../Editor/handlesystem.h \
+		../Editor/compositehandle.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QString \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qstring.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMainWindow \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmainwindow.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QMultiHash \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qhash.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QVector \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qvector.h \
 		ui_mainwindow.h \
+		../Editor/inspector.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QPointer \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qpointer.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QScrollArea \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qscrollarea.h \
 		../Editor/worldwindow.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QWindow \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qwindow.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QOpenGLFunctions \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglfunctions.h \
-		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QVector \
-		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qvector.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QMatrix4x4 \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qmatrix4x4.h \
 		../Editor/BypassGL.h \
 		../Editor/worlddatabase.h \
 		../Editor/idatamodel.h \
-		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QString \
-		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qstring.h \
 		../Editor/objectfactory.h \
 		../Editor/IComponent.h \
 		../Editor/ComponentTypes.h \
@@ -622,8 +691,13 @@ mainwindow.o: ../Editor/mainwindow.cpp ../Editor/mainwindow.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QList \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qlist.h \
 		../Editor/archetypedatabase.h \
+		../Editor/componentmetadatabase.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QHBoxLayout \
-		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qboxlayout.h
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qboxlayout.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QMetaObject \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qobjectdefs.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QDebug \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qdebug.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../Editor/mainwindow.cpp
 
 worldwindow.o: ../Editor/worldwindow.cpp ../Editor/worldwindow.h \
@@ -641,6 +715,12 @@ worldwindow.o: ../Editor/worldwindow.cpp ../Editor/worldwindow.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QString \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qstring.h \
 		../Editor/ComponentTypes.h \
+		../Editor/composite.h \
+		../Editor/objectfactory.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QHash \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qhash.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QList \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qlist.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QCoreApplication \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qcoreapplication.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QScreen \
@@ -778,7 +858,9 @@ composite.o: ../Editor/composite.cpp ../Editor/composite.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QHash \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qhash.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QList \
-		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qlist.h
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qlist.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QDebug \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qdebug.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o composite.o ../Editor/composite.cpp
 
 worlddatabase.o: ../Editor/worlddatabase.cpp ../Editor/worlddatabase.h \
@@ -795,6 +877,12 @@ worlddatabase.o: ../Editor/worlddatabase.cpp ../Editor/worlddatabase.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qlist.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QVector \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qvector.h \
+		../Editor/model.h \
+		../Editor/transform.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QMatrix4x4 \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qmatrix4x4.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QVector3D \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qvector3d.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qalgorithms.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o worlddatabase.o ../Editor/worlddatabase.cpp
 
@@ -820,6 +908,60 @@ idatamodel.o: ../Editor/idatamodel.cpp ../Editor/idatamodel.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qstring.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o idatamodel.o ../Editor/idatamodel.cpp
 
+compositehandle.o: ../Editor/compositehandle.cpp ../Editor/compositehandle.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QString \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qstring.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o compositehandle.o ../Editor/compositehandle.cpp
+
+inspector.o: ../Editor/inspector.cpp ../Editor/inspector.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QVector \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qvector.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QPointer \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qpointer.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QScrollArea \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qscrollarea.h \
+		../Editor/compositehandle.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QString \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qstring.h \
+		../Editor/composite.h \
+		../Editor/objectfactory.h \
+		../Editor/IComponent.h \
+		../Editor/ComponentTypes.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QHash \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qhash.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QList \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qlist.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QVBoxLayout \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qboxlayout.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QPushButton \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qpushbutton.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o inspector.o ../Editor/inspector.cpp
+
+handlesystem.o: ../Editor/handlesystem.cpp ../Editor/handlesystem.h \
+		../Editor/compositehandle.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QString \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qstring.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o handlesystem.o ../Editor/handlesystem.cpp
+
+inspectorcomponent.o: ../Editor/inspectorcomponent.cpp ../Editor/inspectorcomponent.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QWidget \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qwidget.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QString \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qstring.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o inspectorcomponent.o ../Editor/inspectorcomponent.cpp
+
+componentmetadatabase.o: ../Editor/componentmetadatabase.cpp ../Editor/componentmetadatabase.h \
+		../Editor/idatamodel.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QString \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qstring.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QMultiHash \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qhash.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QVector \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qvector.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QFile \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qfile.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o componentmetadatabase.o ../Editor/componentmetadatabase.cpp
+
 qrc_Resources.o: qrc_Resources.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_Resources.o qrc_Resources.cpp
 
@@ -828,6 +970,12 @@ moc_mainwindow.o: moc_mainwindow.cpp
 
 moc_worldwindow.o: moc_worldwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_worldwindow.o moc_worldwindow.cpp
+
+moc_inspector.o: moc_inspector.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_inspector.o moc_inspector.cpp
+
+moc_inspectorcomponent.o: moc_inspectorcomponent.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_inspectorcomponent.o moc_inspectorcomponent.cpp
 
 ####### Install
 

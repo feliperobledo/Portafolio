@@ -67,4 +67,9 @@ void WorldDatabase::Remove(const Composite* address)
     end = std::remove(begin,end,address);
 }
 
+Composite* WorldDatabase::GetLastCreated(void)
+{
+    return m_WorldObjects.back();
+}
+
 //-----------------------------------------------------------------------------
