@@ -5,6 +5,9 @@
 #include "mymodelserializer.h"
 #include <QDebug>
 #include <QVector>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QJsonArray>
 
 struct GLData
 {
@@ -32,47 +35,9 @@ Model::Model() : IComponent(),
 
 void Model::Initialize(const char*)
 {
-    //m_glData->m_Indices = serializer.
-
-    //The vertices of our 3D cube in model space
-    GLint numOfVerts = 8;
-    GLfloat vertexData[56] =
-    {
-         //model space vertex |       color
-           0.5f, 0.5f, 0.5f,    1.0f,0.0f,0.0f,1.0f, //[0]
-          -0.5f, 0.5f, 0.5f,    0.0f,1.0f,0.0f,1.0f, //1
-          -0.5f,-0.5f, 0.5f,    0.0f,0.0f,1.0f,1.0f, //2
-           0.5f,-0.5f, 0.5f,    1.0f,0.0f,0.0f,1.0f, //3
-           0.5f,-0.5f,-0.5f,    1.0f,0.0f,0.0f,1.0f, //4
-           0.5f, 0.5f,-0.5f,    1.0f,0.0f,0.0f,1.0f, //5
-          -0.5f, 0.5f,-0.5f,    1.0f,0.0f,0.0f,1.0f, //6
-          -0.5f,-0.5f,-0.5f,    1.0f,0.0f,0.0f,1.0f  //[7]
-    };
-
-    m_glData->m_vertCount = numOfVerts;
-    for(int i = 0; i < 56; ++i)
-        m_glData->m_VertData.push_back(vertexData[i]);
-
-    //Define how each face is defined
-    GLuint numOfIndeces = 36;
-    GLushort indices[36] =
-    {
-        0,1,2,    0,2,3, //front
-        0,3,4,    0,4,5, //right
-        5,1,0,    5,6,1, //top
-        5,4,7,    5,7,6, //back
-        6,7,2,    6,2,1, //left
-        7,3,2,    7,4,3  //bottom
-    };
-
-    m_glData->m_indicesCount = numOfIndeces;
-    for(int i = 0; i < 36; ++i)
-        m_glData->m_Indices.push_back(indices[i]);
-
     //going to have to implement the bridge pattern here
     ExternalInitializer bridge;
-    //bridge.SerializeData(this,":/modelResources/Models/mod_sample_cube.mod");
-
+    bridge.SerializeData(this,":/Resources/Models/cube.json");
 }
 
 void Model::Free()
@@ -136,19 +101,31 @@ void Model::ReceiveGL(QOpenGLFunctions *glMethods)
 
 // -----------------------------------------------------------------------------
 
-void Model::LoadModel(const void* dataObject)
+void Model::LoadModel(const QJsonDocument &jsonDocument)
 {
-    using namespace SampleModelSerializer;
-    typedef MyModelSerializer::MyDataHolder DataStore;
+    QJsonObject obj = jsonDocument.object();
 
-    const DataStore* dataStore =
-            static_cast<const MyModelSerializer::MyDataHolder*>(dataObject);
+    //Get the two main objects of the json file
+    QJsonObject indices = obj["indices"].toObject();
+    QJsonObject vertices = obj["vertices"].toObject();
 
-    const DataStore::VertexData* dataModel =
-            static_cast<const DataStore::VertexData*>(dataStore->GetDataStore());
+    //Initialize the vertices
+    m_glData->m_vertCount = vertices["vertCount"].toInt();
+    unsigned fieldPerVert = vertices["fieldPerVert"].toInt();
+    QJsonArray array = vertices["vertData"].toArray();
 
-    dataModel->m_vertices;
-    //QVector<QVariant>::iterator iter = modData->
+    for(unsigned i = 0; i < m_glData->m_vertCount * fieldPerVert; ++i)
+    {
+        m_glData->m_VertData.push_back(array[i].toDouble());
+    }
+
+    //Initialie the indices
+    m_glData->m_indicesCount = indices["count"].toInt();
+    array = indices["indexData"].toArray();
+    for(unsigned i = 0; i < m_glData->m_indicesCount; ++i)
+    {
+        m_glData->m_Indices.push_back(GLushort(array[i].toDouble()));
+    }
 }
 
 // -----------------------------------------------------------------------------

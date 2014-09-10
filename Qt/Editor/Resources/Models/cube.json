@@ -2,7 +2,7 @@
   "vertices" : 
   {
        "vertCount" : 8,
-       "fieldPerVert" : 7
+       "fieldPerVert" : 7,
        "vertData" : 
        [
            0.5,0.5,0.5,1.0,0.0,0.0,1.0,
@@ -14,10 +14,10 @@
           -0.5,0.5,-0.5,1.0,0.0,0.0,1.0,
           -0.5,-0.5,-0.5,1.0,0.0,0.0,1.0
       ]
-  }
-  "indices"
+  },
+  "indices" :
   {
-      "count" : 12,
+      "count" : 36,
       "indexData" : 
       [
         0,1,2,

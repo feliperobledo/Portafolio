@@ -4,5 +4,6 @@
         <file>Resources/Shaders/sample.fsh</file>
         <file>Resources/Databases/ComponentDatabase</file>
         <file>Resources/Databases/ConversionTypes</file>
+        <file>Resources/Models/cube.json</file>
     </qresource>
 </RCC>

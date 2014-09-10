@@ -558,6 +558,7 @@ compiler_rcc_make_all: qrc_Resources.cpp
 compiler_rcc_clean:
 	-$(DEL_FILE) qrc_Resources.cpp
 qrc_Resources.cpp: ../Editor/Resources.qrc \
+		../Editor/Resources/Models/cube.json \
 		../Editor/Resources/Databases/ComponentDatabase \
 		../Editor/Resources/Databases/ConversionTypes \
 		../Editor/Resources/Shaders/vs_sample.vsh \
@@ -846,7 +847,15 @@ externalinitializer.o: ../Editor/externalinitializer.cpp ../Editor/externaliniti
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QChar \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qchar.h \
 		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QDebug \
-		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qdebug.h
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qdebug.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QJsonDocument \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qjsondocument.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QJsonArray \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qjsonarray.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QJsonObject \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qjsonobject.h \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QErrorMessage \
+		/Volumes/LaCie/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qerrormessage.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o externalinitializer.o ../Editor/externalinitializer.cpp
 
 composite.o: ../Editor/composite.cpp ../Editor/composite.h \

@@ -3,6 +3,7 @@
 
 #include "IComponent.h"
 #include <QString>
+#include <QJsonDocument>
 
 #define VERTEX_POS_SIZE 3      //x,y,z
 #define VERTEX_COLOR_SIZE 4    //r,g,b,a
@@ -29,7 +30,7 @@ public:
     void PostDraw();
     void ReceiveGL(QOpenGLFunctions *glMethods);
 
-    void LoadModel(const void* dataObject);
+    void LoadModel(const QJsonDocument& jsonDocument);
 
 private:
     QString m_ModelFile;
