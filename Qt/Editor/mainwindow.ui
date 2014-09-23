@@ -69,7 +69,7 @@
      <rect>
       <x>550</x>
       <y>20</y>
-      <width>271</width>
+      <width>251</width>
       <height>511</height>
      </rect>
     </property>
@@ -81,11 +81,37 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>269</width>
+       <width>249</width>
        <height>509</height>
       </rect>
      </property>
     </widget>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>541</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>New Component</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_3">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>540</y>
+      <width>131</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add Component</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -127,7 +153,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>51</x>
-     <y>142</y>
+     <y>575</y>
     </hint>
     <hint type="destinationlabel">
      <x>73</x>
@@ -135,8 +161,43 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>NewComponent()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>246</x>
+     <y>582</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>293</x>
+     <y>579</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_3</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ShowComponentList()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>362</x>
+     <y>601</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>443</x>
+     <y>603</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>CreateEmpty()</slot>
+  <slot>NewComponent()</slot>
+  <slot>AddComponent()</slot>
+  <slot>ShowComponentList()</slot>
  </slots>
 </ui>

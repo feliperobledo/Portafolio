@@ -1,10 +1,10 @@
 #ifndef INSPECTOR_H
 #define INSPECTOR_H
 
+#include "compositehandle.h"
 #include <QVector>
 #include <QPointer>
 #include <QScrollArea>
-#include "compositehandle.h"
 
 class Inspector : public QScrollArea
 {
@@ -15,6 +15,8 @@ public:
     void Initialize();
     void ReceiveNew(const CompositeHandle& rhs);
     void ReceiveNew(const QVector<CompositeHandle>& rhs);
+    void UpdateFields(const CompositeHandle& rhs);
+    bool HasWidgetNamed(const QString &name);
 
 signals:
 

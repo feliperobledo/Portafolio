@@ -75,15 +75,7 @@ private:
 
     QOpenGLContext*    m_Context;
     QOpenGLPaintDevice* m_PaintDevice;
-    QOpenGLShaderProgram* m_SProgram;
-    GLuint m_ProgramObject;
 
-    GLint m_posAttr;
-    GLint m_colAttr;
-    GLint m_modelToPerspUni;
-
-    float m_yRot;
-    QMatrix4x4 m_modelToWorld;
     QMatrix4x4 m_worldToView;
     QMatrix4x4 m_viewToPerps;
     QMatrix4x4 m_modelToPersp;

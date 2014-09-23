@@ -22,6 +22,7 @@
 #include "worldwindow.h"
 #include "model.h"
 #include "composite.h"
+#include "component.h"
 #include <QCoreApplication>
 #include <QScreen>
 #include <QPainter>
@@ -43,8 +44,6 @@ WorldWindow::WorldWindow(QWindow *parent) :
     m_Animating(false),
     m_Context(0),
     m_PaintDevice(0),
-    m_SProgram(0),
-    m_yRot(0.0f),
     m_glMask(),
     m_WorldObjects(NULL)
 {
@@ -75,25 +74,6 @@ void WorldWindow::initialize()
     initializeOpenGLFunctions();
     m_glMask.m_gl.initializeOpenGLFunctions();
 
-    m_SProgram = new QOpenGLShaderProgram(this);
-
-    m_SProgram->addShaderFromSourceFile(QOpenGLShader::Vertex,
-                                        QString(":/Resources/Shaders/vs_sample.vsh"));
-
-    m_SProgram->addShaderFromSourceFile(QOpenGLShader::Fragment,
-                                        QString(":/Resources/Shaders/sample.fsh"));
-
-    //Linking occurs once all shaders have been attahced
-    if(!m_SProgram->link())
-    {
-        qDebug() << QString("could not link");
-    }
-
-    m_posAttr = m_SProgram->attributeLocation("aPosition");
-    m_colAttr = m_SProgram->attributeLocation("aColor");
-    m_modelToPerspUni = m_SProgram->uniformLocation("u_modelPersp_matrix");
-    qDebug() << "uModelToPerspMat = " << m_modelToPerspUni;
-
     //init the device where we will paint
     //For some reason, I need to initialize this here.
     // TODO: look into why laters
@@ -109,13 +89,13 @@ void WorldWindow::initialize()
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
 
-    m_SelfMethods = dynamic_cast<QOpenGLFunctions*>(this);
+    m_SelfMethods = dynamic_cast<QOpenGLFunctions*>(this);//??
 }
 
 
 void WorldWindow::render()
 {
-    qDebug() << "render()";
+    //qDebug() << "render()";
 
     //make this the current context
     m_Context->makeCurrent(this);
@@ -136,111 +116,24 @@ void WorldWindow::render()
 
 void WorldWindow::render(QPainter*)
 {
-    qDebug() << "render(QPainter*)";
-
-    m_SProgram->bind();
-
-
-//-----------------------------------------------------------------------------
-
-    //Setting matrix data
-
-    m_modelToWorld.setToIdentity();
-    m_modelToWorld.translate(0.0f,0.0f,-10.0);
-    m_modelToWorld.rotate(m_yRot,QVector3D(0.0f,1.0f,0.0f));
-    m_modelToWorld.rotate(m_yRot,QVector3D(1.0f,0.0f,0.0f));
-    m_modelToWorld.scale(3);
-
-    //qDebug() << m_modelToWorld;
-
-    m_yRot += 0.5f;
-
-    m_modelToPersp = m_viewToPerps * (m_worldToView * m_modelToWorld);
-
-    //Update uniform values
-    m_SProgram->setUniformValue(m_modelToPerspUni,m_modelToPersp);
-
-//-----------------------------------------------------------------------------
-
-    //Do the above for ALL models
+    //qDebug() << "render(QPainter*)";
     if(m_WorldObjects)
     {
         int objectsSize = (*m_WorldObjects).size();
         Model* model = NULL;
         for(int i = 0; i < objectsSize; ++i)
         {
-            model = dynamic_cast<Model*>(((*m_WorldObjects)[i])->GetComponent("Model"));
+            model = dynamic_cast<Model*>( ( (*m_WorldObjects)[i] )->
+                    GetComponent("Model",Composite::engine_component()));
             if(model)
             {
                 model->ReceiveGL(m_SelfMethods);
-                model->DrawPrep();
-            }
-        }
-    }
-
-//-----------------------------------------------------------------------------
-    //Enable the vertex attribute array
-    glEnableVertexAttribArray(m_posAttr);
-    glEnableVertexAttribArray(m_colAttr);
-
-    //Load the vertex data to specific indexes in the shader program
-    GLint vtxStride = sizeof(GLfloat) * VERTEX_POS_SIZE +
-                      sizeof(GLfloat) * VERTEX_COLOR_SIZE;
-    GLuint offset = 0;
-    GLuint numOfIndeces = 36;
-
-    //Tells GL how to interpret the data in the vertex buffer
-    glVertexAttribPointer(m_posAttr,
-                          VERTEX_POS_SIZE,
-                          GL_FLOAT,
-                          GL_FALSE,
-                          vtxStride,
-                          (const void*)offset);
-    offset += VERTEX_POS_SIZE * sizeof(GLfloat);
-
-    glVertexAttribPointer(m_colAttr,
-                          VERTEX_COLOR_SIZE,
-                          GL_FLOAT,
-                          GL_FALSE,
-                          vtxStride,
-                          (const void*)offset);
-
-//-----------------------------------------------------------------------------
-    //Have graphics card draw what is attached to the VBOs
-    //);z
-    if(m_WorldObjects)
-    {
-        int objectsSize = (*m_WorldObjects).size();
-        Model* model = NULL;
-        for(int i = 0; i < objectsSize; ++i)
-        {
-            model = dynamic_cast<Model*>(((*m_WorldObjects)[i])->GetComponent("Model"));
-            if(model)
-            {
+                model->DrawPrep(m_worldToView,m_viewToPerps);
                 model->Draw();
-            }
-        }
-    }
-
-    //Disable arrays
-    glDisableVertexAttribArray(m_colAttr);
-    glDisableVertexAttribArray(m_posAttr);
-
-    if(m_WorldObjects)
-    {
-        int objectsSize = (*m_WorldObjects).size();
-        Model* model = NULL;
-        for(int i = 0; i < objectsSize; ++i)
-        {
-            model = dynamic_cast<Model*>(((*m_WorldObjects)[i])->GetComponent("Model"));
-            if(model)
-            {
                 model->PostDraw();
             }
         }
-    }
-
-    m_SProgram->release();
+    }  
 }
 
 void WorldWindow::setAnimating(bool animating)
@@ -266,7 +159,7 @@ void WorldWindow::renderLater()
 
 void WorldWindow::renderNow()
 {
-    qDebug() << "renderNow";
+    //qDebug() << "renderNow";
 
     if (!isExposed())
         return;
@@ -287,7 +180,7 @@ bool WorldWindow::event(QEvent * event)
     {
         case QEvent::UpdateRequest:
         {
-            qDebug() << "event(QEvent::UpdateRequested)";
+            //qDebug() << "event(QEvent::UpdateRequested)";
             m_UpdatePending = false;
 
             //emit the signal that requests the world data

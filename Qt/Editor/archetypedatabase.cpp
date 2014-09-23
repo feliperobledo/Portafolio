@@ -1,6 +1,6 @@
 #include "archetypedatabase.h"
 #include "composite.h"
-#include "IComponent.h"
+#include "EngineComponent.h"
 #include <QFile>
 
 
@@ -42,7 +42,7 @@ const Composite::Archetype* ArchetypeDatabase::GetArchetype(const QString&,
     return NULL;
 }
 
-const IComponent::Archetype* ArchetypeDatabase::GetArchetype(const QString&,
+const EngineComponent::Archetype* ArchetypeDatabase::GetArchetype(const QString&,
                                                              ComponentArchetype)
 {
     return NULL;

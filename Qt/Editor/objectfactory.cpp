@@ -1,4 +1,5 @@
 #include "objectfactory.h"
+#include "component.h"
 
 ObjectFactory::ObjectFactory()
 {
@@ -9,7 +10,7 @@ Composite* ObjectFactory::newComposite() const
     return new Composite();
 }
 
-IComponent* ObjectFactory::newComponent(const QString& componentName)
+EngineComponent *ObjectFactory::newComponent(const QString& componentName)
 {
     return m_CompFactories[componentName]->create();
 }
@@ -18,8 +19,8 @@ void ObjectFactory::ObjectAddComponent(Composite *obj, const QString& componentN
 {
     if(obj->m_ComponentList.find(componentName) == obj->m_ComponentList.end())
     {
-        IComponentFactory* factory = this->m_CompFactories[componentName];
-        IComponent* newComponent = factory->create();
-        obj->m_ComponentList.insert(componentName,newComponent);
+        EngineComponentFactory* factory = this->m_CompFactories[componentName];
+        EngineComponent* newComponent = factory->create();
+        obj->m_ComponentList[componentName]->SetEngineComponentPtr(newComponent);
     }
 }

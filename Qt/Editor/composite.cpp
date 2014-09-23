@@ -1,14 +1,40 @@
 #include "composite.h"
+#include "component.h"
 #include <QDebug>
+
+Composite::Composite(QObject *parent)
+    :QObject(parent)
+{
+
+}
+
+Composite::~Composite()
+{
+
+}
+
+Composite::Composite(const Archetype& ar,QObject *parent):
+    QObject(parent)
+{
+    Q_UNUSED(ar);
+}
+
+
+Composite::Composite(const Composite& rhs) :
+    QObject(rhs.parent()),
+    m_ArchetypeName(rhs.m_ArchetypeName)
+{
+
+}
 
 void Composite::Initialize()
 {
     Components::iterator iter = m_ComponentList.begin();
     for(; iter != m_ComponentList.end(); ++iter)
     {
-        iter.value()->Initialize("");
+        iter.value()->Initialize();
     }
-    m_Name = "NewObject";
+    setObjectName("NewObject");
 }
 
 void Composite::Free()
@@ -31,7 +57,7 @@ void Composite::Free()
     }
 }
 
-IComponent* Composite::GetComponent(const QString& name)
+Component *Composite::GetComponent(const QString& name)
 {
     Components::iterator iter = m_ComponentList.find(name);
     if(iter != m_ComponentList.end())
@@ -41,7 +67,35 @@ IComponent* Composite::GetComponent(const QString& name)
     return NULL;
 }
 
-const IComponent* Composite::GetComponent(const QString& name) const
+EngineComponent* Composite::GetComponent(const QString& name,engine_component)
+{
+    Components::iterator iter = m_ComponentList.find(name);
+    if(iter != m_ComponentList.end())
+    {
+        Component* comp = iter.value();
+        if(comp->IsEngineComponent())
+        {
+            return comp->GetComponentPtr();
+        }
+    }
+    return NULL;
+}
+
+const EngineComponent* Composite::GetComponent(const QString& name,engine_component) const
+{
+    Components::const_iterator iter = m_ComponentList.find(name);
+    if(iter != m_ComponentList.end())
+    {
+        const Component* comp = iter.value();
+        if(comp->IsEngineComponent())
+        {
+            return comp->GetComponentPtr();
+        }
+    }
+    return NULL;
+}
+
+const Component *Composite::GetComponent(const QString& name) const
 {
     Components::const_iterator iter = m_ComponentList.find(name);
     if(iter != m_ComponentList.end())
@@ -56,22 +110,13 @@ const Composite::Components& Composite::GetComponentList() const
     return m_ComponentList;
 }
 
+void Composite::AddComponent(Component* newComponent)
+{
+    m_ComponentList.insert(newComponent->objectName(),newComponent);
+    newComponent->setParent(this);
+}
+
 //-----------------------------------------------------------------------------
-
-void Composite::Owner(Composite* owner)
-{
-    m_Owner = owner;
-}
-
-Composite* Composite::Owner(void)
-{
-    return m_Owner;
-}
-
-const Composite* Composite::Owner(void) const
-{
-    return m_Owner;
-}
 
 void Composite::NewChild(Composite* child)
 {
@@ -84,32 +129,6 @@ Composite::CompositeList& Composite::Children(void)
 }
 
 //-----------------------------------------------------------------------------
-
-Composite::Composite()
-{
-
-}
-
-Composite::~Composite()
-{
-
-}
-
-Composite::Composite(const Archetype&, Composite* owner) :
-    m_Owner(owner),
-    m_Name("")
-{
-
-}
-
-
-Composite::Composite(const Composite& rhs) :
-    m_Owner(NULL),
-    m_Name(rhs.m_Name),
-    m_ArchetypeName(rhs.m_ArchetypeName)
-{
-
-}
 
 Composite Composite::operator=(const Composite&) const
 {

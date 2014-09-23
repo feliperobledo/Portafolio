@@ -6,6 +6,7 @@
 #include <QVector>
 
 class Composite;
+class Component;
 
 class WorldDatabase : public IDataModel
 {
@@ -29,6 +30,9 @@ public:
 
     const ObjectList* WorldObjects() const;
     ObjectList* WorldObjects();
+
+    void AddComponentTo(Component* newComponent,Composite* object);
+    void SetComponentToDefault(Component* component);
 
 private:
     ObjectFactory m_Factory;

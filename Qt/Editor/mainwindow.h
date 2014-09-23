@@ -13,10 +13,13 @@
 #define MAINWINDOW_H
 
 #include "handlesystem.h"
+#include "componentselection.h"
 #include <QMainWindow>
 #include <QMultiHash>
 #include <QVector>
 #include <QString>
+#include <QListWidget>
+#include <QDialog>
 
 class WorldWindow;
 class IDataModel;
@@ -42,7 +45,10 @@ public:
 
 public slots:
     void CreateEmpty(void);
+    void NewComponent();
     void WorldObjectRequest();
+    void AddComponentToSelection(QListWidgetItem*);
+    void ShowComponentList();
 
 signals:
     void SendWorldObjects(QVector<Composite*>*);
@@ -52,10 +58,15 @@ private:
     WorldWindow* m_WorldScreen;
     HandleSystem m_HandleSys;
     Databases m_DataModels;
+    ComponentSelection m_CompSelectDialog;
 
 private:
     IDataModel* DataModel(const QString& name);
     const IDataModel* DataModel(const QString& name) const;
+    bool InsertComponent(const QString& componentName);
+
+
+
 
 
 };

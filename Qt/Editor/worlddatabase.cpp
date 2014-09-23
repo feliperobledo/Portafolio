@@ -3,7 +3,10 @@
 #include "objectfactory.h"
 #include "model.h"
 #include "transform.h"
+#include "component.h"
+#include "attribmodel.h"
 #include <qalgorithms.h>
+#include <QList>
 
 WorldDatabase::WorldDatabase()
 {
@@ -38,11 +41,6 @@ void WorldDatabase::NewComposite()
 {
     //create dummy object in the meantime
     Composite* newObj = this->m_Factory.newComposite();
-    m_Factory.ObjectAddComponent(newObj,"Model");
-    m_Factory.ObjectAddComponent(newObj,"Transform");
-
-    newObj->Initialize();
-
     this->m_WorldObjects.push_back(newObj);
 }
 
@@ -54,6 +52,23 @@ const WorldDatabase::ObjectList* WorldDatabase::WorldObjects() const
 WorldDatabase::ObjectList* WorldDatabase::WorldObjects()
 {
     return &m_WorldObjects;
+}
+
+void WorldDatabase::AddComponentTo(Component* newComponent,Composite* object)
+{
+    //Create the component if it is an engine component, then add the component
+    //to the object. Will work even if NULL
+    EngineComponent* engineComponent = m_Factory.newComponent(newComponent->objectName());
+    newComponent->SetEngineComponentPtr(engineComponent);
+    //set component attributes to default
+    SetComponentToDefault(newComponent);
+    object->AddComponent(newComponent);
+
+    //If the engine component is viable, then set its parent
+    if(engineComponent)
+    {
+        engineComponent->setParent(object);
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -73,3 +88,82 @@ Composite* WorldDatabase::GetLastCreated(void)
 }
 
 //-----------------------------------------------------------------------------
+
+void WorldDatabase::SetComponentToDefault(Component* component)
+{
+    AttribModel& attribModel = *(component->GetAttributes());
+    QHash<QString,AttribModel::Attribute>::iterator iter = attribModel.GetData().begin();
+    for(;iter != attribModel.GetData().end(); ++iter)
+    {
+        if(iter.value().m_Type == QString("bool"))
+        {
+            iter.value().m_Data = QVariant(false);
+        }
+        else if(iter.value().m_Type == QString("double"))
+        {
+            iter.value().m_Data = QVariant(0.0);
+        }
+        else if(iter.value().m_Type == QString("Object"))
+        {
+            iter.value().m_Data = QVariant("");
+        }
+        else if(iter.value().m_Type == QString("List"))
+        {
+            iter.value().m_IsList = true;
+            iter.value().m_Data = QVariant("[]");
+        }
+        if(iter.value().m_Type == QString("String"))
+        {
+            iter.value().m_Data = QVariant(QString(""));
+        }
+        else if(iter.value().m_Type == QString("vec2"))
+        {
+            QList<QVariant> temp;
+            for(int i = 0; i < 2; ++i)
+                temp.push_back(QVariant(0.0));
+            iter.value().m_IsList = true;
+            iter.value().m_Data = QVariant(temp);
+        }
+        else if(iter.value().m_Type == QString("vec3"))
+        {
+            QList<QVariant> temp;
+            for(int i = 0; i < 3; ++i)
+                temp.push_back(QVariant(0.0));
+            iter.value().m_IsList = true;
+            iter.value().m_Data = QVariant(temp);
+        }
+        else if(iter.value().m_Type == QString("vec4"))
+        {
+            QList<QVariant> temp;
+            for(int i = 0; i < 4; ++i)
+                temp.push_back(QVariant(0.0));
+            iter.value().m_IsList = true;
+            iter.value().m_Data = QVariant(temp);
+        }
+        else if(iter.value().m_Type == QString("mat2"))
+        {
+            QList<QVariant> temp;
+            for(int i = 0; i < 2 * 2; ++i)
+                temp.push_back(QVariant(0.0));
+            iter.value().m_IsList = true;
+            iter.value().m_Data = QVariant(temp);
+        }
+        else if(iter.value().m_Type == QString("mat3"))
+        {
+            QList<QVariant> temp;
+            for(int i = 0; i < 3 * 3; ++i)
+                temp.push_back(QVariant(0.0));
+            iter.value().m_IsList = true;
+            iter.value().m_Data = QVariant(temp);
+        }
+        else if(iter.value().m_Type == QString("mat4"))
+        {
+            QList<QVariant> temp;
+            for(int i = 0; i < 4 * 4; ++i)
+                temp.push_back(QVariant(0.0));
+            iter.value().m_IsList = true;
+            iter.value().m_Data = QVariant(temp);
+        }
+
+    }
+}

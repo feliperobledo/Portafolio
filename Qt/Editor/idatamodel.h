@@ -6,7 +6,7 @@
 class IDataModel
 {
 public:
-    IDataModel();
+    IDataModel() {};
     virtual void Initialize(const QString& initFile) = 0;
     virtual void Free() = 0;
     virtual ~IDataModel() {}

@@ -3,30 +3,35 @@
 
 #include <QMatrix4x4>
 #include <QVector3D>
-#include "IComponent.h"
+#include "EngineComponent.h"
+#include "component.h"
 
-class Transform : public IComponent
+class Transform : public EngineComponent
 {
+    Q_OBJECT
 public:
-    Transform();
+    explicit Transform(QObject* parent = NULL);
 
     virtual void Initialize(const char*);
     virtual void Free();
+    virtual void ChangeData(const QString& member, const QVariant& data);
     virtual ~Transform();
 
     void Position (const QVector3D &);
-    void    Scale (const QMatrix4x4 &);
-    void Rotation (const QMatrix4x4 &);
+    void Scale (const QVector3D &);
+    void Rotation (const QVector3D &);
 
     const QVector3D &Position() const;
-    const QMatrix4x4    &Scale() const;
-    const QMatrix4x4 &Rotation() const;
+    const QVector3D    &Scale() const;
+    const QVector3D &Rotation() const;
 
     QMatrix4x4 GetMatrix() const;
+
+    void SetMember(QVector3D &member, const QVariant& data);
 private:
     QVector3D m_pos;
-    QMatrix4x4 m_scale;
-    QMatrix4x4 m_rotation;
+    QVector3D  m_scale;
+    QVector3D  m_rotation;
 };
 
 #endif // TRANSFORM_H

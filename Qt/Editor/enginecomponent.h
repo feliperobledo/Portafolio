@@ -8,35 +8,20 @@
 //  the prior written consent of DigiPen Institute of Technology is
 //  prohibited.
 // -----------------------------------------------------------------------------
-#ifndef ICOMPONENT_H
-#define ICOMPONENT_H
+#ifndef ENGINE_COMPONENT_H
+#define ENGINE_COMPONENT_H
 
+#include <QObject>
 #include <QString>
-
-#define REGISTER_COMPONENT(x) CT_##x
-enum ComponentType
-{
-    #include "ComponentTypes.h"
-    Total
-};
-#undef REGISTER_COMPONENT
-
-// -----------------------------------------------------------------------------
-
-#define REGISTER_COMPONENT(x) #x
-static char* ComponentTypeArray[] =
-{
-    #include "ComponentTypes.h"
-    "Total"
-};
-#undef REGISTER_COMPONENT
 
 class Composite;
 
 // -----------------------------------------------------------------------------
 
-class IComponent
+class EngineComponent : public QObject
 {
+    Q_OBJECT
+
 public:
     struct Archetype
     {
@@ -48,19 +33,21 @@ public:
     };
 
 public:
-    IComponent() {}
+    explicit EngineComponent(QObject* parent = NULL) : QObject(parent) {}
     virtual void Initialize(const char*) = 0;
     virtual void Free() = 0;
-    virtual ~IComponent() {}
-    //ComponentType GetType() const { return m_Type; }
-    const Composite* Owner() const { return m_owner; }
+    virtual void ChangeData(const QString& member, const QVariant& data) = 0;
+    virtual ~EngineComponent() {}
+
+signals:
+
+public slots:
+    //every child will create their own slots
+
 
 private:
-    //ComponentType m_Type;
-    Composite* m_owner;
-
     //now composites can access private data publicly
     friend class Composite;
 };
 
-#endif // ICOMPONENT_H
+#endif // EngineComponent_H

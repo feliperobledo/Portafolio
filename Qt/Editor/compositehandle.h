@@ -12,9 +12,9 @@ public:
 
     CompositeHandle& operator=(Composite* rhs);
 
-    const Composite* operator->();
+    Composite* operator->();
     const Composite* operator->() const;
-    const Composite& operator*();
+    Composite& operator*();
     const Composite& operator*() const;
 
 private:

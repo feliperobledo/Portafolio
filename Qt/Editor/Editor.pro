@@ -16,32 +16,28 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     worldwindow.cpp \
     objectfactory.cpp \
-    ISerializer.cpp \
-    mymodelserializer.cpp \
     transform.cpp \
     model.cpp \
-    externalinitializer.cpp \
     composite.cpp \
     worlddatabase.cpp \
     archetypedatabase.cpp \
-    idatamodel.cpp \
     compositehandle.cpp \
     inspector.cpp \
     handlesystem.cpp \
-    inspectorcomponent.cpp \
-    componentmetadatabase.cpp
+    component.cpp \
+    componentmodel.cpp \
+    componentselection.cpp \
+    attributeview.cpp \
+    attribmodel.cpp \
+    attributedelegate.cpp \
+    attributeeditor.cpp
 
 HEADERS  += mainwindow.h \
     worldwindow.h \
-    IComponent.h \
-    ComponentTypes.h \
     objectfactory.h \
-    ISerializer.h \
-    mymodelserializer.h \
     transform.h \
     model.h \
     BypassGL.h \
-    externalinitializer.h \
     composite.h \
     worlddatabase.h \
     archetypedatabase.h \
@@ -49,8 +45,14 @@ HEADERS  += mainwindow.h \
     compositehandle.h \
     inspector.h \
     handlesystem.h \
-    inspectorcomponent.h \
-    componentmetadatabase.h
+    component.h \
+    enginecomponent.h \
+    componentmodel.h \
+    componentselection.h \
+    attributeview.h \
+    attribmodel.h \
+    attributedelegate.h \
+    attributeeditor.h
 
 FORMS    += mainwindow.ui
 

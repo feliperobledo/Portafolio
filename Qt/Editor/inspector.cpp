@@ -1,6 +1,8 @@
 #include "inspector.h"
 #include "composite.h"
-#include "IComponent.h"
+#include "component.h"
+#include "EngineComponent.h"
+#include "attributeview.h"
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QString>
@@ -36,9 +38,44 @@ void Inspector::ReceiveNew(const QVector<CompositeHandle>& rhs)
     }
 }
 
+void Inspector::UpdateFields(const CompositeHandle& cHandle)
+{
+    //Only add a child if it cannot be found
+    const Composite::Components& components =  cHandle->GetComponentList();
+    Composite::Components::const_iterator iter = components.begin();
+    for(;iter != components.end(); ++iter)
+    {
+        QString name(iter.key());
+        if(!HasWidgetNamed(name))
+        {
+            AttributeView* newAV = new AttributeView(name,this);
+            newAV->setObjectName(name);
+            newAV->GetView()->setModel((iter.value()->GetAttributes()));
+
+            this->layout()->addWidget(newAV);
+
+            newAV->Initialize();
+        }
+        //children().removeOne()
+    }
+}
+
+bool Inspector::HasWidgetNamed(const QString& name)
+{
+    QObjectList::const_iterator iter = children().begin();
+    for(;iter != children().end();++iter)
+    {
+        if((*iter)->objectName() == name)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 // -----------------------------------------------------------------------------
 
-bool Inspector::ShareSameComponents(const QVector<CompositeHandle>& rhs)
+bool Inspector::ShareSameComponents(const QVector<CompositeHandle>&)
 {
     //Use first element in the vector to determine if all other composites
     //share the same attributes as the it.
@@ -52,8 +89,19 @@ void Inspector::InitCompositeWidgets(const CompositeHandle& cHandle)
     Composite::Components::const_iterator iter = components.begin();
     for(;iter != components.end(); ++iter)
     {
+        //Create new view for this component
         QString name(iter.key());
-        this->layout()->addWidget(new QPushButton(name));
+        AttributeView* newAV = new AttributeView(name,this);
+        newAV->setObjectName(name);
+
+        //Give this view the data it needs to display
+        newAV->GetView()->setModel((iter.value()->GetAttributes()));
+
+        //Add the view to the layout of the inspector
+        this->layout()->addWidget(newAV);
+
+        //Finilize composition of view by initializing the view
+        newAV->Initialize();
     }
 
 }

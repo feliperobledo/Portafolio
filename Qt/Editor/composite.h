@@ -2,14 +2,17 @@
 #define COMPOSITE_H
 
 #include "objectfactory.h"
+#include <QObject>
 #include <QHash>
 #include <QString>
 #include <QList>
 
-class IComponent;
+class EngineComponent;
+class Component;
 
-class Composite
+class Composite : public QObject
 {    
+    Q_OBJECT
 public:
     struct Archetype
     {
@@ -21,27 +24,36 @@ public:
     };
 
 public:
-    typedef QHash<QString,IComponent*> Components;
+    typedef QHash<QString,Component*> Components;
     typedef QList<Composite*> CompositeList;
 
-    ~Composite();
+    struct engine_component {};
+    struct py_component {};
+
+    explicit Composite(QObject* parent = NULL);
+    explicit Composite(const Archetype& archetype, QObject *parent = NULL);
+    Composite(const Composite& rhs);
+    virtual ~Composite();
 
     void Initialize();
     void Free();
-    IComponent* GetComponent(const QString& name);
-    const IComponent* GetComponent(const QString& name) const;
+
+    Component* GetComponent(const QString& name);
+    EngineComponent* GetComponent(const QString& name,engine_component);
+    const EngineComponent* GetComponent(const QString& name,engine_component) const;
+    const Component* GetComponent(const QString& name) const;
     const Components& GetComponentList() const;
 
-    void Owner(Composite* owner);
-    Composite* Owner(void);
-    const Composite* Owner(void) const;
     void NewChild(Composite* child);
     CompositeList& Children(void);
 
+    void AddComponent(Component *newComponent);
+
+signals:
+
+public slots:
+
 private:
-    Composite();
-    Composite(const Archetype& archetype, Composite* owner);
-    Composite(const Composite& rhs);
     Composite operator=(const Composite& rhs) const;
     Composite& operator=(const Composite& rhs);
 
@@ -49,13 +61,9 @@ private:
     //Only the object factory can create and manipulate composites
     friend class ObjectFactory;
 
-    Composite* m_Owner;
     Components m_ComponentList;
-    QString m_Name;
     QString m_ArchetypeName;
     CompositeList m_Children;
-
-
 };
 
 #endif // COMPOSITE_H

@@ -2,7 +2,7 @@
 #define ARCHETYPEDATABASE_H
 
 #include "composite.h"
-#include "IComponent.h"
+#include "EngineComponent.h"
 #include "idatamodel.h"
 #include <QMultiHash>
 #include <QString>
@@ -11,7 +11,7 @@ class ArchetypeDatabase : public IDataModel
 {
 public:
     typedef QMultiHash<QString,Composite::Archetype*> CompositeArchList;
-    typedef QMultiHash<QString,IComponent::Archetype*> ComponentArchList;
+    typedef QMultiHash<QString,EngineComponent::Archetype*> ComponentArchList;
 
     struct CompositeArchetype {};
     struct ComponentArchetype {};
@@ -30,7 +30,7 @@ public:
                                const QString& archName);
 
     const Composite::Archetype* GetArchetype(const QString& name, CompositeArchetype ar);
-    const IComponent::Archetype* GetArchetype(const QString& name, ComponentArchetype ar);
+    const EngineComponent::Archetype* GetArchetype(const QString& name, ComponentArchetype ar);
 
 private:
     CompositeArchList m_CompositeArchetypes;
