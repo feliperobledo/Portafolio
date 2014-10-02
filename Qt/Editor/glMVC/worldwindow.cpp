@@ -20,9 +20,9 @@
 // -----------------------------------------------------------------------------
 
 #include "worldwindow.h"
-#include "model.h"
-#include "composite.h"
-#include "component.h"
+#include "../engineComponents/model.h"
+#include "../core/composite.h"
+#include "../core/component.h"
 #include <QCoreApplication>
 #include <QScreen>
 #include <QPainter>
@@ -133,7 +133,7 @@ void WorldWindow::render(QPainter*)
                 model->PostDraw();
             }
         }
-    }  
+    }
 }
 
 void WorldWindow::setAnimating(bool animating)

@@ -1,7 +1,7 @@
 #include "model.h"
-#include "BypassGL.h"
+#include "../glMVC/BypassGL.h"
 #include "transform.h"
-#include "composite.h"
+#include "../core/composite.h"
 #include <QMatrix4x4>
 #include <QFile>
 #include <QDebug>

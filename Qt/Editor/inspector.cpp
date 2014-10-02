@@ -1,8 +1,8 @@
 #include "inspector.h"
-#include "composite.h"
-#include "component.h"
-#include "EngineComponent.h"
-#include "attributeview.h"
+#include "core/composite.h"
+#include "core/component.h"
+#include "core/EngineComponent.h"
+#include "attributeMVC/attributeview.h"
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QString>
@@ -15,7 +15,9 @@ Inspector::Inspector(QWidget *parent) :
 
 void Inspector::Initialize()
 {
-    setLayout(new QVBoxLayout(this));
+    QVBoxLayout* inspectorLayout = new QVBoxLayout(this);
+    //inspectorLayout->set
+    setLayout(inspectorLayout);
 }
 
 void Inspector::ReceiveNew(const CompositeHandle& rhs)

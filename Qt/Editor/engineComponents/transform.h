@@ -3,8 +3,8 @@
 
 #include <QMatrix4x4>
 #include <QVector3D>
-#include "EngineComponent.h"
-#include "component.h"
+#include "../core/EngineComponent.h"
+#include "../core/component.h"
 
 class Transform : public EngineComponent
 {

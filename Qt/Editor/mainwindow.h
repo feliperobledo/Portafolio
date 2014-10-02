@@ -12,8 +12,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "handlesystem.h"
-#include "componentselection.h"
+#include "core/handlesystem.h"
+#include "core/componentselection.h"
 #include <QMainWindow>
 #include <QMultiHash>
 #include <QVector>

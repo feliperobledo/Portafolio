@@ -11,12 +11,12 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "worldwindow.h"
-#include "worlddatabase.h"
-#include "idatamodel.h"
-#include "archetypedatabase.h"
-#include "componentmodel.h"
-#include "composite.h"
+#include "glMVC/worldwindow.h"
+#include "core/worlddatabase.h"
+#include "core/idatamodel.h"
+#include "core/archetypedatabase.h"
+#include "core/componentmodel.h"
+#include "core/composite.h"
 #include <QHBoxLayout>
 #include <QMetaObject>
 #include <QDebug>

@@ -1,7 +1,7 @@
 #ifndef INSPECTOR_H
 #define INSPECTOR_H
 
-#include "compositehandle.h"
+#include "core/compositehandle.h"
 #include <QVector>
 #include <QPointer>
 #include <QScrollArea>

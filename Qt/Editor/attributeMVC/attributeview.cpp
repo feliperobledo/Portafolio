@@ -15,9 +15,12 @@ void AttributeView::Initialize()
     m_Delegate.Initialize();
     m_View.setItemDelegate(&m_Delegate);
 
+
     //Create a layout for the view to be able to hold objects in a coherent
     //manner
-    setLayout(new QVBoxLayout(this));
+    QVBoxLayout* attributeLayout = new QVBoxLayout(this);
+    //attributeLayout->setSi
+    setLayout(attributeLayout);
     layout()->addWidget(&m_View);
     m_View.show();
 

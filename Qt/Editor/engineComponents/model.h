@@ -1,7 +1,7 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include "EngineComponent.h"
+#include "../core/EngineComponent.h"
 #include <QString>
 #include <QJsonDocument>
 #include <QOpenGLFunctions>

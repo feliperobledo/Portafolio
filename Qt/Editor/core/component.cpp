@@ -1,7 +1,7 @@
 #include "component.h"
 #include "enginecomponent.h"
-#include "model.h"
-#include "transform.h"
+#include "../engineComponents/model.h"
+#include "../engineComponents/transform.h"
 
 Component::Component(const QString &name, EngineComponent *c, QObject *parent) :
     QObject(parent),

@@ -1,10 +1,10 @@
 #include "worlddatabase.h"
 #include "composite.h"
 #include "objectfactory.h"
-#include "model.h"
-#include "transform.h"
+#include "../engineComponents/model.h"
+#include "../engineComponents/transform.h"
 #include "component.h"
-#include "attribmodel.h"
+#include "../attributeMVC/attribmodel.h"
 #include <qalgorithms.h>
 #include <QList>
 

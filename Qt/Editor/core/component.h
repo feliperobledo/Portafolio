@@ -6,7 +6,7 @@
 //changes to to a model could signify a change to either the Transform or
 //Model components
 
-#include "attribmodel.h"
+#include "../attributeMVC/attribmodel.h"
 #include <QObject>
 #include <QVariant>
 #include <QString>

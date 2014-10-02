@@ -10,8 +10,8 @@
 //  prohibited.
 // -----------------------------------------------------------------------------
 #include "attribmodel.h"
-#include "model.h"
-#include "transform.h"
+#include "../engineComponents/model.h"
+#include "../engineComponents/transform.h"
 
 AttribModel::AttribModel(QObject *parent) :
     QAbstractTableModel(parent)
