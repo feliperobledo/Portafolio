@@ -19,6 +19,8 @@ void Inspector::Initialize()
 
 
     //inspectorLayout->set
+
+    //changings something trivial
     setLayout(inspectorLayout);
 }
 
