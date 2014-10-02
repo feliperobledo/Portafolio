@@ -16,6 +16,8 @@ Inspector::Inspector(QWidget *parent) :
 void Inspector::Initialize()
 {
     QVBoxLayout* inspectorLayout = new QVBoxLayout(this);
+
+
     //inspectorLayout->set
     setLayout(inspectorLayout);
 }
