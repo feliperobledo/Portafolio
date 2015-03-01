@@ -8,14 +8,22 @@ import (
 const EPSILON float64 = 0.000001
 
 func Sqrt(x float64) float64 {
+  //With the Newton method, the lower the z value is,
+  //the closer to the square root
 	var z float64 = 1.0
 
-	prevZ := z - ( (math.Pow(z,2) - x) / (2 * z))
+	prevZ := 0.0
+  delta := z - prevZ
 
-	for (prevZ - z)>EPSILON && -(prevZ - z)<EPSILON {
+	for delta>EPSILON || -delta< -EPSILON {
+    fmt.Println("previous z: %v \n",prevZ)
+
 		newZ := z - ( (math.Pow(z,2) - x) / (2 * z))
+    fmt.Println("new z: %v \n",newZ)
+
 		prevZ = z;
 		z = newZ;
+    delta = z - prevZ;
 	}
 	return z
 }
@@ -45,4 +53,5 @@ func main() {
   }
 
   fmt.Println(Sqrt(2))
+  fmt.Println("Square root value: ",math.Sqrt(2))
 }
