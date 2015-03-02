@@ -1,0 +1,20 @@
+Project: Proj1
+Description: My very first Node.js project structure. Before learning Node.js
+             I am looking up how to set up a project directory. This is my
+             first attempt at doing so.
+
+Project Structure Reasoning:
+  bin: anything that doesn’t fit nicely inside of an npm script (e.g. hooks, ci, etc)
+
+  lib: the components of the application
+    |
+    |-contains other standalone projects used by the application
+
+  package.json: project-wide dependencies and npm scripts
+
+  index.js: initializes the application
+
+
+Resources used:
+
+- https://strongloop.com/strongblog/modular-node-js-express/
