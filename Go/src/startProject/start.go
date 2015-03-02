@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
   "runtime"
+	"frPackage"
 )
 
 const EPSILON float64 = 0.000001
@@ -41,4 +42,7 @@ func main() {
       // plan9, windows...
       fmt.Printf("%s.", os)
     }
+
+		//sample test on test package
+		fmt.Printf("%v \n",frPackage.ToPrint())
 }
