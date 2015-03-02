@@ -44,5 +44,5 @@ func main() {
     }
 
 		//sample test on test package
-		fmt.Printf("%v \n",frPackage.ToPrint())
+		fmt.Printf("Reversed sample: %s \n",frPackage.Reverse(frPackage.ToPrint()))
 }
