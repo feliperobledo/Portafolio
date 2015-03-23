@@ -3,17 +3,43 @@
   <head>
     <meta charset="UTF-16">
     <title>Title of the document</title>
-
-    <script src="firstTest.js"></script>
-
   </head>
 
   <body>
     Content of the document......
 
     <h1>My Web Page</h1>
+
     <p id="demo">A Paragraph</p>
-    <button type="button" onclick="logTest()">Try it</button>
+
+    <p id="timeDisplay">Date should display here</p>
+
+    <form>
+      UserInput:</br>
+      <input type="text" id="lineEdit" onkey="addUserInputToArray">
+      </br>
+    </form>
+
+    <button type="button" onclick="myFunction()">Try it</button>
+
+    <button type"button" onclick="changeState()">State Button</button>
+    <p id="stateDisplay">I show the state</button>
+
+
+    <!--W3 schools state that it is best for scripts to be loaded at the end
+        of a file, given that we want the whole page to be displayed to the
+        user.                                                                -->
+    <script src="firstTest.js"></script>
+    <script src="stateChanges.js"></script>
   </body>
 
 </html>
+
+<!-- Common Events:
+1.onchange
+2.onclick
+3.onmouseover
+4.onmouseout
+5.onkeydown
+6.onload
+-->
