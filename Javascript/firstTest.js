@@ -1,3 +1,8 @@
+// strict mode does not allow Hoisting, which allows the use of undeclared
+//  variables because declared. This can only be done at the beginning of a
+//  scope or a file.
+"use strict";
+
 var currDate;
 
 var userInput = [];

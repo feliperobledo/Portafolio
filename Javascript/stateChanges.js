@@ -4,8 +4,8 @@ var states = ["Start", "Middle", "End"];
 
 function changeState() {
   ++currState;
-  if(currState >= states.length || currState < 0)
-  {
+  // debugger; // this line will set a breakpoint on the web browser
+  if (currState >= states.length || currState < 0) {
     console.log("State Overflow. Restarting sequence.")
     currState = 0;
   }
@@ -20,8 +20,7 @@ function displayState() {
 }
 
 function onStateChange() {
-  switch(currState)
-  {
+  switch (currState) {
     case 0:
       break;
     case 1:
