@@ -15,4 +15,8 @@ func main() {
   // The return type of the new function is a pointer on the heap
 	var p2 = Math2D.Point2D_Int_New(5,5);
 	Math2D.Point2D_Int_Print(p2);
+
+	var pArray = Math2D.Point2D_Int_Array(5);
+	fmt.Printf("%s len=%d cap=%d %v\n", "pArray", len(pArray), cap(pArray), pArray);
+	
 }
