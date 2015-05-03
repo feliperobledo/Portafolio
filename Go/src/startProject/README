@@ -4,3 +4,10 @@ Description: This is a sample project created to demonstrate my understanding of
              problem, it may solve various or simple display the features of the
              Go language.
 Author: Felipe Robledo
+
+To compile and run Go Program:
+go install <project_name>
+  *<project_name> has to be a subdirectory under the GOPATH env. variable.
+$GOPATH/bin/<project_name>
+  *bin contains the executable binaries.
+  *<project_name> is the subdirectory under the GOPATH env. variable.

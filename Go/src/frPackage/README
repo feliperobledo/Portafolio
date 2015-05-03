@@ -1,0 +1,4 @@
+Description: this is a package subdirectory. When a Go program is compiled, it
+             will open all the related packages and compile them. As convention,
+             every source file has the "package <package_name>" line as the
+             first line, where <package_name> is the name of the subdirectory.
