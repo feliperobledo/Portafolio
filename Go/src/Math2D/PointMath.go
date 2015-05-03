@@ -15,6 +15,10 @@ type Point2D_float struct {
   Y float64
 }
 
+func Point2D_Int_New(x int, y int) *Point2D_int {
+  return &Point2D_int{x,y};
+}
+
 func Point2D_Int_Print(in *Point2D_int) {
   fmt.Println("P(",(*in).X,",",(*in).Y,")\n")
 }
