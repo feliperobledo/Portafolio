@@ -17,8 +17,11 @@ func main() {
 		defer fmt.Println("This statement was deferred.\n\n")
 	}
 	// Cannot take the address of a function :(
-  var fPtr = fmt.Println;
-	fPtr("Calling function pointer")
+  var fPtr = func() string {
+		return "PLAYING WITH ANONYMOUS FUNCTIONS!"
+	}
+
+	fmt.Println(fPtr());
 
   fmt.Println("Newton Form value: ",frPackage.Sqrt(2))
   fmt.Println("Square root value: ",math.Sqrt(2))
