@@ -7,30 +7,55 @@
 //
 
 #import "View.h"
+#include "initGL.h"
 #include <OpenGL/gl.h>
 #include <OpenGL/gltypes.h>
 
 @implementation View
 {
     GLuint m_FrameBufferIds[1];
-    GLuint m_OffScreenTextures[1];
+    GLuint m_RenderBuffers[1];
+    GLuint *m_OffScreenTextures;
 }
 
 // Use this method to allocate and initialize the NSOpenGLPixelFormat object
 + (NSOpenGLPixelFormat*)defaultPixelFormat {
-    NSOpenGLPixelFormatAttribute attributes [] =
-    {
+    
+    NSOpenGLPixelFormatAttribute attributes [] = {
+        //kCGLPFAOpenGLProfile,
+        
+        // Helps guarantee all displays support pixel format
+        NSOpenGLPFAScreenMask, 0,
+        
+        // Don't fall back to the software renderer
+        NSOpenGLPFANoRecovery,
+
+        // pixel format available to all renderers
+        NSOpenGLPFAAllRenderers,
+        
+        // Front and Back Buffer
         NSOpenGLPFADoubleBuffer,
-        NSOpenGLPFAAccelerated,         // If present, this attribute indicates that only hardware-accelerated renderers are considered.
-        NSOpenGLPFAColorSize, 32,
-        NSOpenGLPFADepthSize, 24,
+        
+        // Only hardware-accelerated renderers are considered.
+        NSOpenGLPFAAccelerated,
+        
+        // Bit sizes
+        NSOpenGLPFAColorSize,  32,
+        NSOpenGLPFADepthSize,  24,
+        NSOpenGLPFAAlphaSize,   8,
         NSOpenGLPFAStencilSize, 8,
-        NSOpenGLPFAMultisample, // I think this is antialiasing
+        
+        // Use color, depth and accumulation sizes of sizes equal to or greater
+        NSOpenGLPFAClosestPolicy,
+        
         (NSOpenGLPixelFormatAttribute)nil
     };
     
-    NSOpenGLPixelFormat* newDefaultFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
-    return newDefaultFormat;
+    // Adds the display mask attribute for selected display
+    CGDirectDisplayID display = CGMainDisplayID ();
+    attributes[1] = (NSOpenGLPixelFormatAttribute) CGDisplayIDToOpenGLDisplayMask (display);
+    
+    return  [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
 }
 
 // Retains the pixel format and sets up the notification
@@ -46,42 +71,12 @@
                                               name:NSViewGlobalFrameDidChangeNotification
                                               object:self];
         
-        m_GLContext = [[NSOpenGLContext alloc] initWithFormat:format shareContext:nil];
         
+        m_GLContext = [[NSOpenGLContext alloc] initWithFormat:format shareContext:nil];
         if(m_GLContext != nil) {
-            [m_GLContext setView:self];
-            [self setNeedsDisplay:YES];
             [self prepareOpenGL];
             
-            NSRect pixelBounds = [self convertRectToBacking:[self bounds]];
-            // Set-up for including a backed-layer. Should dive into this more
-            //    deeply later.
-            //CALayer* newBackedLayer = [[CALayer alloc]init];
-            //[self setWantsLayer:YES];
-            //[self setLayer:newBackedLayer];
-            
-            if (false) {
-                glGenFramebuffers(1, m_FrameBufferIds);
-                glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBufferIds[0]);
-                
-                glGenTextures(1, m_OffScreenTextures);
-                glBindTexture(GL_TEXTURE_2D, m_OffScreenTextures[0]);
-                
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, NSWidth(pixelBounds), NSHeight(pixelBounds), 0,
-                             GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-                // Need to remember other texture initialization...
-                
-                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE, m_OffScreenTextures[0], 4);
-                
-                GLenum ret = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-                if (ret != GL_NO_ERROR) {
-                    if( ret != GL_FRAMEBUFFER_COMPLETE) {
-                        NSLog(@"Something bad happened");
-                    }
-                }
-            }
+
         }
     }
     return self;
@@ -89,6 +84,7 @@
 
 - (void) _surfaceNeedsUpdate:(NSNotification*)notification {
     [self update];
+    //[m_GLContext update];
 }
 
 // Used to set the OpenGL context we are going to use to draw
@@ -108,11 +104,31 @@
 
 // Use this method to initialize OpenGL state after creating NSOpenGLContext
 - (void)prepareOpenGL {
+    [m_GLContext setView:self];
+    [self setNeedsDisplay:YES];
+    
     NSRect pixelBounds = [self convertRectToBacking:[self bounds]];
     [m_GLContext makeCurrentContext];
     glViewport(0, 0,
               (GLint)NSWidth(pixelBounds),
               (GLint)NSHeight(pixelBounds));
+    
+    // Set-up for including a backed-layer. Should dive into this more
+    //    deeply later.
+    //CALayer* newBackedLayer = [[CALayer alloc]init];
+    //[self setWantsLayer:YES];
+    //[self setLayer:newBackedLayer];
+    
+    if (false) {
+        m_OffScreenTextures = initGL(m_FrameBufferIds, m_RenderBuffers, 1, NSWidth(pixelBounds), NSHeight(pixelBounds));
+        
+        GLenum ret = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        if (ret != GL_NO_ERROR) {
+            if( ret != GL_FRAMEBUFFER_COMPLETE) {
+                NSLog(@"Something bad happened");
+            }
+        }
+    }
 
     //glEnable();
 }
@@ -126,21 +142,11 @@
 // Call the update method of the NSOpenGLContext class
 - (void)update {
     NSLog(@"update");
+
     if(m_GLContext) {
-        
-        [m_GLContext makeCurrentContext];
-        
-        //[super drawRect:dirtyRect];
-        
-        glClearColor(0,0,0,0);
-        glClear(GL_COLOR_BUFFER_BIT);
-        
-        // Drawing code here.
-        
-        [m_GLContext flushBuffer];
+        [m_GLContext update];
     }
     
-    //[self setNeedsDisplay:YES];
     [self display];
 }
 -(void) updateLayer {
@@ -171,7 +177,10 @@
     [context makeCurrentContext];
 }
 
+// Make all draw calls
 - (void)drawRect:(NSRect)dirtyRect {
+    NSLog(@"Drawing");
+    
     [super drawRect:dirtyRect];
     if(m_GLContext) {
         [m_GLContext makeCurrentContext];
@@ -180,6 +189,14 @@
         glClear(GL_COLOR_BUFFER_BIT);
         
         // Drawing code here.
+        glColor3f(1.0f, 0.85f, 0.35f);
+        glBegin(GL_TRIANGLES);
+        {
+            glVertex3f(  0.0,  0.6, 0.0);
+            glVertex3f( -0.2, -0.3, 0.0);
+            glVertex3f(  0.2, -0.3 ,0.0);
+        }
+        glEnd();
         
         [m_GLContext flushBuffer];
     }
@@ -201,7 +218,9 @@
     [super rightMouseDown:theEvent];
     
     NSPoint aPoint = [theEvent locationInWindow];
+    NSLog(@"Event Point: [%f,%f]\n",aPoint.x,aPoint.y);
     NSPoint localPoint = [self convertPoint:aPoint fromView:nil];
+    NSLog(@"Local Point: [%f,%f]\n",localPoint.x,localPoint.y);
 }
 
 -(void) dealloc {

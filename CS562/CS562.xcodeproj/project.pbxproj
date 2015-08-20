@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		701E2F871B7E612500807877 /* initGL.c in Sources */ = {isa = PBXBuildFile; fileRef = 701E2F861B7E612500807877 /* initGL.c */; };
 		706065561B46FBC700C884F6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 706065551B46FBC700C884F6 /* AppDelegate.m */; };
 		706065581B46FBC700C884F6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 706065571B46FBC700C884F6 /* main.m */; };
 		7060655B1B46FBC700C884F6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060655A1B46FBC700C884F6 /* ViewController.m */; };
@@ -31,6 +32,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		701E2F851B7E60DA00807877 /* initGL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = initGL.h; sourceTree = "<group>"; };
+		701E2F861B7E612500807877 /* initGL.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = initGL.c; sourceTree = "<group>"; };
 		7060654F1B46FBC700C884F6 /* CS562.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CS562.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		706065531B46FBC700C884F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		706065541B46FBC700C884F6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -72,6 +75,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		701E2F841B7E60B400807877 /* BoilerPlate */ = {
+			isa = PBXGroup;
+			children = (
+				701E2F851B7E60DA00807877 /* initGL.h */,
+				701E2F861B7E612500807877 /* initGL.c */,
+			);
+			name = BoilerPlate;
+			sourceTree = "<group>";
+		};
 		706065461B46FBC700C884F6 = {
 			isa = PBXGroup;
 			children = (
@@ -96,6 +108,7 @@
 		706065511B46FBC700C884F6 /* CS562 */ = {
 			isa = PBXGroup;
 			children = (
+				701E2F841B7E60B400807877 /* BoilerPlate */,
 				706065541B46FBC700C884F6 /* AppDelegate.h */,
 				706065551B46FBC700C884F6 /* AppDelegate.m */,
 				706065591B46FBC700C884F6 /* ViewController.h */,
@@ -240,6 +253,7 @@
 				7060655B1B46FBC700C884F6 /* ViewController.m in Sources */,
 				706065581B46FBC700C884F6 /* main.m in Sources */,
 				706065561B46FBC700C884F6 /* AppDelegate.m in Sources */,
+				701E2F871B7E612500807877 /* initGL.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

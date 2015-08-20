@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>A3CEBE81-F82A-4A1E-BEEB-55873AD798AA</string>
+	<key>IDESourceControlProjectName</key>
+	<string>project</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>E8B0E471F184CC767F1737E5226F84F4FEF37617</key>
+		<string>https://github.com/ProjectDestiny/Portafolio.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>CS562/CS562.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>E8B0E471F184CC767F1737E5226F84F4FEF37617</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/ProjectDestiny/Portafolio.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>E8B0E471F184CC767F1737E5226F84F4FEF37617</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>E8B0E471F184CC767F1737E5226F84F4FEF37617</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Portafolio</string>
+		</dict>
+	</array>
+</dict>
+</plist>

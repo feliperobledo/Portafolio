@@ -14,6 +14,10 @@
 - (void)loadView {
     NSRect newRect = NSMakeRect(0, 0, 800, 600);
     NSOpenGLPixelFormat* format = [View defaultPixelFormat];
+    if(format == nil) {
+        NSLog(@"ERROR! Pixel format not created correctly");
+        // dump some info here ...
+    }
     
     View* glView = [[View alloc] initWithFrame:newRect pixelFormat:format];
     [self setView:glView];
