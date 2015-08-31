@@ -7,20 +7,18 @@
 //
 // should connect to a controller for update (ie. on controller.Notify - view.update
 
-#import <Foundation/Foundation.h>
+#import "Connector.h"
 
 @class Entity;
 
-@interface IView : NSObject
+@interface IView : Connector
 {
     @private
-        Entity* _owner;
 }
 
 -(id) initWithOwner:(Entity*)owner;
 -(id) initWithOwner:(Entity*)owner usingSerializer:(NSObject*)ser;
 -(void) serializeWith:(NSObject*)ser;
--(const Entity*)Owner;
 
 // all other public methods are child-class dependent and should be used to inform
 //     the controller of changes.

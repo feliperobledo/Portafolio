@@ -11,27 +11,21 @@
 @implementation IModel
 
 -(id) initWithOwner:(Entity*)owner {
-    if(self != [super init]){
-        _owner = owner;
-    }
-    return self;
-}
-
--(id) initWithOwner:(Entity*)owner usingSerializer:(NSObject*)ser {
-    if(self != [super init]){
+    if(self != [super initWithOwner:owner]){
         
     }
     return self;
 }
 
-//------------------------------------------------------------------------------
+-(id) initWithOwner:(Entity*)owner usingSerializer:(NSObject*)ser {
+    if(self != [super initWithOwner:owner usingSerializer:ser]){
+        
+    }
+    return self;
+}
 
 -(void) serializeWith:(NSObject*)ser {
     // ..get data from object
-}
-
--(const Entity*)Owner{
-    return _owner;
 }
 
 @end

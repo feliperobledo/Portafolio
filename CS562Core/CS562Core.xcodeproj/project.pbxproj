@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		705DD97D1B8F5B13002FAD03 /* Connector.h in Headers */ = {isa = PBXBuildFile; fileRef = 705DD97B1B8F5B13002FAD03 /* Connector.h */; };
+		705DD97E1B8F5B13002FAD03 /* Connector.m in Sources */ = {isa = PBXBuildFile; fileRef = 705DD97C1B8F5B13002FAD03 /* Connector.m */; };
+		705DD9811B90A0C7002FAD03 /* EntityCreator.h in Headers */ = {isa = PBXBuildFile; fileRef = 705DD97F1B90A0C7002FAD03 /* EntityCreator.h */; };
+		705DD9841B923BEB002FAD03 /* EntityCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = 705DD9831B923BEB002FAD03 /* EntityCreator.m */; };
+		7099A89F1B92AD5B0004E616 /* EntityCreatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7099A89E1B92AD5B0004E616 /* EntityCreatorTests.m */; };
 		70EF71D51B84A05200E0D8FD /* CS562Core.h in Headers */ = {isa = PBXBuildFile; fileRef = 70EF71D41B84A05200E0D8FD /* CS562Core.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		70EF71DB1B84A05200E0D8FD /* CS562Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70EF71CF1B84A05200E0D8FD /* CS562Core.framework */; };
 		70EF71E21B84A05200E0D8FD /* CS562CoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 70EF71E11B84A05200E0D8FD /* CS562CoreTests.m */; };
@@ -31,6 +36,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		705DD97B1B8F5B13002FAD03 /* Connector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Connector.h; sourceTree = "<group>"; };
+		705DD97C1B8F5B13002FAD03 /* Connector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Connector.m; sourceTree = "<group>"; };
+		705DD97F1B90A0C7002FAD03 /* EntityCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntityCreator.h; sourceTree = "<group>"; };
+		705DD9831B923BEB002FAD03 /* EntityCreator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntityCreator.m; sourceTree = "<group>"; };
+		7099A89E1B92AD5B0004E616 /* EntityCreatorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntityCreatorTests.m; sourceTree = "<group>"; };
 		70EF71CF1B84A05200E0D8FD /* CS562Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CS562Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		70EF71D31B84A05200E0D8FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		70EF71D41B84A05200E0D8FD /* CS562Core.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CS562Core.h; sourceTree = "<group>"; };
@@ -94,6 +104,10 @@
 				70EF71D21B84A05200E0D8FD /* Supporting Files */,
 				70EF71EB1B84A0EE00E0D8FD /* Entity.h */,
 				70EF71EC1B84A0EE00E0D8FD /* Entity.m */,
+				705DD97B1B8F5B13002FAD03 /* Connector.h */,
+				705DD97C1B8F5B13002FAD03 /* Connector.m */,
+				705DD97F1B90A0C7002FAD03 /* EntityCreator.h */,
+				705DD9831B923BEB002FAD03 /* EntityCreator.m */,
 			);
 			path = CS562Core;
 			sourceTree = "<group>";
@@ -111,6 +125,7 @@
 			children = (
 				70EF71E11B84A05200E0D8FD /* CS562CoreTests.m */,
 				70EF71DF1B84A05200E0D8FD /* Supporting Files */,
+				7099A89E1B92AD5B0004E616 /* EntityCreatorTests.m */,
 			);
 			path = CS562CoreTests;
 			sourceTree = "<group>";
@@ -161,7 +176,9 @@
 				70EF71F81B84A13200E0D8FD /* IView.h in Headers */,
 				70EF71D51B84A05200E0D8FD /* CS562Core.h in Headers */,
 				70EF71ED1B84A0EE00E0D8FD /* Entity.h in Headers */,
+				705DD97D1B8F5B13002FAD03 /* Connector.h in Headers */,
 				70EF71FC1B84A14A00E0D8FD /* IController.h in Headers */,
+				705DD9811B90A0C7002FAD03 /* EntityCreator.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,7 +279,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				70EF71F91B84A13200E0D8FD /* IView.m in Sources */,
+				705DD97E1B8F5B13002FAD03 /* Connector.m in Sources */,
 				70EF71FD1B84A14A00E0D8FD /* IController.m in Sources */,
+				705DD9841B923BEB002FAD03 /* EntityCreator.m in Sources */,
 				70EF71EE1B84A0EE00E0D8FD /* Entity.m in Sources */,
 				70EF71F51B84A12400E0D8FD /* IModel.m in Sources */,
 			);
@@ -273,6 +292,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				70EF71E21B84A05200E0D8FD /* CS562CoreTests.m in Sources */,
+				7099A89F1B92AD5B0004E616 /* EntityCreatorTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -455,6 +475,7 @@
 				70EF71E71B84A05200E0D8FD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		70EF71E81B84A05200E0D8FD /* Build configuration list for PBXNativeTarget "CS562CoreTests" */ = {
 			isa = XCConfigurationList;
@@ -463,6 +484,7 @@
 				70EF71EA1B84A05200E0D8FD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

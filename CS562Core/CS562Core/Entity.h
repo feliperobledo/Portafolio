@@ -15,22 +15,31 @@
 @interface Entity : NSObject
 {
     @private;
-    unsigned long _id;
+    uint64 _id;
 }
-@property NSString*       _name;
-@property Entity*         _parent;
-@property NSMutableArray* _children;
-@property NSMapTable*     _models;
-@property NSMapTable*     _views;
-@property NSMapTable*     _controllers;
 
--(id)initWithId:(unsigned long)ID;
--(id)initWithId:(unsigned long)ID withName:(NSString*)name;
--(id)initWithId:(unsigned long)ID withName:(NSString*)name utilizeSerializer:(NSObject*)ser;
+@property (retain) NSString*       _name;
+@property (retain) Entity*         _parent;
+@property (retain) NSMutableArray* _children;
+@property (retain) NSMapTable*     _models;
+@property (retain) NSMapTable*     _views;
+@property (retain) NSMapTable*     _controllers;
+
+-(id)initWithId:(uint64)ID andParent:(Entity*)parent;
+-(id)initWithId:(uint64)ID withName:(NSString*)name andParent:(Entity*)parent;
+-(id)initWithId:(uint64)ID withName:(NSString*)name utilizeSerializer:(NSObject*)ser andParent:(Entity*)p;
 -(void)postInit;
+
+-(uint64)getID;
+
+// Can only be called by EntityCreator
+-(void)setID:(uint64)newID;
 
 -(void)addChild:(Entity*)newChild;
 -(NSMutableArray*)getChild:(NSString*)name;
+
+-(Entity*) getParent;
+-(void) setParent:(Entity*)newParent;
 
 -(void)addModel:(IModel*)model;
 -(void)addView:(IView*)view;

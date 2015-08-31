@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>A3CEBE81-F82A-4A1E-BEEB-55873AD798AA</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>CS562</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>E8B0E471F184CC767F1737E5226F84F4FEF37617</key>
 		<string>https://github.com/ProjectDestiny/Portafolio.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>CS562/CS562.xcodeproj/project.xcworkspace</string>
+	<string>CS562/CS562.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>E8B0E471F184CC767F1737E5226F84F4FEF37617</key>

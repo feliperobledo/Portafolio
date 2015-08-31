@@ -20,23 +20,26 @@
 @synthesize _views       = Views;
 @synthesize _controllers = Controllers;
 
--(id)initWithId:(unsigned long)ID {
+-(id)initWithId:(uint64)ID andParent:(Entity *)parent{
     if (self != [super init]) {
         _id = ID;
+        [self setParent:parent];
     }
     return self;
 }
 
--(id)initWithId:(unsigned long)ID withName:(NSString*)name {
+-(id)initWithId:(uint64)ID withName:(NSString*)name andParent:(Entity *)parent{
     if (self != [super init]) {
         _id = ID;
+        [self setParent:parent];
     }
     return self;
 }
 
--(id)initWithId:(unsigned long)ID withName:(NSString*)name utilizeSerializer:(NSObject*)ser {
+-(id)initWithId:(uint64)ID withName:(NSString*)name utilizeSerializer:(NSObject*)ser andParent:(Entity *)p{
     if (self != [super init]) {
         _id = ID;
+        [self setParent:p];
         [self serializeSelfWith:ser];
     }
     return self;
@@ -57,6 +60,15 @@
     }
 }
 
+-(uint64)getID {
+    return self->_id;
+}
+
+// Can only be called by EntityCreator
+-(void)setID:(uint64)newID {
+    self->_id = newID;
+}
+
 // -----------------------------------------------------------------------------
 -(void)addChild:(Entity*)newChild {
 
@@ -64,6 +76,14 @@
 
 -(NSMutableArray*)getChild:(NSString*)name {
     return nil;
+}
+
+-(Entity*) getParent {
+    return Parent;
+}
+
+-(void) setParent:(Entity*)newParent {
+    Parent = newParent;
 }
 
 // -----------------------------------------------------------------------------
