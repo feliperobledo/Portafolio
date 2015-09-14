@@ -7,22 +7,30 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		705DD97D1B8F5B13002FAD03 /* Connector.h in Headers */ = {isa = PBXBuildFile; fileRef = 705DD97B1B8F5B13002FAD03 /* Connector.h */; };
+		700D0B981BA63416009D9230 /* nsobject-extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 700D0B971BA63416009D9230 /* nsobject-extensions.m */; };
+		700D0B9F1BA64C3C009D9230 /* nsobject-extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 700D0B961BA633F7009D9230 /* nsobject-extensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		705DD97D1B8F5B13002FAD03 /* Connector.h in Headers */ = {isa = PBXBuildFile; fileRef = 705DD97B1B8F5B13002FAD03 /* Connector.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		705DD97E1B8F5B13002FAD03 /* Connector.m in Sources */ = {isa = PBXBuildFile; fileRef = 705DD97C1B8F5B13002FAD03 /* Connector.m */; };
-		705DD9811B90A0C7002FAD03 /* EntityCreator.h in Headers */ = {isa = PBXBuildFile; fileRef = 705DD97F1B90A0C7002FAD03 /* EntityCreator.h */; };
+		705DD9811B90A0C7002FAD03 /* EntityCreator.h in Headers */ = {isa = PBXBuildFile; fileRef = 705DD97F1B90A0C7002FAD03 /* EntityCreator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		705DD9841B923BEB002FAD03 /* EntityCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = 705DD9831B923BEB002FAD03 /* EntityCreator.m */; };
+		7071A3881B96D4A300967316 /* Introspection.h in Headers */ = {isa = PBXBuildFile; fileRef = 7071A3861B96D4A300967316 /* Introspection.h */; };
+		7071A3891B96D4A300967316 /* Introspection.m in Sources */ = {isa = PBXBuildFile; fileRef = 7071A3871B96D4A300967316 /* Introspection.m */; };
 		7099A89F1B92AD5B0004E616 /* EntityCreatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7099A89E1B92AD5B0004E616 /* EntityCreatorTests.m */; };
 		70EF71D51B84A05200E0D8FD /* CS562Core.h in Headers */ = {isa = PBXBuildFile; fileRef = 70EF71D41B84A05200E0D8FD /* CS562Core.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		70EF71DB1B84A05200E0D8FD /* CS562Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70EF71CF1B84A05200E0D8FD /* CS562Core.framework */; };
 		70EF71E21B84A05200E0D8FD /* CS562CoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 70EF71E11B84A05200E0D8FD /* CS562CoreTests.m */; };
-		70EF71ED1B84A0EE00E0D8FD /* Entity.h in Headers */ = {isa = PBXBuildFile; fileRef = 70EF71EB1B84A0EE00E0D8FD /* Entity.h */; };
+		70EF71ED1B84A0EE00E0D8FD /* Entity.h in Headers */ = {isa = PBXBuildFile; fileRef = 70EF71EB1B84A0EE00E0D8FD /* Entity.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		70EF71EE1B84A0EE00E0D8FD /* Entity.m in Sources */ = {isa = PBXBuildFile; fileRef = 70EF71EC1B84A0EE00E0D8FD /* Entity.m */; };
-		70EF71F41B84A12400E0D8FD /* IModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 70EF71F21B84A12400E0D8FD /* IModel.h */; };
+		70EF71F41B84A12400E0D8FD /* IModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 70EF71F21B84A12400E0D8FD /* IModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		70EF71F51B84A12400E0D8FD /* IModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 70EF71F31B84A12400E0D8FD /* IModel.m */; };
-		70EF71F81B84A13200E0D8FD /* IView.h in Headers */ = {isa = PBXBuildFile; fileRef = 70EF71F61B84A13200E0D8FD /* IView.h */; };
+		70EF71F81B84A13200E0D8FD /* IView.h in Headers */ = {isa = PBXBuildFile; fileRef = 70EF71F61B84A13200E0D8FD /* IView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		70EF71F91B84A13200E0D8FD /* IView.m in Sources */ = {isa = PBXBuildFile; fileRef = 70EF71F71B84A13200E0D8FD /* IView.m */; };
-		70EF71FC1B84A14A00E0D8FD /* IController.h in Headers */ = {isa = PBXBuildFile; fileRef = 70EF71FA1B84A14A00E0D8FD /* IController.h */; };
+		70EF71FC1B84A14A00E0D8FD /* IController.h in Headers */ = {isa = PBXBuildFile; fileRef = 70EF71FA1B84A14A00E0D8FD /* IController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		70EF71FD1B84A14A00E0D8FD /* IController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70EF71FB1B84A14A00E0D8FD /* IController.m */; };
+		70FD91501BA3324B000CC95C /* Data.json in Resources */ = {isa = PBXBuildFile; fileRef = 70FD914F1BA3324B000CC95C /* Data.json */; };
+		70FD91531BA36652000CC95C /* SampleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70FD91521BA36652000CC95C /* SampleController.m */; };
+		70FD91561BA36675000CC95C /* SampleModel1.m in Sources */ = {isa = PBXBuildFile; fileRef = 70FD91551BA36675000CC95C /* SampleModel1.m */; };
+		70FD91591BA36706000CC95C /* SampleModel2.m in Sources */ = {isa = PBXBuildFile; fileRef = 70FD91581BA36706000CC95C /* SampleModel2.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,11 +43,27 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		700D0B9E1BA64BF7009D9230 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		700D0B961BA633F7009D9230 /* nsobject-extensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "nsobject-extensions.h"; sourceTree = "<group>"; };
+		700D0B971BA63416009D9230 /* nsobject-extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "nsobject-extensions.m"; sourceTree = "<group>"; };
 		705DD97B1B8F5B13002FAD03 /* Connector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Connector.h; sourceTree = "<group>"; };
 		705DD97C1B8F5B13002FAD03 /* Connector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Connector.m; sourceTree = "<group>"; };
 		705DD97F1B90A0C7002FAD03 /* EntityCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntityCreator.h; sourceTree = "<group>"; };
 		705DD9831B923BEB002FAD03 /* EntityCreator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntityCreator.m; sourceTree = "<group>"; };
+		7071A3861B96D4A300967316 /* Introspection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Introspection.h; sourceTree = "<group>"; };
+		7071A3871B96D4A300967316 /* Introspection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Introspection.m; sourceTree = "<group>"; };
 		7099A89E1B92AD5B0004E616 /* EntityCreatorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntityCreatorTests.m; sourceTree = "<group>"; };
 		70EF71CF1B84A05200E0D8FD /* CS562Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CS562Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		70EF71D31B84A05200E0D8FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -55,6 +79,13 @@
 		70EF71F71B84A13200E0D8FD /* IView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IView.m; sourceTree = "<group>"; };
 		70EF71FA1B84A14A00E0D8FD /* IController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IController.h; sourceTree = "<group>"; };
 		70EF71FB1B84A14A00E0D8FD /* IController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IController.m; sourceTree = "<group>"; };
+		70FD914F1BA3324B000CC95C /* Data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = Data.json; path = SampleData/Data.json; sourceTree = "<group>"; };
+		70FD91511BA36652000CC95C /* SampleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleController.h; sourceTree = "<group>"; };
+		70FD91521BA36652000CC95C /* SampleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleController.m; sourceTree = "<group>"; };
+		70FD91541BA36675000CC95C /* SampleModel1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleModel1.h; sourceTree = "<group>"; };
+		70FD91551BA36675000CC95C /* SampleModel1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleModel1.m; sourceTree = "<group>"; };
+		70FD91571BA36706000CC95C /* SampleModel2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleModel2.h; sourceTree = "<group>"; };
+		70FD91581BA36706000CC95C /* SampleModel2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleModel2.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +107,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		700D0B951BA633C3009D9230 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				700D0B961BA633F7009D9230 /* nsobject-extensions.h */,
+				700D0B971BA63416009D9230 /* nsobject-extensions.m */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
 		70EF71C51B84A05200E0D8FD = {
 			isa = PBXGroup;
 			children = (
@@ -97,6 +137,7 @@
 		70EF71D11B84A05200E0D8FD /* CS562Core */ = {
 			isa = PBXGroup;
 			children = (
+				700D0B951BA633C3009D9230 /* Extensions */,
 				70EF71F11B84A10E00E0D8FD /* controller */,
 				70EF71F01B84A10400E0D8FD /* view */,
 				70EF71EF1B84A0F700E0D8FD /* model */,
@@ -108,6 +149,8 @@
 				705DD97C1B8F5B13002FAD03 /* Connector.m */,
 				705DD97F1B90A0C7002FAD03 /* EntityCreator.h */,
 				705DD9831B923BEB002FAD03 /* EntityCreator.m */,
+				7071A3861B96D4A300967316 /* Introspection.h */,
+				7071A3871B96D4A300967316 /* Introspection.m */,
 			);
 			path = CS562Core;
 			sourceTree = "<group>";
@@ -123,6 +166,8 @@
 		70EF71DE1B84A05200E0D8FD /* CS562CoreTests */ = {
 			isa = PBXGroup;
 			children = (
+				70FD915A1BA380DF000CC95C /* SampleMVCInstances */,
+				70FD914F1BA3324B000CC95C /* Data.json */,
 				70EF71E11B84A05200E0D8FD /* CS562CoreTests.m */,
 				70EF71DF1B84A05200E0D8FD /* Supporting Files */,
 				7099A89E1B92AD5B0004E616 /* EntityCreatorTests.m */,
@@ -165,6 +210,19 @@
 			name = controller;
 			sourceTree = "<group>";
 		};
+		70FD915A1BA380DF000CC95C /* SampleMVCInstances */ = {
+			isa = PBXGroup;
+			children = (
+				70FD91511BA36652000CC95C /* SampleController.h */,
+				70FD91521BA36652000CC95C /* SampleController.m */,
+				70FD91541BA36675000CC95C /* SampleModel1.h */,
+				70FD91551BA36675000CC95C /* SampleModel1.m */,
+				70FD91571BA36706000CC95C /* SampleModel2.h */,
+				70FD91581BA36706000CC95C /* SampleModel2.m */,
+			);
+			name = SampleMVCInstances;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -172,13 +230,15 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70EF71D51B84A05200E0D8FD /* CS562Core.h in Headers */,
 				70EF71F41B84A12400E0D8FD /* IModel.h in Headers */,
 				70EF71F81B84A13200E0D8FD /* IView.h in Headers */,
-				70EF71D51B84A05200E0D8FD /* CS562Core.h in Headers */,
 				70EF71ED1B84A0EE00E0D8FD /* Entity.h in Headers */,
 				705DD97D1B8F5B13002FAD03 /* Connector.h in Headers */,
 				70EF71FC1B84A14A00E0D8FD /* IController.h in Headers */,
+				700D0B9F1BA64C3C009D9230 /* nsobject-extensions.h in Headers */,
 				705DD9811B90A0C7002FAD03 /* EntityCreator.h in Headers */,
+				7071A3881B96D4A300967316 /* Introspection.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,6 +253,7 @@
 				70EF71CB1B84A05200E0D8FD /* Frameworks */,
 				70EF71CC1B84A05200E0D8FD /* Headers */,
 				70EF71CD1B84A05200E0D8FD /* Resources */,
+				700D0B9E1BA64BF7009D9230 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -268,6 +329,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70FD91501BA3324B000CC95C /* Data.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,7 +345,9 @@
 				70EF71FD1B84A14A00E0D8FD /* IController.m in Sources */,
 				705DD9841B923BEB002FAD03 /* EntityCreator.m in Sources */,
 				70EF71EE1B84A0EE00E0D8FD /* Entity.m in Sources */,
+				700D0B981BA63416009D9230 /* nsobject-extensions.m in Sources */,
 				70EF71F51B84A12400E0D8FD /* IModel.m in Sources */,
+				7071A3891B96D4A300967316 /* Introspection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,8 +355,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70FD91591BA36706000CC95C /* SampleModel2.m in Sources */,
 				70EF71E21B84A05200E0D8FD /* CS562CoreTests.m in Sources */,
+				70FD91561BA36675000CC95C /* SampleModel1.m in Sources */,
 				7099A89F1B92AD5B0004E616 /* EntityCreatorTests.m in Sources */,
+				70FD91531BA36652000CC95C /* SampleController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -384,6 +451,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = macosx;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -393,6 +461,7 @@
 		70EF71E61B84A05200E0D8FD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLY_RULES_IN_COPY_FILES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -400,6 +469,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = CS562Core/Info.plist;
+				INFOPLIST_PREPROCESS = YES;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -410,6 +480,7 @@
 		70EF71E71B84A05200E0D8FD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLY_RULES_IN_COPY_FILES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -417,6 +488,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = CS562Core/Info.plist;
+				INFOPLIST_PREPROCESS = YES;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";

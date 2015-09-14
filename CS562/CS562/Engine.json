@@ -1,0 +1,22 @@
+{
+    "Name" : "Engine",
+    "Children" : [
+    ],
+    "Models" : {
+        "MeshStore" : {
+            
+            "meshObjFileNames" : [
+                "Bunny.obj",
+                "Horse.obj",
+                "Dragon.obj",
+            ],
+            
+        }
+    },
+    "Views" : {
+        
+    },
+    "Controller" : {
+        
+    }
+}

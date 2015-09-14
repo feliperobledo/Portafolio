@@ -10,7 +10,8 @@
 
 @class Entity;
 
-#define CHUNK_SIZE 256
+#define CHUNK_SIZE 10
+#define INVALID_ID 0
 
 @interface EntityCreator : NSObject
 {
@@ -22,12 +23,14 @@
     
 }
 
+// An array to arrays. Each entry has CHUNK_SIZE elements
 @property (nonatomic, retain, strong) NSMutableArray* _objectTable;
+// An array of unsigned long NSNumbers. 
 @property (nonatomic, retain, strong) NSMutableArray* _freeList;
 
-
+-(id) init;
 -(uint64) newEmptyEntity:(Entity*)parent;
--(uint64) newEntity:(Entity*)parent fromJSONFile:(NSString*)filename;
+-(uint64) newEntity:(Entity*)parent fromJSONFile:(NSData*)fileData;
 
 //------------------------------------------------------------------------------
 
@@ -46,3 +49,4 @@
 +(uint32) getIndexFromID:(uint64)ID;
 
 @end
+

@@ -17,7 +17,8 @@
 }
 
 -(id) initWithOwner:(Entity*)owner;
--(id) initWithOwner:(Entity*)owner usingSerializer:(NSObject*)ser;
+-(id) initWithOwner:(Entity*)owner usingSerializer:(NSDictionary*)ser;
+-(id) initWithDictionary:(NSDictionary*)dict;
 -(void) serializeWith:(NSObject*)ser;
 
 // all other public methods are child-class dependent and should be used to inform

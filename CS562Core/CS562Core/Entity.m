@@ -10,6 +10,7 @@
 #import "IView.h"
 #import "IModel.h"
 #import "IController.h"
+#import <EntityCreator.h>
 
 @implementation Entity
 
@@ -21,25 +22,30 @@
 @synthesize _controllers = Controllers;
 
 -(id)initWithId:(uint64)ID andParent:(Entity *)parent{
-    if (self != [super init]) {
+    if (self == [super init]) {
         _id = ID;
         [self setParent:parent];
+        [self initAllMem];
     }
     return self;
 }
 
 -(id)initWithId:(uint64)ID withName:(NSString*)name andParent:(Entity *)parent{
-    if (self != [super init]) {
+    if (self == [super init]) {
         _id = ID;
         [self setParent:parent];
+        [self initAllMem];
+        Name = name;
     }
     return self;
 }
 
 -(id)initWithId:(uint64)ID withName:(NSString*)name utilizeSerializer:(NSObject*)ser andParent:(Entity *)p{
-    if (self != [super init]) {
+    if (self == [super init]) {
         _id = ID;
         [self setParent:p];
+        [self initAllMem];
+        Name = name;
         [self serializeSelfWith:ser];
     }
     return self;
@@ -69,6 +75,10 @@
     self->_id = newID;
 }
 
+-(void)setName:(NSString*)name {
+    Name = name;
+}
+
 // -----------------------------------------------------------------------------
 -(void)addChild:(Entity*)newChild {
 
@@ -86,13 +96,14 @@
     Parent = newParent;
 }
 
-// -----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 -(void)addModel:(IModel*)model {
     NSString* className = NSStringFromClass([model class]);
     if([Models valueForKey:className] != nil) {
         return;
     }
-    [Models insertValue:model inPropertyWithKey:[className lowercaseString]];
+    [Models setObject:model forKey:[className lowercaseString]];
+    [model setOwner:self];
 }
 
 -(void)addView:(IView*)view {
@@ -100,7 +111,8 @@
     if([Views valueForKey:className] != nil) {
         return;
     }
-    [Views insertValue:view inPropertyWithKey:[className lowercaseString]];
+    [Views setObject:view forKey:[className lowercaseString]];
+    [view setOwner:self];
 }
 
 -(void)addController:(IController*)controller {
@@ -108,45 +120,55 @@
     if([Controllers valueForKey:className] != nil) {
         return;
     }
-    [Controllers insertValue:controller inPropertyWithKey:[className lowercaseString]];
+    [Controllers setObject:controller forKey:[className lowercaseString]];
+    [controller setOwner:self];
+}
+
+-(IModel*)getModelWithName:(NSString*)modelName {
+    NSString *temp = [modelName lowercaseString];
+    return [Models valueForKey:temp];
+}
+
+-(IView*)getViewWithName:(NSString*)viewName {
+    NSString *temp = [viewName lowercaseString];
+    return [Views valueForKey:temp];
+}
+
+-(IController*)getControllerName:(NSString*)controllerName {
+    NSString *temp = [controllerName lowercaseString];
+    return [Controllers valueForKey:temp];
 }
 
 -(void)removeModelUsingInstance:(IModel*)model {
     NSString* className = NSStringFromClass([model class]);
-    if([Models valueForKey:className] == nil) {
-        return;
-    }
-    [Models removeObjectForKey:[className lowercaseString]];
+    [self removeModelUsingName:className];
+    [model setOwner:nil];
 }
 
 -(void)removeViewUsingInstance:(IView*)view {
     NSString* className = NSStringFromClass([view class]);
-    if([Views valueForKey:className] == nil) {
-        return;
-    }
-    [Views removeObjectForKey:[className lowercaseString]];
+    [self removeViewUsingName:className];
+    [view setOwner:nil];
 }
 
 -(void)removeControllerUsingInstance:(IController*)controller {
     NSString* className = NSStringFromClass([controller class]);
-    if([Controllers valueForKey:className] == nil) {
-        return;
-    }
-    [Controllers removeObjectForKey:[className lowercaseString]];
+    [self removeControllerUsingName:className];
+    [controller setOwner:nil];
 }
 
 -(void)removeModelUsingName:(NSString*)name {
     if([Controllers valueForKey:name] == nil) {
         return;
     }
-    [Controllers removeObjectForKey:[name lowercaseString]];
+    [Models removeObjectForKey:[name lowercaseString]];
 }
 
 -(void)removeViewUsingName:(NSString*)name {
     if([Controllers valueForKey:name] == nil) {
         return;
     }
-    [Controllers removeObjectForKey:[name lowercaseString]];
+    [Views removeObjectForKey:[name lowercaseString]];
 }
 
 -(void)removeControllerUsingName:(NSString*)name {
@@ -170,4 +192,13 @@
     // - list of views
     // - list of children entities
 }
+
+-(void) initAllMem {
+    Name        = [[NSString       alloc] init];
+    Children    = [[NSMutableArray alloc] init];
+    Models      = [[NSMutableDictionary  alloc] init];
+    Views       = [[NSMutableDictionary  alloc] init];
+    Controllers = [[NSMutableDictionary  alloc] init];
+}
+
 @end

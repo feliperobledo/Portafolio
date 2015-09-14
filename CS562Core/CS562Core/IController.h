@@ -13,11 +13,23 @@
 
 @class Entity;
 
+// Should intead inherit from NSResponder
+/* For my own looping, I need to create a timer as follows:
+ *
+ *  const float framerate = 40;
+    const float frequency = 1.0f/framerate;
+    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:frequency
+        target:self selector:@selector(update) userInfo:nil repeats:YES];
+ *
+ *
+ * This code would have to be in the main world view.
+ */
 @interface IController : Connector
 
 
 -(id) initWithOwner:(Entity*)owner;
--(id) initWithOwner:(Entity*)owner usingSerializer:(NSObject*)ser;
+-(id) initWithOwner:(Entity*)owner usingSerializer:(NSDictionary*)ser;
+-(id) initWithDictionary:(NSDictionary*)dict;
 -(void) serializeWith:(NSObject*)ser;
 
 // controller only methods

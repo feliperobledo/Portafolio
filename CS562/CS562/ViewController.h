@@ -7,9 +7,13 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <CS562Core/CS562Core.h>
+
 
 @interface ViewController : NSViewController
 
+@property EntityCreator* _entityCreator;
+@property Entity* _engine;
 
 @end
 

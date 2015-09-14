@@ -21,9 +21,9 @@
 @property (retain) NSString*       _name;
 @property (retain) Entity*         _parent;
 @property (retain) NSMutableArray* _children;
-@property (retain) NSMapTable*     _models;
-@property (retain) NSMapTable*     _views;
-@property (retain) NSMapTable*     _controllers;
+@property (retain) NSMutableDictionary*     _models;
+@property (retain) NSMutableDictionary*     _views;
+@property (retain) NSMutableDictionary*     _controllers;
 
 -(id)initWithId:(uint64)ID andParent:(Entity*)parent;
 -(id)initWithId:(uint64)ID withName:(NSString*)name andParent:(Entity*)parent;
@@ -34,6 +34,7 @@
 
 // Can only be called by EntityCreator
 -(void)setID:(uint64)newID;
+-(void)setName:(NSString*)name;
 
 -(void)addChild:(Entity*)newChild;
 -(NSMutableArray*)getChild:(NSString*)name;
@@ -45,6 +46,11 @@
 -(void)addView:(IView*)view;
 -(void)addController:(IController*)controller;
 
+-(IModel*)getModelWithName:(NSString*)modelName;
+-(IView*)getViewWithName:(NSString*)viewName;
+-(IController*)getControllerName:(NSString*)controllerName;
+
+
 -(void)removeModelUsingInstance:(IModel*)model;
 -(void)removeViewUsingInstance:(IView*)view;
 -(void)removeControllerUsingInstance:(IController*)controller;
@@ -52,7 +58,6 @@
 -(void)removeModelUsingName:(NSString*)name;
 -(void)removeViewUsingName:(NSString*)name;
 -(void)removeControllerUsingName:(NSString*)name;
-
 
 
 @end

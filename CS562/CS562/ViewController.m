@@ -21,6 +21,27 @@
     
     View* glView = [[View alloc] initWithFrame:newRect pixelFormat:format];
     [self setView:glView];
+    
+    __entityCreator = [[EntityCreator alloc] init];
+    
+    NSBundle* bundle = [NSBundle mainBundle];
+    NSString* path = [bundle pathForResource:@"Engine" ofType:@"json"];
+    NSData* objData = [NSData dataWithContentsOfFile:path];
+    
+    uint64 engineID = [__entityCreator newEntity:nil fromJSONFile:objData];
+    if (engineID == 0) {
+        NSLog(@"Engine Created: FAIL");
+        return;
+    }
+    NSLog(@"Engine Created: SUCCESS");
+    
+    __engine = [__entityCreator getEntity:engineID];
+    if (__engine == nil) {
+        NSLog(@"Engine Retrieved: FAIL");
+        return;
+    }
+    NSLog(@"Engine Retrieved: SUCCESS");
+    
 }
 
 - (void) viewWillAppear {

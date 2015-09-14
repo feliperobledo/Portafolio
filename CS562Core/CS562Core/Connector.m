@@ -13,16 +13,24 @@
 
 
 -(id) initWithOwner:(Entity*)owner {
-    if(self != [super init]){
+    if(self == [super init]){
         _owner = owner;
     }
     return self;
 }
 
--(id) initWithOwner:(Entity*)owner usingSerializer:(NSObject*)ser {
-    if(self != [super init]){
+-(id) initWithOwner:(Entity*)owner usingSerializer:(NSDictionary*)ser {
+    if(self == [super init]){
         
     }
+    return self;
+}
+
+/* Mimic dictionary interface.
+ * Required for component initialization
+ */
+-(id) initWithDictionary:(NSDictionary*)dict {
+    
     return self;
 }
 
@@ -30,34 +38,12 @@
     // ..get data from object
 }
 
+-(void) setOwner:(Entity*)newOwner{
+    _owner = newOwner;
+}
+
 -(const Entity*)Owner{
     return _owner;
-}
-
-//------------------------------------------------------------------------------
-
--(void) connect:(SEL)method toSignal:(NSString*)signal from:(Connector*)caster {
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                          selector:method
-                                          name:signal
-                                          object:caster];
-    
-    /*
-     Be sure to invoke removeObserver:name:object: before notificationObserver or any object specified in addObserver:selector:name:object: is deallocated.
-     */
-}
-
--(void) disconnect:(NSString*)signalName {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:signalName object:nil];
-}
-
--(void) disconnectionCompletely {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
--(void) emmit:(NSString*)signalName withData:(NSDictionary*)data {
-    [[NSNotificationCenter defaultCenter] postNotificationName:signalName object:self userInfo:data];
 }
 
 @end

@@ -11,16 +11,24 @@
 @implementation IView
 
 -(id) initWithOwner:(Entity*)owner {
-    if(self != [super initWithOwner:owner]){
+    if(self == [super initWithOwner:owner]){
         
     }
     return self;
 }
 
--(id) initWithOwner:(Entity*)owner usingSerializer:(NSObject*)ser {
-    if(self != [super initWithOwner:owner usingSerializer:ser]){
+-(id) initWithOwner:(Entity*)owner usingSerializer:(NSDictionary*)ser {
+    if(self == [super initWithOwner:owner usingSerializer:ser]){
         
     }
+    return self;
+}
+
+/* Mimic dictionary interface.
+ * Required for component initialization
+ */
+-(id) initWithDictionary:(NSDictionary*)dict {
+    
     return self;
 }
 

@@ -4,3 +4,14 @@
 controls. I need to review this because it doesn't make much sense.
 - There is a whole chapter on full screen applications. I need to review this
 later on.
+
+# Outcomes
+- I just learned how to include a framework in XCode. First you have to make
+one. You have to build it for buth Running and Profiling. You can then drag and
+drop (from the finder) the .framework of it, and your project will now have a
+reference to it. Since you will be using the binary from it, make sure to include
+it in your project's "Embedded Binaries" portion. From there, make sure that
+your framework does copy the header files when built by going to your project
+settings -> Build Phases and dragging all the Project headers to the public
+section (note that these headers should be the same ones you mention in your
+master header). This should be it!

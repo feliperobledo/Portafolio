@@ -1,0 +1,81 @@
+{
+  "Name" : "Sample" ,
+  "Children" : [
+    {
+        "Name" : "Foo",
+        "Children" : [
+        ],
+        "Models" : {
+            "SampleModel1" : {
+                "age"  : 10,
+                "name" : "Eily",
+                "students" : ["Felipe","Someone"],
+            },
+            "SampleModel2" : {
+                "radius" : 1.0005,
+                "position" : {
+                "x" : 1,
+                "y" : 0,
+                "z" : 0,
+                },
+            },
+        },
+        "Controllers" : {
+            "SampleController" : {
+            },
+        },
+        "Views" : {
+        },
+    },
+    {
+        "Name" : "Foo",
+        "Children" : [
+        ],
+        "Models" : {
+            "SampleModel1" : {
+                "age"  : 10,
+                "name" : "Eily",
+                "students" : ["Felipe","Someone"],
+            },
+            "SampleModel2" : {
+                "radius" : 1.0005,
+                "position" : {
+                "x" : 1,
+                "y" : 0,
+                "z" : 0,
+                },
+            },
+        },
+        "Controllers" : {
+            "SampleController" : {
+            },
+        },
+        "Views" : {
+        },
+    },
+  ],
+  "Models" : {
+    "SampleModel1" : {
+        "age"  : 10,
+        "name" : "Eily",
+        "students" : ["Felipe","Someone"],
+      },
+    "SampleModel2" : {
+        "radius" : 1.0005,
+        "position" : {
+          "x" : 1,
+          "y" : 0,
+          "z" : 0,
+        },
+      },
+    },
+  "Controllers" : {
+    "SampleController" : {
+    },
+  },
+  "Views" : {
+  },
+}
+
+
+

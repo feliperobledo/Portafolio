@@ -17,10 +17,18 @@
     return self;
 }
 
--(id) initWithOwner:(Entity*)owner usingSerializer:(NSObject*)ser {
+-(id) initWithOwner:(Entity*)owner usingSerializer:(NSDictionary*)ser {
     if(self != [super initWithOwner:owner usingSerializer:ser]){
         
     }
+    return self;
+}
+
+/* Mimic dictionary interface.
+ * Required for component initialization
+ */
+-(id) initWithDictionary:(NSDictionary*)dict {
+    
     return self;
 }
 

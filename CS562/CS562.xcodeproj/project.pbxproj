@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		700D0BA51BA7542B009D9230 /* MeshStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 700D0BA41BA7542B009D9230 /* MeshStore.m */; };
+		700D0BAF1BA75810009D9230 /* CS562Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 700D0BAD1BA757F6009D9230 /* CS562Core.framework */; };
+		700D0BB01BA75810009D9230 /* CS562Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 700D0BAD1BA757F6009D9230 /* CS562Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		700D0BB61BA761EE009D9230 /* Mesh.m in Sources */ = {isa = PBXBuildFile; fileRef = 700D0BB11BA761EE009D9230 /* Mesh.m */; };
+		700D0BB91BA767B5009D9230 /* Engine.json in Resources */ = {isa = PBXBuildFile; fileRef = 700D0BB81BA767B5009D9230 /* Engine.json */; };
+		700D0BBB1BA7682B009D9230 /* Sample.json in Resources */ = {isa = PBXBuildFile; fileRef = 700D0BBA1BA7682B009D9230 /* Sample.json */; };
+		700D0BBD1BA76EA4009D9230 /* MeshData in Resources */ = {isa = PBXBuildFile; fileRef = 700D0BBC1BA76EA4009D9230 /* MeshData */; };
 		701E2F871B7E612500807877 /* initGL.c in Sources */ = {isa = PBXBuildFile; fileRef = 701E2F861B7E612500807877 /* initGL.c */; };
 		706065561B46FBC700C884F6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 706065551B46FBC700C884F6 /* AppDelegate.m */; };
 		706065581B46FBC700C884F6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 706065571B46FBC700C884F6 /* main.m */; };
@@ -31,7 +38,31 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		700D0B9D1BA63C97009D9230 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				700D0BB01BA75810009D9230 /* CS562Core.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		700D0BA31BA7542B009D9230 /* MeshStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeshStore.h; sourceTree = "<group>"; };
+		700D0BA41BA7542B009D9230 /* MeshStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeshStore.m; sourceTree = "<group>"; };
+		700D0BAD1BA757F6009D9230 /* CS562Core.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CS562Core.framework; path = "../../Library/Developer/Xcode/DerivedData/CS562Core-gqvecmhxcyfrpdfkmhgyucqdckgf/Build/Products/Release/CS562Core.framework"; sourceTree = "<group>"; };
+		700D0BB11BA761EE009D9230 /* Mesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Mesh.m; sourceTree = "<group>"; };
+		700D0BB21BA761EE009D9230 /* Mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mesh.h; sourceTree = "<group>"; };
+		700D0BB41BA761EE009D9230 /* HalfEdgeMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HalfEdgeMethods.h; sourceTree = "<group>"; };
+		700D0BB51BA761EE009D9230 /* MacroCommons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacroCommons.h; sourceTree = "<group>"; };
+		700D0BB81BA767B5009D9230 /* Engine.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Engine.json; sourceTree = "<group>"; };
+		700D0BBA1BA7682B009D9230 /* Sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Sample.json; sourceTree = "<group>"; };
+		700D0BBC1BA76EA4009D9230 /* MeshData */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MeshData; sourceTree = "<group>"; };
 		701E2F851B7E60DA00807877 /* initGL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = initGL.h; sourceTree = "<group>"; };
 		701E2F861B7E612500807877 /* initGL.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = initGL.c; sourceTree = "<group>"; };
 		7060654F1B46FBC700C884F6 /* CS562.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CS562.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -62,6 +93,7 @@
 				7073CE721B4A383B00E3FEB8 /* GLKit.framework in Frameworks */,
 				70D7D2351B482464007D87EA /* QuartzCore.framework in Frameworks */,
 				70D7D2331B48245C007D87EA /* OpenGL.framework in Frameworks */,
+				700D0BAF1BA75810009D9230 /* CS562Core.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,9 +107,45 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		700D0BA01BA753D5009D9230 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				700D0BB41BA761EE009D9230 /* HalfEdgeMethods.h */,
+				700D0BB21BA761EE009D9230 /* Mesh.h */,
+				700D0BB11BA761EE009D9230 /* Mesh.m */,
+				700D0BA31BA7542B009D9230 /* MeshStore.h */,
+				700D0BA41BA7542B009D9230 /* MeshStore.m */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		700D0BA11BA753DC009D9230 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		700D0BA21BA753E1009D9230 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		700D0BB71BA7678B009D9230 /* DataFiles */ = {
+			isa = PBXGroup;
+			children = (
+				700D0BBA1BA7682B009D9230 /* Sample.json */,
+				700D0BB81BA767B5009D9230 /* Engine.json */,
+			);
+			name = DataFiles;
+			sourceTree = "<group>";
+		};
 		701E2F841B7E60B400807877 /* BoilerPlate */ = {
 			isa = PBXGroup;
 			children = (
+				700D0BB51BA761EE009D9230 /* MacroCommons.h */,
 				701E2F851B7E60DA00807877 /* initGL.h */,
 				701E2F861B7E612500807877 /* initGL.c */,
 			);
@@ -87,6 +155,7 @@
 		706065461B46FBC700C884F6 = {
 			isa = PBXGroup;
 			children = (
+				700D0BAD1BA757F6009D9230 /* CS562Core.framework */,
 				7073CE711B4A383B00E3FEB8 /* GLKit.framework */,
 				70D7D2341B482464007D87EA /* QuartzCore.framework */,
 				70D7D2321B48245C007D87EA /* OpenGL.framework */,
@@ -108,6 +177,11 @@
 		706065511B46FBC700C884F6 /* CS562 */ = {
 			isa = PBXGroup;
 			children = (
+				700D0BBC1BA76EA4009D9230 /* MeshData */,
+				700D0BB71BA7678B009D9230 /* DataFiles */,
+				700D0BA21BA753E1009D9230 /* Controllers */,
+				700D0BA11BA753DC009D9230 /* Views */,
+				700D0BA01BA753D5009D9230 /* Models */,
 				701E2F841B7E60B400807877 /* BoilerPlate */,
 				706065541B46FBC700C884F6 /* AppDelegate.h */,
 				706065551B46FBC700C884F6 /* AppDelegate.m */,
@@ -159,6 +233,7 @@
 				7060654B1B46FBC700C884F6 /* Sources */,
 				7060654C1B46FBC700C884F6 /* Frameworks */,
 				7060654D1B46FBC700C884F6 /* Resources */,
+				700D0B9D1BA63C97009D9230 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -229,7 +304,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				700D0BBB1BA7682B009D9230 /* Sample.json in Resources */,
+				700D0BBD1BA76EA4009D9230 /* MeshData in Resources */,
 				7060655D1B46FBC700C884F6 /* Images.xcassets in Resources */,
+				700D0BB91BA767B5009D9230 /* Engine.json in Resources */,
 				706065601B46FBC700C884F6 /* Main.storyboard in Resources */,
 				7073CE701B4A378800E3FEB8 /* README in Resources */,
 			);
@@ -249,6 +327,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				700D0BB61BA761EE009D9230 /* Mesh.m in Sources */,
+				700D0BA51BA7542B009D9230 /* MeshStore.m in Sources */,
 				7073CE6E1B49DF1700E3FEB8 /* View.m in Sources */,
 				7060655B1B46FBC700C884F6 /* ViewController.m in Sources */,
 				706065581B46FBC700C884F6 /* main.m in Sources */,
@@ -371,6 +451,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CS562Core-gqvecmhxcyfrpdfkmhgyucqdckgf/Build/Products/Debug",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CS562Core-gqvecmhxcyfrpdfkmhgyucqdckgf/Build/Products/Release",
+				);
 				INFOPLIST_FILE = CS562/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -382,6 +467,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CS562Core-gqvecmhxcyfrpdfkmhgyucqdckgf/Build/Products/Release",
+				);
 				INFOPLIST_FILE = CS562/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
