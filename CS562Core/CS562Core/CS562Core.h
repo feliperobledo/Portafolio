@@ -21,5 +21,6 @@ FOUNDATION_EXPORT const unsigned char CS562CoreVersionString[];
 #import <CS562Core/IModel.h>
 #import <CS562Core/Entity.h>
 #import <CS562Core/EntityCreator.h>
+#import <CS562Core/nsobject-extensions.h>
 
 

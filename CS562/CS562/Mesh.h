@@ -69,7 +69,7 @@ typedef struct Face Face;
     @property Vertex* vertices;
     @property Face* faces;
     @property GLKVector3* vertNormals;
-    @property (getter=sourceName) NSString* modelFileName;
+    @property (getter=sourceName,setter=setSourceFile:) NSString* modelFileName;
     @property (strong,nonatomic)  NSMutableDictionary* halfEdgeDictionary;
 
 -(id) init;
@@ -78,7 +78,7 @@ typedef struct Face Face;
 -(id) initWithDictionary:(NSDictionary*)dict;
 -(void) serializeWith:(NSObject*)ser;
 
--(BOOL) initWithFile:(NSString*)filename;
+-(BOOL) createMeshDataFromFile:(NSData*)objData;
 -(void) initFaceNormals;
 -(void) initVertexNormals;
 -(void) flushMemory;

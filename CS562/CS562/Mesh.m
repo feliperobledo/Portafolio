@@ -167,16 +167,12 @@
     v2->twin->next = v1->twin;
 }
 
--(BOOL) initWithFile:(NSString*)filename
+-(BOOL) createMeshDataFromFile:(NSData*)objData
 {
     //open the file
     self.m_VertCount = 0;
     self.m_FaceCount = 0;
-    self.modelFileName = [[NSString alloc] initWithString:filename];
-    
-    NSString *modelPath = [[NSBundle mainBundle] pathForResource:filename
-                                                           ofType:@".obj"];
-    NSData* objData = [NSData dataWithContentsOfFile:modelPath];
+
     if(objData)
     {
         //Create an array of string, each index being a line in the file
@@ -184,17 +180,40 @@
         NSArray *lines = [file componentsSeparatedByString:@"\n"];
         self.halfEdgeDictionary = [[NSMutableDictionary alloc]init];
         
-        //We want locality of reference for all data, so we parse once in order
-        //to know how many faces and vertices should be allocated.
+        // Get the number of vertices and faces from the first 10 lines
         for(NSString * line in lines)
         {
-            if ([line hasPrefix:@"v"])
-            {
-                ++self.m_VertCount;
+            if (![line hasPrefix:@"#"]) {
+                continue;
             }
-            else if([line hasPrefix:@"f"])
+            
+            if (![line containsString:@"Vertices"] ||
+                ![line containsString:@"Faces"]) {
+                continue;
+            }
+            
+            // Intermediate
+            NSString *numberString;
+            
+            NSScanner *scanner = [NSScanner scannerWithString:line];
+            NSCharacterSet *numbers = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+            
+            // Throw away characters before the first number.
+            [scanner scanUpToCharactersFromSet:numbers intoString:NULL];
+            
+            // Collect numbers.
+            [scanner scanCharactersFromSet:numbers intoString:&numberString];
+            
+            // Result.
+            GLuint val = [numberString intValue];
+            
+            if ([line containsString:@"Vertices"])
             {
-                ++self.m_FaceCount;
+                self.m_VertCount = val;
+            }
+            else if([line containsString:@"Faces"])
+            {
+                self.m_FaceCount = val;
             }
         }
         
@@ -306,7 +325,7 @@
         
         self.vertices = vertexData;
         self.edges = halfEdges;
-        self.m_Faces = faceData;
+        self.faces = faceData;
         
         //At this point we have all the data we need, so now we have to compute the normals for
         //each face, and then for each vertex
@@ -330,7 +349,7 @@
     for(GLuint i = 0; i < self.m_FaceCount; ++i)
     {
         //Get the vertex reference by the 3 indeces that a face constains
-        Face* face = &self.m_Faces[i];
+        Face* face = &self.faces[i];
         NSAssert(face != NULL, @"A created Face has not been properly assigned");
         
         GLKVector3 vert1, vert2, vert3, vec1, vec2;
@@ -360,7 +379,7 @@
         //vertex
         for(GLuint f = 0; f < self.m_FaceCount; ++f)
         {
-            Face* face = &self.m_Faces[i];
+            Face* face = &self.faces[i];
             NSAssert(face != NULL, @"A created Face is NULL at initVertexNormal");
             
             Vertex *vert1, *vert2, *vert3;
@@ -405,8 +424,8 @@
     }
     if(self.faces)
     {
-        free(self.m_Faces);
-        self.m_Faces = NULL;
+        free(self.faces);
+        self.faces = NULL;
     }
 }
 

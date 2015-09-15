@@ -14,6 +14,7 @@
 		700D0BB91BA767B5009D9230 /* Engine.json in Resources */ = {isa = PBXBuildFile; fileRef = 700D0BB81BA767B5009D9230 /* Engine.json */; };
 		700D0BBB1BA7682B009D9230 /* Sample.json in Resources */ = {isa = PBXBuildFile; fileRef = 700D0BBA1BA7682B009D9230 /* Sample.json */; };
 		700D0BBD1BA76EA4009D9230 /* MeshData in Resources */ = {isa = PBXBuildFile; fileRef = 700D0BBC1BA76EA4009D9230 /* MeshData */; };
+		700D0BBF1BA77422009D9230 /* MeshLoadTimes.m in Sources */ = {isa = PBXBuildFile; fileRef = 700D0BBE1BA77422009D9230 /* MeshLoadTimes.m */; };
 		701E2F871B7E612500807877 /* initGL.c in Sources */ = {isa = PBXBuildFile; fileRef = 701E2F861B7E612500807877 /* initGL.c */; };
 		706065561B46FBC700C884F6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 706065551B46FBC700C884F6 /* AppDelegate.m */; };
 		706065581B46FBC700C884F6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 706065571B46FBC700C884F6 /* main.m */; };
@@ -63,6 +64,7 @@
 		700D0BB81BA767B5009D9230 /* Engine.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Engine.json; sourceTree = "<group>"; };
 		700D0BBA1BA7682B009D9230 /* Sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Sample.json; sourceTree = "<group>"; };
 		700D0BBC1BA76EA4009D9230 /* MeshData */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MeshData; sourceTree = "<group>"; };
+		700D0BBE1BA77422009D9230 /* MeshLoadTimes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeshLoadTimes.m; sourceTree = "<group>"; };
 		701E2F851B7E60DA00807877 /* initGL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = initGL.h; sourceTree = "<group>"; };
 		701E2F861B7E612500807877 /* initGL.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = initGL.c; sourceTree = "<group>"; };
 		7060654F1B46FBC700C884F6 /* CS562.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CS562.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -211,6 +213,7 @@
 			children = (
 				7060656B1B46FBC700C884F6 /* CS562Tests.m */,
 				706065691B46FBC700C884F6 /* Supporting Files */,
+				700D0BBE1BA77422009D9230 /* MeshLoadTimes.m */,
 			);
 			path = CS562Tests;
 			sourceTree = "<group>";
@@ -342,6 +345,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7060656C1B46FBC700C884F6 /* CS562Tests.m in Sources */,
+				700D0BBF1BA77422009D9230 /* MeshLoadTimes.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

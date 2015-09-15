@@ -12,7 +12,7 @@ typedef uint32 MeshID;
 
 @interface MeshStore : IModel
 
-@property NSArray* meshObjFileNames;
+@property NSArray* meshObjFiles;
 @property (strong,nonatomic) NSMutableDictionary* filenameToIdMap;
 @property (strong,nonatomic) NSMutableDictionary* meshData;
 

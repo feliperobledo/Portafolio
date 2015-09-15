@@ -6,9 +6,18 @@
         "MeshStore" : {
             
             "meshObjFileNames" : [
-                "Bunny.obj",
-                "Horse.obj",
-                "Dragon.obj",
+                {
+                    "Name" : "Bunny",
+                    "Type" : "obj",
+                },
+                {
+                    "Name" : "Horse",
+                    "Type" : "obj",
+                },
+                {
+                    "Name" : "Dragon",
+                    "Type" : "obj",
+                },
             ],
             
         }
