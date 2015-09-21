@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <XCTest/XCTest.h>
+#import "MeshStore.h"
 
 @interface MeshLoadTimes : XCTestCase
 
@@ -16,23 +17,47 @@
 @implementation MeshLoadTimes
 
 - (void)testBunnyLoadTime {
-    // This is an example of a performance test case.
+    MeshStore* newStore = [[MeshStore alloc] init];
+    
+    NSMutableDictionary* entry =[[NSMutableDictionary alloc] init];
+    [entry setValue:@"bunny" forKey:@"Name"];
+    [entry setValue:@"obj" forKey:@"Type"];
+    
+    NSArray* meshFiles = [[NSArray alloc] initWithObjects:entry, nil];
+    [newStore setMeshObjFiles:meshFiles];
+    
     [self measureBlock:^{
-        // Put the code you want to measure the time of here.
+        [newStore postInit];
     }];
 }
 
 - (void)testHorseLoadTime {
-    // This is an example of a performance test case.
+    MeshStore* newStore = [[MeshStore alloc] init];
+    
+    NSMutableDictionary* entry =[[NSMutableDictionary alloc] init];
+    [entry setValue:@"horse" forKey:@"Name"];
+    [entry setValue:@"obj" forKey:@"Type"];
+    
+    NSArray* meshFiles = [[NSArray alloc] initWithObjects:entry, nil];
+    [newStore setMeshObjFiles:meshFiles];
+    
     [self measureBlock:^{
-        // Put the code you want to measure the time of here.
+        [newStore postInit];
     }];
 }
 
 - (void)testDragonLoadTime {
-    // This is an example of a performance test case.
+    MeshStore* newStore = [[MeshStore alloc] init];
+    
+    NSMutableDictionary* entry =[[NSMutableDictionary alloc] init];
+    [entry setValue:@"dragon" forKey:@"Name"];
+    [entry setValue:@"obj" forKey:@"Type"];
+    
+    NSArray* meshFiles = [[NSArray alloc] initWithObjects:entry, nil];
+    [newStore setMeshObjFiles:meshFiles];
+    
     [self measureBlock:^{
-        // Put the code you want to measure the time of here.
+        [newStore postInit];
     }];
 }
 @end

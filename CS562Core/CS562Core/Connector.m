@@ -16,6 +16,7 @@
     if(self == [super init]){
         _owner = owner;
     }
+    
     return self;
 }
 

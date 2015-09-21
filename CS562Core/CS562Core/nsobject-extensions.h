@@ -11,7 +11,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSObject(MVCExtension)
+@interface NSObject (MVCExtension)
+
+@property (strong,atomic) NSMutableDictionary* _aliases;
 
 // Connect self to a signal from another object
 -(void) connect:(SEL)method toSignal:(NSString*)signal from:(NSObject*)caster;

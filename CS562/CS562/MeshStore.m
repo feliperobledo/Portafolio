@@ -52,7 +52,7 @@
         NSString *filename = [fileData valueForKey:@"Name"],
                  *type = [fileData valueForKey:@"Type"];
         
-        NSBundle* bundle = [NSBundle mainBundle];
+        NSBundle* bundle = [NSBundle bundleForClass:[self class]];
         NSString* path = [bundle pathForResource:filename ofType:type];
         NSData* objData = [NSData dataWithContentsOfFile:path];
         

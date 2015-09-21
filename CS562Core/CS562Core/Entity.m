@@ -54,6 +54,10 @@
 -(void)postInit {
     //Do any other initilization work, such as creating the bindings of all
     //controllers.
+    for (NSString* key in Models) {
+        IModel* model = [Models valueForKey:key];
+        [model postInit];
+    }
     
     // init this controllers first, then child controllers
     for (NSString* key in Controllers) {

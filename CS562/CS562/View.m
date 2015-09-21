@@ -6,16 +6,30 @@
 //  Copyright (c) 2015 Felipe Robledo. All rights reserved.
 //
 
+
+// FIXME: Remove
+float points[] = {
+    0.0f,  0.5f,  0.0f,
+    0.5f, -0.5f,  0.0f,
+    -0.5f, -0.5f,  0.0f
+};
+
 #import "View.h"
 #include "initGL.h"
-#include <OpenGL/gl.h>
+#include <OpenGL/gl3.h>
 #include <OpenGL/gltypes.h>
+#include <GLKit/GLKit.h>
 
 @implementation View
 {
     GLuint m_FrameBufferIds[1];
     GLuint m_RenderBuffers[1];
     GLuint *m_OffScreenTextures;
+    
+    // FIXME: Remove
+    GLuint vbo;
+    GLuint vao;
+    GLuint shader_programme;
 }
 
 // Use this method to allocate and initialize the NSOpenGLPixelFormat object
@@ -24,20 +38,21 @@
     NSOpenGLPixelFormatAttribute attributes [] = {
         //kCGLPFAOpenGLProfile,
         
+        
         // Helps guarantee all displays support pixel format
         NSOpenGLPFAScreenMask, 0,
-        
+ 
         // Don't fall back to the software renderer
         NSOpenGLPFANoRecovery,
 
         // pixel format available to all renderers
         NSOpenGLPFAAllRenderers,
         
-        // Front and Back Buffer
-        NSOpenGLPFADoubleBuffer,
-        
         // Only hardware-accelerated renderers are considered.
         NSOpenGLPFAAccelerated,
+        
+        // Front and Back Buffer
+        NSOpenGLPFADoubleBuffer,
         
         // Bit sizes
         NSOpenGLPFAColorSize,  32,
@@ -47,6 +62,8 @@
         
         // Use color, depth and accumulation sizes of sizes equal to or greater
         NSOpenGLPFAClosestPolicy,
+        
+        NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion3_2Core,
         
         (NSOpenGLPixelFormatAttribute)nil
     };
@@ -73,10 +90,96 @@
         
         
         m_GLContext = [[NSOpenGLContext alloc] initWithFormat:format shareContext:nil];
-        if(m_GLContext != nil) {
-            [self prepareOpenGL];
+        if( m_GLContext != nil) {
+            [m_GLContext setView:self];
+            [m_GLContext makeCurrentContext];
             
-
+            NSLog(@"OpenGL version = %s", glGetString(GL_VERSION));
+            NSLog(@"GLSL version = %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
+            
+            NSRect pixelBounds = [self convertRectToBacking:[self bounds]];
+            glViewport(0, 0,
+                       (GLint)NSWidth(pixelBounds),
+                       (GLint)NSHeight(pixelBounds));
+            
+            m_HasGeneratedFocus = NO;
+            [self setNeedsDisplay:YES];
+            
+            // FIXME: Remove
+            glGenBuffers (1, &vbo);
+            glBindBuffer (GL_ARRAY_BUFFER, vbo);
+            glBufferData (GL_ARRAY_BUFFER, 9 * sizeof (float), points, GL_STATIC_DRAW);
+            
+            // FIXME: Remove
+            // Remember: VAOs allow us to matain a state of vbo's. This way, we
+            //           only have to trigger the vao to use all vbo's attached
+            //           to it.
+            glGenVertexArrays (1, &vao);
+            glBindVertexArray (vao);
+            { // specify on which attribute of the vao
+                glEnableVertexAttribArray (GLKVertexAttribPosition);
+                glBindBuffer (GL_ARRAY_BUFFER, vbo);
+                glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+            }
+            
+            // FIXME: Remove
+            // Example of creating shaders
+            NSBundle* mainBundle = [NSBundle mainBundle];
+            
+            NSString *vertexShaderPath = [mainBundle pathForResource:@"simple" ofType:@"vsh"];
+            NSString *fragmentShaderPath = [mainBundle pathForResource:@"simple" ofType:@"fsh"];
+            
+            NSData
+            *vshData = [NSData dataWithContentsOfFile:vertexShaderPath],
+            *fshData = [NSData dataWithContentsOfFile:fragmentShaderPath];
+            
+            NSString *vsh = nil, *fsh = nil;
+            if(vshData && fshData)
+            {
+                vsh = [[NSString alloc] initWithData:vshData encoding:NSUTF8StringEncoding];
+                fsh = [[NSString alloc] initWithData:fshData encoding:NSUTF8StringEncoding];
+            }
+            
+            const char* vshSource = [vsh UTF8String];
+            GLuint vs = glCreateShader (GL_VERTEX_SHADER);
+            glShaderSource (vs, 1, &vshSource, NULL);
+            glCompileShader (vs);
+            
+            const char* fshSource = [fsh UTF8String];
+            GLuint fs = glCreateShader (GL_FRAGMENT_SHADER);
+            glShaderSource (fs, 1, &fshSource, NULL);
+            glCompileShader (fs);
+            
+            shader_programme = glCreateProgram ();
+            glAttachShader (shader_programme, fs);
+            glAttachShader (shader_programme, vs);
+            glLinkProgram (shader_programme);
+            
+            GLint linked = 0;
+            glGetProgramiv(shader_programme,GL_LINK_STATUS,&linked);
+            if(!linked)
+            {
+                GLint infoLen = 0;
+                
+                glGetProgramiv(shader_programme,GL_INFO_LOG_LENGTH,&infoLen);
+                
+                if(infoLen > 0)
+                {
+                    char* infoLog = (char*)malloc(sizeof(char)*infoLen);
+                    
+                    glGetProgramInfoLog(shader_programme, infoLen, NULL, infoLog);
+                    printf("Error linking program:\n%s\n",infoLog);
+                    
+                    free(infoLog);
+                }
+                
+                printf("Deleting shader program");
+                glDeleteProgram(shader_programme);
+            }
+            else
+            {
+                NSLog(@"Shader linked successfully");
+            }
         }
     }
     return self;
@@ -104,14 +207,9 @@
 
 // Use this method to initialize OpenGL state after creating NSOpenGLContext
 - (void)prepareOpenGL {
-    [m_GLContext setView:self];
-    [self setNeedsDisplay:YES];
-    
-    NSRect pixelBounds = [self convertRectToBacking:[self bounds]];
-    [m_GLContext makeCurrentContext];
-    glViewport(0, 0,
-              (GLint)NSWidth(pixelBounds),
-              (GLint)NSHeight(pixelBounds));
+    if(m_HasGeneratedFocus) {
+        return;
+    }
     
     // Set-up for including a backed-layer. Should dive into this more
     //    deeply later.
@@ -119,7 +217,20 @@
     //[self setWantsLayer:YES];
     //[self setLayer:newBackedLayer];
     
+    GLint rendererID = 0;
+    [m_GLContext getValues:&rendererID forParameter:NSOpenGLCPCurrentRendererID];
+    NSLog(@"Renderer/FrameBuffer ID: %d",rendererID);
+    
+    GLint drawFboId = 0, readFboId = 0, fbObject = 0;
+    glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &drawFboId);
+    glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &readFboId);
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &fbObject);
+    NSLog(@"Draw FBO ID: %d",drawFboId);
+    NSLog(@"Read FBO ID: %d",readFboId);
+    NSLog(@"FBO ID: %d",fbObject);
+    
     if (false) {
+        NSRect pixelBounds = [self convertRectToBacking:[self bounds]];
         m_OffScreenTextures = initGL(m_FrameBufferIds, m_RenderBuffers, 1, NSWidth(pixelBounds), NSHeight(pixelBounds));
         
         GLenum ret = glCheckFramebufferStatus(GL_FRAMEBUFFER);
@@ -128,9 +239,11 @@
                 NSLog(@"Something bad happened");
             }
         }
+        
+        glBindBuffer(GL_FRAMEBUFFER, fbObject);
     }
 
-    //glEnable();
+    m_HasGeneratedFocus = true;
 }
 
 -(void)prepareForReuse {
@@ -185,18 +298,12 @@
     if(m_GLContext) {
         [m_GLContext makeCurrentContext];
         
-        //glClearColor(0,0,0,0);
-        glClear(GL_COLOR_BUFFER_BIT);
-        
-        // Drawing code here.
-        glColor3f(1.0f, 0.85f, 0.35f);
-        glBegin(GL_TRIANGLES);
-        {
-            glVertex3f(  0.0,  0.6, 0.0);
-            glVertex3f( -0.2, -0.3, 0.0);
-            glVertex3f(  0.2, -0.3 ,0.0);
-        }
-        glEnd();
+        // wipe the drawing surface clear
+        glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glUseProgram (shader_programme);
+        glBindVertexArray (vao);
+        // draw points 0-3 from the currently bound VAO with current in-use shader
+        glDrawArrays (GL_TRIANGLES, 0, 3);
         
         [m_GLContext flushBuffer];
     }
@@ -225,6 +332,6 @@
 
 -(void) dealloc {
     glDeleteTextures(1, m_OffScreenTextures);
-    glDeleteFramebuffersEXT(1, m_FrameBufferIds);
+    glDeleteFramebuffers(1, m_FrameBufferIds);
 }
 @end

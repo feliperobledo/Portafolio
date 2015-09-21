@@ -13,6 +13,7 @@
     @private
     NSOpenGLContext*      m_GLContext;
     NSOpenGLPixelFormat*  m_PixelFormat;
+    BOOL                  m_HasGeneratedFocus;
 }
 
 // Use this method to allocate and initialize the NSOpenGLPixelFormat object

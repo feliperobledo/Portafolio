@@ -126,19 +126,22 @@
 
 -(HalfEdge*)createHalfEdgeFromMeta:(NSString*)halfEdgeMetaName fromEdgeMem:(HalfEdge*)newHalfEdge fromVertMem:(Vertex*)vertexMem
 {
-    //Set the twin pointer for both half edges. The newHalfEdge twin is next to it in memory
+    // Set the twin pointer for both half edges. The newHalfEdge twin is next to it in memory
     HalfEdge* twin = newHalfEdge + 1;
     newHalfEdge->twin = twin;
     twin->twin = newHalfEdge;
     
-    //indices:           0    1    2   3
-    //meta name format:  E    x    :   y
-    //Extract the vertex indices form the meta name
-    int fromIndex = [[halfEdgeMetaName substringWithRange:NSMakeRange(1, 1)] integerValue];
-    int toIndex   = [[halfEdgeMetaName substringWithRange:NSMakeRange(3, 3)] integerValue];
+    // indices:           0   ...   y   ...
+    // meta name format:  E    x    :    y
+    // Extract the vertex indices form the meta name
+    NSString* subString = [halfEdgeMetaName substringFromIndex:1];
+    NSArray* faceComponents = [subString componentsSeparatedByString:@":"];
     
-    //Init half-edge with the vertex it goes to
-    //Set start index's out edge if it has not been set
+    int fromIndex = (int)[[faceComponents objectAtIndex:0] integerValue];
+    int toIndex   = (int)[[faceComponents objectAtIndex:1] integerValue];
+    
+    // Init half-edge with the vertex it goes to
+    // Set start index's out edge if it has not been set
     if(newHalfEdge->to == NULL)
     {
         newHalfEdge->to = &vertexMem[toIndex];
@@ -148,7 +151,7 @@
         }
     }
     
-    //set up the half edge's twin
+    // Set up the half edge's twin
     if(twin->to == NULL)
     {
         twin->to = &vertexMem[fromIndex];
@@ -159,6 +162,19 @@
     }
     
     return newHalfEdge;
+}
+
+-(NSString*) getTwinNameFromHalfEdgeName:(NSString*)halfEdgeName {
+    NSString* subString = [halfEdgeName substringFromIndex:1];
+    NSArray* faceComponents = [subString componentsSeparatedByString:@":"];
+    
+    NSMutableString* output = [[NSMutableString alloc] init];
+    [output appendString:@"E"];
+    [output appendString:[faceComponents objectAtIndex:1]];
+    [output appendString:@":"];
+    [output appendString:[faceComponents objectAtIndex:0]];
+    
+    return output;
 }
 
 -(void) halfEdge:(HalfEdge*)v1 pointsTo:(HalfEdge*)v2
@@ -187,7 +203,7 @@
                 continue;
             }
             
-            if (![line containsString:@"Vertices"] ||
+            if (![line containsString:@"Vertices"] &&
                 ![line containsString:@"Faces"]) {
                 continue;
             }
@@ -229,6 +245,7 @@
         GLuint edgesCount = self.m_FaceCount * 3;
         GLuint halfEdgesCount = self.m_HalfEdgeCount = edgesCount * 2;
         GLuint halfEdgeArrayByteSize = sizeof(HalfEdge) * halfEdgesCount;
+        
         HalfEdge* halfEdges = (HalfEdge*)malloc(halfEdgeArrayByteSize);
         NSAssert(halfEdges != NULL, @"Ran out of memory. Too many EDGES in model or OS fault");
         memset(halfEdges, 0, halfEdgeArrayByteSize);
@@ -238,7 +255,7 @@
         {
             if ([line hasPrefix:@"v"])
             {
-                GLKVector3* position = &(vertexData + vertexIndex)->pos;
+                Vertex *vert = &vertexData[vertexIndex];
                 
                 //Get a new string that starts after the prefix
                 NSString *lineTrunc = [line substringFromIndex:2];
@@ -246,9 +263,10 @@
                 //Convert line into an array of 3 entries, one for each element of the vertex
                 NSArray *lineVertices = [lineTrunc componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
                 
-                position[vertexIndex].x = [[lineVertices objectAtIndex:0] floatValue];
-                position[vertexIndex].y = [[lineVertices objectAtIndex:1] floatValue];
-                position[vertexIndex].z = [[lineVertices objectAtIndex:2] floatValue];
+                
+                vert->pos.x = [[lineVertices objectAtIndex:0] floatValue];
+                vert->pos.y = [[lineVertices objectAtIndex:1] floatValue];
+                vert->pos.z = [[lineVertices objectAtIndex:2] floatValue];
                 ++vertexIndex;
             }
             else if([line hasPrefix:@"f"]) // we will now create the half edges
@@ -279,18 +297,23 @@
                     
                     
                     NSAssert(halfEdgeIndex != halfEdgesCount,@"Accessing more half edge memory than allocated");
+                    
+                    // Get the memory for the new half-edge we will use
                     HalfEdge* currentMemory = halfEdges + halfEdgeIndex;
                     BOOL shouldAdd = NO;
                     if([self.halfEdgeDictionary objectForKey:halfEdgeName] == nil)
                     {
+                        // This meta-name does not have any memory attached to
+                        // it, so we will assign it the new memory address.
                         shouldAdd = YES;
                         currEdges[count] = [self createHalfEdgeFromMeta:halfEdgeName fromEdgeMem:currentMemory fromVertMem:vertexData];
                     }
                     else
                     {
-                        //Since the edge already exists, we just need to keep track of it
-                        //for the construction of this face.
-                        [[self.halfEdgeDictionary objectForKey:halfEdgeName] getValue:currEdges[count]];
+                        // Since the edge already exists, we just need to keep track of it
+                        // for the construction of this face.
+                        NSValue* val = [self.halfEdgeDictionary objectForKey:halfEdgeName];
+                        currEdges[count] = (HalfEdge*)[val pointerValue];
                     }
                     
                     //Update the next edge pointer dependent on current edge
@@ -310,16 +333,26 @@
                         }
                     }
                     
+                    // Let the edge know which is its face
                     currEdges[count]->face = &faceData[faceIndex];
-                    ++count;
-                    ++faceIndex;
                     
                     if(shouldAdd)
                     {
-                        [self.halfEdgeDictionary setObject:[NSValue value:currEdges withObjCType:@encode(HalfEdge)] forKey:halfEdgeName];
+                        [self.halfEdgeDictionary setObject:[NSValue valueWithPointer:currEdges[count]] forKey:halfEdgeName];
+                        
+                        // Adding the address of the half-edge. If encountered
+                        // in the file, this will be fetched and completed.
+                        NSString* halfEdgeTwinName = [self getTwinNameFromHalfEdgeName:halfEdgeName];
+                        [self.halfEdgeDictionary setObject:[NSValue valueWithPointer:currEdges[count]->twin] forKey:halfEdgeTwinName];
+                        
                         halfEdgeIndex += 2;//only advance if we added a new edge
                     }
+                    
+                    ++count;
                 }
+                
+                //Move on to the next face all edges will belong to
+                ++faceIndex;
             }
         }
         
@@ -361,7 +394,7 @@
         vec1 = GLKVector3Subtract(vert1,vert2);
         vec2 = GLKVector3Subtract(vert1,vert3);
         
-        face->normal = GLKVector3CrossProduct(vec1, vec2);
+        face->normal = GLKVector3Normalize( GLKVector3CrossProduct(vec1, vec2) );
     }
 }
 
@@ -384,8 +417,8 @@
             
             Vertex *vert1, *vert2, *vert3;
             vert1 = face->start->to;
-            vert2 = face->start->to->outEdge->to;
-            vert3 = face->start->to->outEdge->to->outEdge->to;
+            vert2 = face->start->next->to;
+            vert3 = face->start->next->next->to;
             
             //If our currVec has the same address as any of the vertices of the
             //current face, then the vertex shares the face
@@ -396,9 +429,11 @@
             }
         }
         
-        vertNorm.x /= sharedFaceCount;
-        vertNorm.y /= sharedFaceCount;
-        vertNorm.z /= sharedFaceCount;
+        if (sharedFaceCount != 0) {
+            vertNorm.x /= sharedFaceCount;
+            vertNorm.y /= sharedFaceCount;
+            vertNorm.z /= sharedFaceCount;
+        }
         
         if(self.vertNormals != NULL)
             self.vertNormals[i] = GLKVector3Normalize(vertNorm);
