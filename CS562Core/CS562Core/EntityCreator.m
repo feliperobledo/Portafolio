@@ -11,6 +11,7 @@
 #import <EntityCreator.h>
 #import <Entity.h>
 #import <Connector.h>
+#import <nsobject-extensions.h>
 #import <malloc/malloc.h>
 
 @implementation EntityCreator
@@ -145,10 +146,17 @@
                     
                     id data = [componentData valueForKey:propName];
                     if (data == nil) {
+                        NSLog(@"\'%s\' does NOT have property \'%s\'",[componentClassName UTF8String],[propName UTF8String]);
                         continue;
                     }
                     
-                    [component setValue:data forKey:propName];
+                    NSLog(@"\'%s\' has \'%s\'",[componentClassName UTF8String],[propName UTF8String]);
+                    
+                    // Set the property with either generically or with the use of a special settor
+                    NSObject* temp = (NSObject*)component;
+                    if([temp couldProperBeSetWithSpecialSetter:propName withData:data] == NO) {
+                        [component setValue:data forKey:propName];
+                    }
                 }
                 
                 free(propertyArray);

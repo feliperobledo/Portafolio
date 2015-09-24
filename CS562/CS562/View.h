@@ -2,6 +2,8 @@
 //  View.h
 //  CS562
 //
+//  This view knows about the deferred rendering process.
+//
 //  Created by Felipe Robledo on 7/5/15.
 //  Copyright (c) 2015 Felipe Robledo. All rights reserved.
 //
@@ -38,6 +40,7 @@
 
 // Call the update method of the NSOpenGLContext class
 - (void)update;
+- (void)draw;
 
 // In-case you need to switch your pixel format
 - (void)setPixelFormat:(NSOpenGLPixelFormat*)pixelFormat;

@@ -9,20 +9,27 @@
 #import "ViewController.h"
 #import "View.h"
 
+// includes from classes that we need to create their meta data for
+#import <Transform.h>
+#import <Model3D.h>
+
 @implementation ViewController
+{
+    NSTimer* gameLoopTimer;
+}
 
 - (void)loadView {
     NSRect newRect = NSMakeRect(0, 0, 800, 600);
     NSOpenGLPixelFormat* format = [View defaultPixelFormat];
     if(format == nil) {
         NSLog(@"ERROR! Pixel format not created correctly");
-        // dump some info here ...
     }
     
     View* glView = [[View alloc] initWithFrame:newRect pixelFormat:format];
     [self setView:glView];
     
     __entityCreator = [[EntityCreator alloc] init];
+    [self addAllProjectMeta];
     
     NSBundle* bundle = [NSBundle mainBundle];
     NSString* path = [bundle pathForResource:@"Engine" ofType:@"json"];
@@ -41,7 +48,15 @@
         return;
     }
     NSLog(@"Engine Retrieved: SUCCESS");
+    [[self _engine] postInit];
     
+    NSTimeInterval refreshRate = 1.0f/60.0f;
+    gameLoopTimer = [NSTimer scheduledTimerWithTimeInterval:refreshRate target:self selector:@selector(gameLoopUpdate) userInfo:nil repeats:YES];
+}
+
+-(void) addAllProjectMeta {
+    [Transform addSpecialSettors];
+    [Model3D addSpecialSettors];
 }
 
 - (void) viewWillAppear {
@@ -67,6 +82,11 @@
     [super setRepresentedObject:representedObject];
 
     // Update the view, if already loaded.
+}
+
+-(void)gameLoopUpdate {
+    View* glView = (View*)[self view];
+    [glView draw];
 }
 
 @end

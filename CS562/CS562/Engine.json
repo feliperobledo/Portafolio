@@ -1,22 +1,53 @@
 {
     "Name" : "Engine",
     "Children" : [
+        {
+            "Name" : "TestObject",
+            "Children" : [
+            ],
+            "Models" : {
+                  "Transform" : {
+                      "data" : {
+                          "scale" : {
+                              "x" : 5,
+                              "y" : 5,
+                              "z" : 5,
+                          },
+                          "translation" : {
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : -10,
+                          },
+                          "rotation" : {
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 0,
+                              "w" : 0,
+                          }
+                      }
+                  },
+                  "Model3D" : {
+                      "meshSource" : {
+                          "Name" : "cube",
+                          "Type" : "obj"
+                      }
+                  }
+            },
+            "Views" : {
+
+            },
+            "Controller" : {
+
+            }
+        }
     ],
     "Models" : {
         "MeshStore" : {
             
-            "meshObjFileNames" : [
+            "meshObjFiles" : [
                 {
-                    "Name" : "Bunny",
-                    "Type" : "obj",
-                },
-                {
-                    "Name" : "Horse",
-                    "Type" : "obj",
-                },
-                {
-                    "Name" : "Dragon",
-                    "Type" : "obj",
+                    "Name" : "cube",
+                    "Type" : "obj"
                 },
             ],
             

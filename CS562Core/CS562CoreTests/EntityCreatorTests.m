@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 #import "EntityCreator.h"
 #import "Entity.h"
+#import "SampleModel1.h"
 
 @interface EntityCreatorTests : XCTestCase
 
@@ -77,6 +78,9 @@
 
 -(void) testThatEntityIsSerializedCorrectly {
     EntityCreator* eCreator = [[EntityCreator alloc] init];
+    
+    // global call to create special settors
+    [SampleModel1 addSpecialSettors];
     
     // Need to acquire a file in a test in the following way
     NSBundle* bundle = [NSBundle bundleForClass:[self class]];

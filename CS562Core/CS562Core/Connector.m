@@ -11,6 +11,9 @@
 
 @implementation Connector
 
+START_SPECIAL_SETTORS(Connector)
+
+END_SPECIAL_SETTORS
 
 -(id) initWithOwner:(Entity*)owner {
     if(self == [super init]){

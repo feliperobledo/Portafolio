@@ -10,11 +10,21 @@
 
 @implementation SampleModel1
 
+START_SPECIAL_SETTORS(SampleModel1)
+
+    ADD_SPECIAL_SETTER(@"source", @"sourceSpecialSetter:")
+
+END_SPECIAL_SETTORS
+
 -(id) init {
     if(self == [super init]){
-        
+
     }
     return self;
+}
+
+-(void) sourceSpecialSetter:(NSObject*)data {
+    NSLog(@"Something");
 }
 
 @end

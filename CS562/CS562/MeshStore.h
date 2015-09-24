@@ -23,4 +23,7 @@ typedef uint32 MeshID;
 -(void) serializeWith:(NSObject*)ser;
 -(void) postInit;
 
+// Test method
+-(BOOL) loadAllMeshDataCreateHalfEdgeMesh;
+
 @end

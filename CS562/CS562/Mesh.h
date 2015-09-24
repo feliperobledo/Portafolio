@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 #import <GLKit/GLKit.h>
-
+#import <OpenGL/gltypes.h>
 #import <CS562Core/IModel.h>
 
 @class Entity;
@@ -42,9 +42,9 @@ struct Vertex
     GLKVector3 pos;
     GLKVector3 normal;
     GLKVector4 colors;
-    GLKVector3 uv;
     GLKVector3 tangent;
     GLKVector3 binormal;
+    GLKVector4 uv; //[0,1] -> u, [2,3]-> v
     HalfEdge* outEdge;
 };
 
@@ -58,6 +58,18 @@ struct Face
 
 typedef struct Face Face;
 
+struct OpenGLMeshData {
+    GLuint vao;
+};
+
+typedef struct OpenGLMeshData OpenGLMeshData;
+
+// Extend GLKVertexAttrib enum to contain more data that we add
+//     to our vertices.
+typedef enum {
+    GLKVertexAttribTangent = GLKVertexAttribTexCoord1 + 1,
+    GLKVertexAttribBinormal
+} ExtendGLKVertexAttrib;
 
 //------------------------------------------------------------------------------
 @interface Mesh : IModel
@@ -68,6 +80,9 @@ typedef struct Face Face;
     @property HalfEdge* edges;
     @property Vertex* vertices;
     @property Face* faces;
+
+    @property OpenGLMeshData* glData;
+
     @property GLKVector3* vertNormals;
     @property (getter=sourceName,setter=setSourceFile:) NSString* modelFileName;
     @property (strong,nonatomic)  NSMutableDictionary* halfEdgeDictionary;
@@ -79,8 +94,20 @@ typedef struct Face Face;
 -(void) serializeWith:(NSObject*)ser;
 
 -(BOOL) createMeshDataFromFile:(NSData*)objData;
+
+// Creates the vertex vbo and index vbo and associates it with
+//     a vao.
+-(void) createOpenGLInformation;
+-(void) bindMesh;
+
+// Operation for initializing missing essential vertex data
 -(void) initFaceNormals;
 -(void) initVertexNormals;
+
 -(void) flushMemory;
 -(void) dealloc;
+
++(GLuint) getVertexStride;
++(GLuint) getVertexSize;
+
 @end

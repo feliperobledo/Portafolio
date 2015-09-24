@@ -10,6 +10,10 @@
                 "age"  : 10,
                 "name" : "Eily",
                 "students" : ["Felipe","Someone"],
+                "source" : {
+                    "Name:" : "foo",
+                    "Type:" : "bar",
+                }
             },
             "SampleModel2" : {
                 "radius" : 1.0005,
@@ -36,6 +40,10 @@
                 "age"  : 10,
                 "name" : "Eily",
                 "students" : ["Felipe","Someone"],
+                "source" : {
+                    "Name:" : "foo",
+                    "Type:" : "bar",
+                }
             },
             "SampleModel2" : {
                 "radius" : 1.0005,

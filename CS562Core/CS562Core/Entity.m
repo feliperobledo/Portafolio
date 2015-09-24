@@ -54,6 +54,7 @@
 -(void)postInit {
     //Do any other initilization work, such as creating the bindings of all
     //controllers.
+    /**/
     for (NSString* key in Models) {
         IModel* model = [Models valueForKey:key];
         [model postInit];
@@ -85,7 +86,8 @@
 
 // -----------------------------------------------------------------------------
 -(void)addChild:(Entity*)newChild {
-
+    [Children addObject:newChild];
+    [newChild setParent:self];
 }
 
 -(NSMutableArray*)getChild:(NSString*)name {

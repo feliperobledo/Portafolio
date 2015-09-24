@@ -34,4 +34,10 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:signalName object:self userInfo:data];
 }
 
+-(BOOL) couldProperBeSetWithSpecialSetter:(NSString*)propName withData:(NSObject *)data {
+    NSLog(@"ERROR: This should NOT be called");
+    [self doesNotRecognizeSelector:_cmd];
+    return NO;
+}
+
 @end

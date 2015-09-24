@@ -16,9 +16,17 @@
  Creation Date: 09/27/2014
  -End Header-------------------------------------------------------------*/
 
-#import "Mesh.h"
+#import <Mesh.h>
+#import <MacroCommons.h>
 
 @implementation Mesh
+{
+    // The data of this variable will be initialized once createMeshDataFromFile:
+    //     is called. It will hold the data required to create the OpenGL index
+    //     array. Once createOpenGLInformation is called, this variable goes
+    //     back to pointing nowhere.
+    GLuint* persistantFaceData;
+}
 
 -(id) init {
     if ((self = [super init])) {
@@ -53,11 +61,312 @@
 }
 
 // -----------------------------------------------------------------------------
+-(BOOL) createMeshDataFromFile:(NSData*)objData
+{
+    //open the file
+    self.m_VertCount = 0;
+    self.m_FaceCount = 0;
+    
+    if(objData)
+    {
+        //Create an array of string, each index being a line in the file
+        NSString* file = [[NSString alloc] initWithData:objData encoding:NSUTF8StringEncoding];
+        NSArray *lines = [file componentsSeparatedByString:@"\n"];
+        self.halfEdgeDictionary = [[NSMutableDictionary alloc]init];
+        
+        // Get the number of vertices and faces from the first 10 lines
+        for(NSString * line in lines)
+        {
+            if (![line hasPrefix:@"#"]) {
+                continue;
+            }
+            
+            if (![line containsString:@"Vertices"] &&
+                ![line containsString:@"Faces"]) {
+                continue;
+            }
+            
+            // Intermediate
+            NSString *numberString;
+            
+            NSScanner *scanner = [NSScanner scannerWithString:line];
+            NSCharacterSet *numbers = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+            
+            // Throw away characters before the first number.
+            [scanner scanUpToCharactersFromSet:numbers intoString:NULL];
+            
+            // Collect numbers.
+            [scanner scanCharactersFromSet:numbers intoString:&numberString];
+            
+            // Result.
+            GLuint val = [numberString intValue];
+            
+            if ([line containsString:@"Vertices"])
+            {
+                self.m_VertCount = val;
+            }
+            else if([line containsString:@"Faces"])
+            {
+                self.m_FaceCount = val;
+            }
+        }
+        
+        Vertex* vertexData = (Vertex*)     malloc(sizeof(Vertex) * self.m_VertCount);
+        Face* faceData     = (Face*)       malloc(sizeof(Face) * self.m_FaceCount);
+        self.vertNormals   = (GLKVector3*) malloc(sizeof(GLKVector3) * self.m_VertCount);
+        persistantFaceData = (GLuint*)     malloc(sizeof(GLuint) * (self.m_FaceCount * 3));
+        
+        NSAssert(vertexData != NULL, @"Ran out of memory. Too many VERTICES in model or OS fault");
+        NSAssert(faceData != NULL, @"Ran out of memory. Too many FACES in model or OS fault");
+        NSAssert(persistantFaceData != NULL, @"FAIL: Ran out of memory. Too many VERTEX INDICES or OS fault");
+        
+        memset(faceData, 0, sizeof(Face) * self.m_FaceCount);
+        memset(persistantFaceData, 0, sizeof(GLuint) * (self.m_FaceCount * 3));
+        memset(vertexData, 0, sizeof(Vertex) * self.m_VertCount);
+        
+        GLuint edgesCount = self.m_FaceCount * 3;
+        GLuint halfEdgesCount = self.m_HalfEdgeCount = edgesCount * 2;
+        GLuint halfEdgeArrayByteSize = sizeof(HalfEdge) * halfEdgesCount;
+        
+        HalfEdge* halfEdges = (HalfEdge*)malloc(halfEdgeArrayByteSize);
+        NSAssert(halfEdges != NULL, @"Ran out of memory. Too many EDGES in model or OS fault");
+        memset(halfEdges, 0, halfEdgeArrayByteSize);
+        
+        int vertexIndex = 0, faceIndex = 0, halfEdgeIndex = 0;
+        for(NSString * line in lines)
+        {
+            if ([line hasPrefix:@"v"])
+            {
+                Vertex *vert = &vertexData[vertexIndex];
+                
+                //Get a new string that starts after the prefix
+                NSString *lineTrunc = [line substringFromIndex:2];
+                
+                //Convert line into an array of 3 entries, one for each element of the vertex
+                NSArray *lineVertices = [lineTrunc componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                
+                
+                vert->pos.x = [[lineVertices objectAtIndex:0] floatValue];
+                vert->pos.y = [[lineVertices objectAtIndex:1] floatValue];
+                vert->pos.z = [[lineVertices objectAtIndex:2] floatValue];
+                ++vertexIndex;
+            }
+            else if([line hasPrefix:@"f"]) // we will now create the half edges
+            {
+                // Get a new string that starts after the prefix
+                NSString* truncLine = [line substringFromIndex:2];
+                
+                // Convert line into an array of 3 entries, one for each element of the face
+                NSArray* data = [truncLine componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                
+                NSMutableArray* objFileVertIndices = [[NSMutableArray alloc]init];
+                
+                
+                [self placeIndicesFrom:data Into:objFileVertIndices];
+                
+                // Store the meta names of the current Edges
+                NSMutableArray* halfEdgesMetaNames = [self createMetaNamesForIndices:objFileVertIndices];
+                
+                // Save the indices of the face into our persitent data. OpenGL
+                //     requires this data to draw.
+                for(int i = 0; i < [objFileVertIndices count]; ++i) {
+                    GLuint temp = (GLuint)[[objFileVertIndices objectAtIndex:i] unsignedIntegerValue];
+                    *((persistantFaceData + faceIndex) + i) = temp;
+                }
+                
+                
+                unsigned count = 0;
+                HalfEdge* currEdges[3] = {0};
+                for(NSString* halfEdgeName in halfEdgesMetaNames)
+                {
+                    /* Half Edge Creation Algorithm:
+                     
+                     For every meta name created
+                     If the edge's twin has not been set, the
+                     */
+                    
+                    
+                    NSAssert(halfEdgeIndex != halfEdgesCount,@"Accessing more half edge memory than allocated");
+                    
+                    // Get the memory for the new half-edge we will use
+                    HalfEdge* currentMemory = halfEdges + halfEdgeIndex;
+                    BOOL shouldAdd = NO;
+                    if([self.halfEdgeDictionary objectForKey:halfEdgeName] == nil)
+                    {
+                        // This meta-name does not have any memory attached to
+                        // it, so we will assign it the new memory address.
+                        shouldAdd = YES;
+                        currEdges[count] = [self createHalfEdgeFromMeta:halfEdgeName fromEdgeMem:currentMemory fromVertMem:vertexData];
+                    }
+                    else
+                    {
+                        // Since the edge already exists, we just need to keep track of it
+                        // for the construction of this face.
+                        NSValue* val = [self.halfEdgeDictionary objectForKey:halfEdgeName];
+                        currEdges[count] = (HalfEdge*)[val pointerValue];
+                    }
+                    
+                    //Update the next edge pointer dependent on current edge
+                    if(count == 0)
+                    {
+                        faceData[faceIndex].start = currEdges[count];
+                    }
+                    else if(count > 0)
+                    {
+                        //previous edge now points to current one
+                        [self halfEdge:currEdges[count - 1] pointsTo:currEdges[count]];
+                        
+                        if(count == 2)
+                        {
+                            //triangle wrap...
+                            [self halfEdge:currEdges[count] pointsTo:currEdges[0]];
+                        }
+                    }
+                    
+                    // Let the edge know which is its face
+                    currEdges[count]->face = &faceData[faceIndex];
+                    
+                    if(shouldAdd)
+                    {
+                        [self.halfEdgeDictionary setObject:[NSValue valueWithPointer:currEdges[count]] forKey:halfEdgeName];
+                        
+                        // Adding the address of the half-edge. If encountered
+                        // in the file, this will be fetched and completed.
+                        NSString* halfEdgeTwinName = [self getTwinNameFromHalfEdgeName:halfEdgeName];
+                        [self.halfEdgeDictionary setObject:[NSValue valueWithPointer:currEdges[count]->twin] forKey:halfEdgeTwinName];
+                        
+                        halfEdgeIndex += 2;//only advance if we added a new edge
+                    }
+                    
+                    ++count;
+                }
+                
+                //Move on to the next face all edges will belong to
+                ++faceIndex;
+            }
+        }
+        
+        self.vertices = vertexData;
+        self.edges = halfEdges;
+        self.faces = faceData;
+        
+        //At this point we have all the data we need, so now we have to compute the normals for
+        //each face, and then for each vertex
+        [self initFaceNormals];
+        
+        //Compute the vertex normal based on the faces that share that vertex
+        [self initVertexNormals];
+        
+        return YES;
+    }
+    else
+    {
+        return NO;
+    }
+}
+
+-(void)createOpenGLInformation {
+    const GLuint vertStride = [Mesh getVertexStride];
+    const GLuint vertCount  = [self vertCount];
+    const GLuint verticesFullByteSize = vertStride * vertCount;
+    
+    // FIXME: there are discrepancies between my vertex struct and and the
+    //        definition of the vertex size. I need to agree on what I will use.
+    GLfloat* rawData = (GLfloat*)malloc(verticesFullByteSize);
+    for(int i = 0; i < vertCount; ++i) {
+        GLfloat* currVertex = (GLfloat*)((char*)rawData + (i * vertStride));
+        memcpy(currVertex, &_vertices[i], vertStride);
+    }
+
+    GLuint vao = 0;
+    glGenVertexArrays (1, &vao);
+    glBindVertexArray(vao);
+    {
+        GLsizei vertexDataComponents = 2;
+        GLuint vboIDs[2] = {0};
+        
+        glGenBuffers(vertexDataComponents, vboIDs);
+        
+        glBindBuffer(GL_ARRAY_BUFFER, vboIDs[0]);
+        glBufferData(GL_ARRAY_BUFFER,
+                     verticesFullByteSize,
+                     rawData,
+                     GL_STATIC_DRAW);
+        
+        
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIDs[1]);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                     verticesFullByteSize,
+                     persistantFaceData,
+                     GL_STATIC_DRAW);
+        
+        free(rawData);
+        rawData = NULL;
+        free(persistantFaceData);
+        persistantFaceData = NULL;
+    }
+    glBindVertexArray(0);
+    
+    self.glData = (OpenGLMeshData*)malloc(sizeof(OpenGLMeshData));
+    [self glData]->vao = vao;
+    
+}
+
+-(void) bindMesh {
+    GLuint vertStride = [Mesh getVertexStride];
+    
+    glBindVertexArray ([self glData]->vao);
+    
+    // Tell OpenGL to use THIS attribute array
+    //glBindBuffer(GL_ARRAY_BUFFER, self.m_BufferObjects[0]);
+    
+    // Tell OpenGL to use THIS index array
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.m_BufferObjects[1]);
+    
+    GLuint64 offset = 0;
+    glVertexAttribPointer(GLKVertexAttribPosition,
+                          POS_SIZE,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          vertStride,
+                          (const void*)offset);
+    offset += sizeof(GLfloat) * POS_SIZE;
+    
+    glVertexAttribPointer(GLKVertexAttribNormal,
+                          NORM_SIZE,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          vertStride,
+                          (const void*)offset);
+    offset += sizeof(GLfloat) * NORM_SIZE;
+    
+    glVertexAttribPointer(GLKVertexAttribColor,
+                          COLOR_SIZE,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          vertStride,
+                          (const void*)offset);
+    
+    glVertexAttribPointer(GLKVertexAttribTangent,
+                          TANGENT_SIZE,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          vertStride,
+                          (const void*)offset);
+    offset += sizeof(GLfloat) * TANGENT_SIZE;
+    
+    glVertexAttribPointer(GLKVertexAttribBinormal,
+                          BINORMAL_SIZE,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          vertStride,
+                          (const void*)offset);
+    offset += sizeof(GLfloat) * BINORMAL_SIZE;
+}
 
 -(void) placeIndicesFrom:(NSArray*)textData Into:(NSMutableArray*)container
 {
     //Retrieve the data from the object file
-    short currVertIndex = 0;
     for(NSString* currFace in textData)
     {
         if([currFace containsString:@"/"])
@@ -69,7 +378,7 @@
             bool hasTextureIndex = range.length == 0;
             
             //Place the data in the corresponding index of the position array
-            NSNumber* vertIndex = [NSNumber numberWithInt:[[faceparts objectAtIndex:0] integerValue] - 1];
+            NSNumber* vertIndex = [NSNumber numberWithInt:(int)[[faceparts objectAtIndex:0] integerValue] - 1];
             [container addObject:vertIndex];
             
             //If we found a texture
@@ -80,7 +389,7 @@
         }
         else
         {
-            NSNumber* vertIndex = [NSNumber numberWithInt:[currFace integerValue] - 1];
+            NSNumber* vertIndex = [NSNumber numberWithInt:(int)([currFace integerValue] - 1)];
             [container addObject:vertIndex];
         }
     }
@@ -183,198 +492,6 @@
     v2->twin->next = v1->twin;
 }
 
--(BOOL) createMeshDataFromFile:(NSData*)objData
-{
-    //open the file
-    self.m_VertCount = 0;
-    self.m_FaceCount = 0;
-
-    if(objData)
-    {
-        //Create an array of string, each index being a line in the file
-        NSString* file = [[NSString alloc] initWithData:objData encoding:NSUTF8StringEncoding];
-        NSArray *lines = [file componentsSeparatedByString:@"\n"];
-        self.halfEdgeDictionary = [[NSMutableDictionary alloc]init];
-        
-        // Get the number of vertices and faces from the first 10 lines
-        for(NSString * line in lines)
-        {
-            if (![line hasPrefix:@"#"]) {
-                continue;
-            }
-            
-            if (![line containsString:@"Vertices"] &&
-                ![line containsString:@"Faces"]) {
-                continue;
-            }
-            
-            // Intermediate
-            NSString *numberString;
-            
-            NSScanner *scanner = [NSScanner scannerWithString:line];
-            NSCharacterSet *numbers = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
-            
-            // Throw away characters before the first number.
-            [scanner scanUpToCharactersFromSet:numbers intoString:NULL];
-            
-            // Collect numbers.
-            [scanner scanCharactersFromSet:numbers intoString:&numberString];
-            
-            // Result.
-            GLuint val = [numberString intValue];
-            
-            if ([line containsString:@"Vertices"])
-            {
-                self.m_VertCount = val;
-            }
-            else if([line containsString:@"Faces"])
-            {
-                self.m_FaceCount = val;
-            }
-        }
-        
-        Vertex* vertexData = (Vertex*)malloc(sizeof(Vertex) * self.m_VertCount);
-        self.vertNormals = (GLKVector3*)malloc(sizeof(GLKVector3) * self.m_VertCount);
-        NSAssert(vertexData != NULL, @"Ran out of memory. Too many VERTICES in model or OS fault");
-        memset(vertexData, 0, sizeof(Vertex) * self.m_VertCount);
-        
-        Face* faceData = (Face*)malloc(sizeof(Face) * self.m_FaceCount);
-        NSAssert(faceData != NULL, @"Ran out of memory. Too many FACES in model or OS fault");
-        memset(faceData, 0, sizeof(Face) * self.m_FaceCount);
-        
-        GLuint edgesCount = self.m_FaceCount * 3;
-        GLuint halfEdgesCount = self.m_HalfEdgeCount = edgesCount * 2;
-        GLuint halfEdgeArrayByteSize = sizeof(HalfEdge) * halfEdgesCount;
-        
-        HalfEdge* halfEdges = (HalfEdge*)malloc(halfEdgeArrayByteSize);
-        NSAssert(halfEdges != NULL, @"Ran out of memory. Too many EDGES in model or OS fault");
-        memset(halfEdges, 0, halfEdgeArrayByteSize);
-        
-        int vertexIndex = 0, faceIndex = 0, halfEdgeIndex = 0;
-        for(NSString * line in lines)
-        {
-            if ([line hasPrefix:@"v"])
-            {
-                Vertex *vert = &vertexData[vertexIndex];
-                
-                //Get a new string that starts after the prefix
-                NSString *lineTrunc = [line substringFromIndex:2];
-                
-                //Convert line into an array of 3 entries, one for each element of the vertex
-                NSArray *lineVertices = [lineTrunc componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-                
-                
-                vert->pos.x = [[lineVertices objectAtIndex:0] floatValue];
-                vert->pos.y = [[lineVertices objectAtIndex:1] floatValue];
-                vert->pos.z = [[lineVertices objectAtIndex:2] floatValue];
-                ++vertexIndex;
-            }
-            else if([line hasPrefix:@"f"]) // we will now create the half edges
-            {
-                //Get a new string that starts after the prefix
-                NSString* truncLine = [line substringFromIndex:2];
-                
-                //Convert line into an array of 3 entries, one for each element of the face
-                NSArray* data = [truncLine componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-                
-                NSMutableArray* objFileVertIndices = [[NSMutableArray alloc]init];
-                [self placeIndicesFrom:data Into:objFileVertIndices];
-                
-                //Store the meta names of the current Edges
-                NSMutableArray* halfEdgesMetaNames = [self createMetaNamesForIndices:objFileVertIndices];
-                
-                //Get the integer values of the vertices so we know which ones we are accessing
-                
-                unsigned count = 0;
-                HalfEdge* currEdges[3] = {0};
-                for(NSString* halfEdgeName in halfEdgesMetaNames)
-                {
-                    /* Half Edge Creation Algorithm:
-  
-                       For every meta name created
-                            If the edge's twin has not been set, the
-                     */
-                    
-                    
-                    NSAssert(halfEdgeIndex != halfEdgesCount,@"Accessing more half edge memory than allocated");
-                    
-                    // Get the memory for the new half-edge we will use
-                    HalfEdge* currentMemory = halfEdges + halfEdgeIndex;
-                    BOOL shouldAdd = NO;
-                    if([self.halfEdgeDictionary objectForKey:halfEdgeName] == nil)
-                    {
-                        // This meta-name does not have any memory attached to
-                        // it, so we will assign it the new memory address.
-                        shouldAdd = YES;
-                        currEdges[count] = [self createHalfEdgeFromMeta:halfEdgeName fromEdgeMem:currentMemory fromVertMem:vertexData];
-                    }
-                    else
-                    {
-                        // Since the edge already exists, we just need to keep track of it
-                        // for the construction of this face.
-                        NSValue* val = [self.halfEdgeDictionary objectForKey:halfEdgeName];
-                        currEdges[count] = (HalfEdge*)[val pointerValue];
-                    }
-                    
-                    //Update the next edge pointer dependent on current edge
-                    if(count == 0)
-                    {
-                        faceData[faceIndex].start = currEdges[count];
-                    }
-                    else if(count > 0)
-                    {
-                        //previous edge now points to current one
-                        [self halfEdge:currEdges[count - 1] pointsTo:currEdges[count]];
-                        
-                        if(count == 2)
-                        {
-                            //triangle wrap...
-                            [self halfEdge:currEdges[count] pointsTo:currEdges[0]];
-                        }
-                    }
-                    
-                    // Let the edge know which is its face
-                    currEdges[count]->face = &faceData[faceIndex];
-                    
-                    if(shouldAdd)
-                    {
-                        [self.halfEdgeDictionary setObject:[NSValue valueWithPointer:currEdges[count]] forKey:halfEdgeName];
-                        
-                        // Adding the address of the half-edge. If encountered
-                        // in the file, this will be fetched and completed.
-                        NSString* halfEdgeTwinName = [self getTwinNameFromHalfEdgeName:halfEdgeName];
-                        [self.halfEdgeDictionary setObject:[NSValue valueWithPointer:currEdges[count]->twin] forKey:halfEdgeTwinName];
-                        
-                        halfEdgeIndex += 2;//only advance if we added a new edge
-                    }
-                    
-                    ++count;
-                }
-                
-                //Move on to the next face all edges will belong to
-                ++faceIndex;
-            }
-        }
-        
-        self.vertices = vertexData;
-        self.edges = halfEdges;
-        self.faces = faceData;
-        
-        //At this point we have all the data we need, so now we have to compute the normals for
-        //each face, and then for each vertex
-        [self initFaceNormals];
-        
-        //Compute the vertex normal based on the faces that share that vertex
-        [self initVertexNormals];
-
-        return YES;
-    }
-    else
-    {
-        return NO;
-    }
-}
-
 -(void) initFaceNormals
 {
     //Go through every face. Compute side vectors for every face, and then
@@ -462,6 +579,11 @@
         free(self.faces);
         self.faces = NULL;
     }
+    if(self.glData)
+    {
+        free(self.glData);
+        self.glData = NULL;
+    }
 }
 
 -(void) dealloc
@@ -471,4 +593,24 @@
      
 }
 
+// -----------------------------------------------------------------------------
+
++(GLuint) getVertexStride {
+    const GLuint vertStride = (sizeof(GLfloat)*POS_SIZE  +
+                               sizeof(GLfloat)*NORM_SIZE +
+                               sizeof(GLfloat)*COLOR_SIZE+
+                               sizeof(GLfloat)*TANGENT_SIZE +
+                               sizeof(GLfloat)*BINORMAL_SIZE);
+    return vertStride;
+}
+
++(GLuint) getVertexSize {
+    const GLuint vertSize = POS_SIZE
+                            + NORM_SIZE
+                            + COLOR_SIZE
+                            + TANGENT_SIZE
+                            + BINORMAL_SIZE;
+    
+    return vertSize;
+}
 @end

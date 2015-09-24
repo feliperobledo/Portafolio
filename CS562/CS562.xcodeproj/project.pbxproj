@@ -7,12 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7007D8821BB3B07F008DCB56 /* CDataInitializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7007D8811BB3B07F008DCB56 /* CDataInitializer.m */; settings = {ASSET_TAGS = (); }; };
 		700D0BA51BA7542B009D9230 /* MeshStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 700D0BA41BA7542B009D9230 /* MeshStore.m */; };
 		700D0BB61BA761EE009D9230 /* Mesh.m in Sources */ = {isa = PBXBuildFile; fileRef = 700D0BB11BA761EE009D9230 /* Mesh.m */; };
 		700D0BB91BA767B5009D9230 /* Engine.json in Resources */ = {isa = PBXBuildFile; fileRef = 700D0BB81BA767B5009D9230 /* Engine.json */; };
 		700D0BBB1BA7682B009D9230 /* Sample.json in Resources */ = {isa = PBXBuildFile; fileRef = 700D0BBA1BA7682B009D9230 /* Sample.json */; };
 		700D0BBF1BA77422009D9230 /* MeshLoadTimes.m in Sources */ = {isa = PBXBuildFile; fileRef = 700D0BBE1BA77422009D9230 /* MeshLoadTimes.m */; };
 		701E2F871B7E612500807877 /* initGL.c in Sources */ = {isa = PBXBuildFile; fileRef = 701E2F861B7E612500807877 /* initGL.c */; };
+		702B488C1BB25CBC008DDA8C /* Transform.m in Sources */ = {isa = PBXBuildFile; fileRef = 702B488B1BB25CBC008DDA8C /* Transform.m */; settings = {ASSET_TAGS = (); }; };
+		702B488F1BB25D07008DDA8C /* Model3D.m in Sources */ = {isa = PBXBuildFile; fileRef = 702B488E1BB25D07008DDA8C /* Model3D.m */; settings = {ASSET_TAGS = (); }; };
 		706065561B46FBC700C884F6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 706065551B46FBC700C884F6 /* AppDelegate.m */; };
 		706065581B46FBC700C884F6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 706065571B46FBC700C884F6 /* main.m */; };
 		7060655B1B46FBC700C884F6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060655A1B46FBC700C884F6 /* ViewController.m */; };
@@ -26,6 +29,7 @@
 		7084E3AC1BAF790200C866E7 /* simple.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 7084E3AB1BAF790200C866E7 /* simple.fsh */; settings = {ASSET_TAGS = (); }; };
 		7084E3B21BAF83A800C866E7 /* Shader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7084E3B11BAF83A800C866E7 /* Shader.m */; settings = {ASSET_TAGS = (); }; };
 		7084E3B51BAF85EF00C866E7 /* ShaderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7084E3B31BAF85EF00C866E7 /* ShaderManager.m */; settings = {ASSET_TAGS = (); }; };
+		709768621BB0722B007369D4 /* cube.obj in Resources */ = {isa = PBXBuildFile; fileRef = 709768611BB0722B007369D4 /* cube.obj */; settings = {ASSET_TAGS = (); }; };
 		70D7D2331B48245C007D87EA /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70D7D2321B48245C007D87EA /* OpenGL.framework */; };
 		70D7D2351B482464007D87EA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70D7D2341B482464007D87EA /* QuartzCore.framework */; };
 		70F696461BAB55F600486C6D /* CS562Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70F696441BAB55E400486C6D /* CS562Core.framework */; };
@@ -64,17 +68,22 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7007D8801BB3B07F008DCB56 /* CDataInitializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDataInitializer.h; sourceTree = "<group>"; };
+		7007D8811BB3B07F008DCB56 /* CDataInitializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDataInitializer.m; sourceTree = "<group>"; };
 		700D0BA31BA7542B009D9230 /* MeshStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeshStore.h; sourceTree = "<group>"; };
 		700D0BA41BA7542B009D9230 /* MeshStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeshStore.m; sourceTree = "<group>"; };
 		700D0BB11BA761EE009D9230 /* Mesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Mesh.m; sourceTree = "<group>"; };
 		700D0BB21BA761EE009D9230 /* Mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mesh.h; sourceTree = "<group>"; };
-		700D0BB41BA761EE009D9230 /* HalfEdgeMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HalfEdgeMethods.h; sourceTree = "<group>"; };
 		700D0BB51BA761EE009D9230 /* MacroCommons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacroCommons.h; sourceTree = "<group>"; };
 		700D0BB81BA767B5009D9230 /* Engine.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Engine.json; sourceTree = "<group>"; };
 		700D0BBA1BA7682B009D9230 /* Sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Sample.json; sourceTree = "<group>"; };
 		700D0BBE1BA77422009D9230 /* MeshLoadTimes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeshLoadTimes.m; sourceTree = "<group>"; };
 		701E2F851B7E60DA00807877 /* initGL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = initGL.h; sourceTree = "<group>"; };
 		701E2F861B7E612500807877 /* initGL.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = initGL.c; sourceTree = "<group>"; };
+		702B488A1BB25CBC008DDA8C /* Transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transform.h; sourceTree = "<group>"; };
+		702B488B1BB25CBC008DDA8C /* Transform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Transform.m; sourceTree = "<group>"; };
+		702B488D1BB25D07008DDA8C /* Model3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model3D.h; sourceTree = "<group>"; };
+		702B488E1BB25D07008DDA8C /* Model3D.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Model3D.m; sourceTree = "<group>"; };
 		7060654F1B46FBC700C884F6 /* CS562.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CS562.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		706065531B46FBC700C884F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		706065541B46FBC700C884F6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -97,6 +106,7 @@
 		7084E3B11BAF83A800C866E7 /* Shader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Shader.m; sourceTree = "<group>"; };
 		7084E3B31BAF85EF00C866E7 /* ShaderManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShaderManager.m; sourceTree = "<group>"; };
 		7084E3B41BAF85EF00C866E7 /* ShaderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderManager.h; sourceTree = "<group>"; };
+		709768611BB0722B007369D4 /* cube.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = cube.obj; path = Meshes/cube.obj; sourceTree = "<group>"; };
 		70D7D2321B48245C007D87EA /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		70D7D2341B482464007D87EA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		70F696441BAB55E400486C6D /* CS562Core.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CS562Core.framework; path = "../../Library/Developer/Xcode/DerivedData/CS562Core-gqvecmhxcyfrpdfkmhgyucqdckgf/Build/Products/Release/CS562Core.framework"; sourceTree = "<group>"; };
@@ -131,11 +141,14 @@
 		700D0BA01BA753D5009D9230 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				700D0BB41BA761EE009D9230 /* HalfEdgeMethods.h */,
 				700D0BB21BA761EE009D9230 /* Mesh.h */,
 				700D0BB11BA761EE009D9230 /* Mesh.m */,
 				700D0BA31BA7542B009D9230 /* MeshStore.h */,
 				700D0BA41BA7542B009D9230 /* MeshStore.m */,
+				702B488A1BB25CBC008DDA8C /* Transform.h */,
+				702B488B1BB25CBC008DDA8C /* Transform.m */,
+				702B488D1BB25D07008DDA8C /* Model3D.h */,
+				702B488E1BB25D07008DDA8C /* Model3D.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -208,13 +221,13 @@
 				701E2F841B7E60B400807877 /* BoilerPlate */,
 				706065541B46FBC700C884F6 /* AppDelegate.h */,
 				706065551B46FBC700C884F6 /* AppDelegate.m */,
+				7073CE6C1B49DF1700E3FEB8 /* View.h */,
+				7073CE6D1B49DF1700E3FEB8 /* View.m */,
 				706065591B46FBC700C884F6 /* ViewController.h */,
 				7060655A1B46FBC700C884F6 /* ViewController.m */,
 				7060655C1B46FBC700C884F6 /* Images.xcassets */,
 				7060655E1B46FBC700C884F6 /* Main.storyboard */,
 				706065521B46FBC700C884F6 /* Supporting Files */,
-				7073CE6C1B49DF1700E3FEB8 /* View.h */,
-				7073CE6D1B49DF1700E3FEB8 /* View.m */,
 				7073CE6F1B4A378800E3FEB8 /* README */,
 			);
 			path = CS562;
@@ -263,6 +276,8 @@
 				7084E3B41BAF85EF00C866E7 /* ShaderManager.h */,
 				7084E3B01BAF83A800C866E7 /* Shader.h */,
 				7084E3B11BAF83A800C866E7 /* Shader.m */,
+				7007D8801BB3B07F008DCB56 /* CDataInitializer.h */,
+				7007D8811BB3B07F008DCB56 /* CDataInitializer.m */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -270,6 +285,7 @@
 		70F6964C1BAC926700486C6D /* Meshes */ = {
 			isa = PBXGroup;
 			children = (
+				709768611BB0722B007369D4 /* cube.obj */,
 				70FDF7AE1BAC95AB00D24F12 /* dragon.obj */,
 				70FDF7AF1BAC95AB00D24F12 /* horse.obj */,
 				70FDF7B01BAC95AB00D24F12 /* bunny.obj */,
@@ -363,6 +379,7 @@
 				7060655D1B46FBC700C884F6 /* Images.xcassets in Resources */,
 				7084E3AC1BAF790200C866E7 /* simple.fsh in Resources */,
 				700D0BB91BA767B5009D9230 /* Engine.json in Resources */,
+				709768621BB0722B007369D4 /* cube.obj in Resources */,
 				70FDF7B31BAC95AB00D24F12 /* horse.obj in Resources */,
 				706065601B46FBC700C884F6 /* Main.storyboard in Resources */,
 				70FDF7B51BAC95AB00D24F12 /* bunny.obj in Resources */,
@@ -388,8 +405,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				702B488F1BB25D07008DDA8C /* Model3D.m in Sources */,
 				700D0BB61BA761EE009D9230 /* Mesh.m in Sources */,
+				7007D8821BB3B07F008DCB56 /* CDataInitializer.m in Sources */,
 				700D0BA51BA7542B009D9230 /* MeshStore.m in Sources */,
+				702B488C1BB25CBC008DDA8C /* Transform.m in Sources */,
 				7084E3B21BAF83A800C866E7 /* Shader.m in Sources */,
 				7073CE6E1B49DF1700E3FEB8 /* View.m in Sources */,
 				7060655B1B46FBC700C884F6 /* ViewController.m in Sources */,

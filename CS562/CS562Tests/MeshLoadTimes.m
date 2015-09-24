@@ -27,7 +27,7 @@
     [newStore setMeshObjFiles:meshFiles];
     
     [self measureBlock:^{
-        [newStore postInit];
+        [newStore loadAllMeshDataCreateHalfEdgeMesh];
     }];
 }
 
@@ -42,7 +42,7 @@
     [newStore setMeshObjFiles:meshFiles];
     
     [self measureBlock:^{
-        [newStore postInit];
+        [newStore loadAllMeshDataCreateHalfEdgeMesh];
     }];
 }
 
@@ -57,7 +57,7 @@
     [newStore setMeshObjFiles:meshFiles];
     
     [self measureBlock:^{
-        [newStore postInit];
+        [newStore loadAllMeshDataCreateHalfEdgeMesh];
     }];
 }
 @end

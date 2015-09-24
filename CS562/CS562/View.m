@@ -2,6 +2,8 @@
 //  View.m
 //  CS562
 //
+//  This view knows about the deferred rendering process.
+//
 //  Created by Felipe Robledo on 7/5/15.
 //  Copyright (c) 2015 Felipe Robledo. All rights reserved.
 //
@@ -38,6 +40,8 @@ float points[] = {
     NSOpenGLPixelFormatAttribute attributes [] = {
         //kCGLPFAOpenGLProfile,
         
+        // Specifying "NoRecovery" gives us a context that cannot fall back to the software renderer.  This makes the View-based context a compatible with the layer-backed context, enabling us to use the "shareContext" feature to share textures, display lists, and other OpenGL objects between the two.
+        //NSOpenGLPFANoRecovery, // Enable automatic use of OpenGL "share" contexts.
         
         // Helps guarantee all displays support pixel format
         NSOpenGLPFAScreenMask, 0,
@@ -91,6 +95,7 @@ float points[] = {
         
         m_GLContext = [[NSOpenGLContext alloc] initWithFormat:format shareContext:nil];
         if( m_GLContext != nil) {
+            [self setWantsLayer:YES];
             [m_GLContext setView:self];
             [m_GLContext makeCurrentContext];
             
@@ -103,7 +108,6 @@ float points[] = {
                        (GLint)NSHeight(pixelBounds));
             
             m_HasGeneratedFocus = NO;
-            [self setNeedsDisplay:YES];
             
             // FIXME: Remove
             glGenBuffers (1, &vbo);
@@ -257,11 +261,27 @@ float points[] = {
     NSLog(@"update");
 
     if(m_GLContext) {
-        [m_GLContext update];
+        //[m_GLContext update];
     }
     
-    [self display];
+    //[self display];
 }
+
+-(void) draw {
+    if(m_GLContext) {
+        [m_GLContext makeCurrentContext];
+        
+        // wipe the drawing surface clear
+        glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glUseProgram (shader_programme);
+        glBindVertexArray (vao);
+        // draw points 0-3 from the currently bound VAO with current in-use shader
+        glDrawArrays (GL_TRIANGLES, 0, 3);
+        
+        [m_GLContext flushBuffer];
+    }
+}
+
 -(void) updateLayer {
     NSLog(@"updateLayer");
 }
@@ -295,18 +315,6 @@ float points[] = {
     NSLog(@"Drawing");
     
     [super drawRect:dirtyRect];
-    if(m_GLContext) {
-        [m_GLContext makeCurrentContext];
-        
-        // wipe the drawing surface clear
-        glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glUseProgram (shader_programme);
-        glBindVertexArray (vao);
-        // draw points 0-3 from the currently bound VAO with current in-use shader
-        glDrawArrays (GL_TRIANGLES, 0, 3);
-        
-        [m_GLContext flushBuffer];
-    }
 }
 
 -(void)viewDidMoveToWindow {

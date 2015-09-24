@@ -24,16 +24,17 @@
 #define COLOR_SIZE     4
 #define TANGENT_SIZE   3
 #define BINORMAL_SIZE  3
-#define FACE_NORM_SIZE 3
 #define TEXTURE_SIZE   3
+#define FACE_NORM_SIZE 3
 
 #define POS_INDEX        0
 #define NORM_INDEX       3
 #define COLOR_INDEX      6
 #define TANGENT_INDEX    9
 #define BINORMAL_INDEX  12
-#define FACE_NORM_INDEX 15
-#define TEXTURE_INDEX   18
+#define TEXTURE_INDEX   15
+#define FACE_NORM_INDEX 18
+
 
 #define MAX_BUFFER_OBJECTS 2
 

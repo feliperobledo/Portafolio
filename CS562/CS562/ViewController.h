@@ -15,5 +15,13 @@
 @property EntityCreator* _entityCreator;
 @property Entity* _engine;
 
+-(void)loadView;
+-(void)viewWillAppear;
+-(void)viewDidAppear;
+-(void)viewDidLoad;
+-(void)setRepresentedObject:(id)representedObject;
+
+-(void)gameLoopUpdate;
+
 @end
 
