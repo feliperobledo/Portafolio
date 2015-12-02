@@ -40,7 +40,7 @@
 
 // Call the update method of the NSOpenGLContext class
 - (void)update;
-- (void)draw;
+- (void)draw:(NSDictionary*)dataToDraw;
 
 // In-case you need to switch your pixel format
 - (void)setPixelFormat:(NSOpenGLPixelFormat*)pixelFormat;
@@ -54,10 +54,19 @@
 
 - (void)drawRect:(NSRect)dirtyRect;
 
--(void)viewDidMoveToWindow;
+- (void)viewDidMoveToWindow;
 
 - (void) updateConstraints;
 
--(void) rightMouseDown:(NSEvent *)theEvent;
+- (BOOL) acceptsFirstResponder;
+- (void) keyDown:(NSEvent *)theEvent;
+- (void) keyUp:(NSEvent *)theEvent;
 
+- (void) rightMouseDown:(NSEvent *)theEvent;
+- (void) rightMouseDragged:(NSEvent *)theEvent;
+- (void) rightMouseUp:(NSEvent *)theEvent;
+
+- (void) mouseDown:(NSEvent *)theEvent;
+- (void) mouseDragged:(NSEvent *)theEvent;
+- (void) mouseUp:(NSEvent *)theEvent;
 @end

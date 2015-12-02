@@ -26,11 +26,12 @@
  */
 @interface IController : Connector
 
-
+-(id) init;
 -(id) initWithOwner:(Entity*)owner;
 -(id) initWithOwner:(Entity*)owner usingSerializer:(NSDictionary*)ser;
 -(id) initWithDictionary:(NSDictionary*)dict;
 -(void) serializeWith:(NSObject*)ser;
+-(void) postInit;
 
 // controller only methods
 -(void) initControllerBindings;

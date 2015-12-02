@@ -24,15 +24,15 @@
 #define COLOR_SIZE     4
 #define TANGENT_SIZE   3
 #define BINORMAL_SIZE  3
-#define TEXTURE_SIZE   3
+#define TEXTURE_SIZE   2
 #define FACE_NORM_SIZE 3
 
 #define POS_INDEX        0
 #define NORM_INDEX       3
 #define COLOR_INDEX      6
-#define TANGENT_INDEX    9
-#define BINORMAL_INDEX  12
-#define TEXTURE_INDEX   15
+#define TANGENT_INDEX   10
+#define BINORMAL_INDEX  13
+#define TEXTURE_INDEX   16
 #define FACE_NORM_INDEX 18
 
 

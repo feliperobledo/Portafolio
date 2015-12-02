@@ -21,11 +21,14 @@
 #import <OpenGL/gltypes.h>
 #import <CS562Core/IModel.h>
 
+//#define USE_HALF_EDGE
+
 @class Entity;
 
 //------------------------------------------------------------------------------
 struct Face;
 struct Vertex;
+
 
 struct HalfEdge
 {
@@ -37,22 +40,34 @@ struct HalfEdge
 
 typedef struct HalfEdge HalfEdge;
 
+
 struct Vertex
 {
     GLKVector3 pos;
     GLKVector3 normal;
-    GLKVector4 colors;
+    GLKVector4 color;
     GLKVector3 tangent;
-    GLKVector3 binormal;
-    GLKVector4 uv; //[0,1] -> u, [2,3]-> v
+    GLKVector3 bitangent;
+    GLKVector2 texture;
+
     HalfEdge* outEdge;
+#ifndef USE_HALF_EDGE
+    GLuint face;
+#endif
+    
+    GLuint index;
 };
 
 typedef struct Vertex Vertex;
 
 struct Face
 {
+#ifdef USE_HALF_EDGE
     HalfEdge* start;
+#else
+    GLuint v1,v2,v3;
+#endif
+    
     GLKVector3 normal;
 };
 
@@ -91,6 +106,7 @@ typedef enum {
 -(id) initWithOwner:(Entity*)owner;
 -(id) initWithOwner:(Entity*)owner usingSerializer:(NSDictionary*)ser;
 -(id) initWithDictionary:(NSDictionary*)dict;
+-(id) initWithVertices:(NSArray*)vertices andFaces:(NSArray*)indices;
 -(void) serializeWith:(NSObject*)ser;
 
 -(BOOL) createMeshDataFromFile:(NSData*)objData;
@@ -103,6 +119,7 @@ typedef enum {
 // Operation for initializing missing essential vertex data
 -(void) initFaceNormals;
 -(void) initVertexNormals;
+-(void) saveVertexNormalsToFile:(NSString*)filename;
 
 -(void) flushMemory;
 -(void) dealloc;

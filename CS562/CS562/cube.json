@@ -1,0 +1,52 @@
+{
+    "Name" : "Cube",
+    "Children" : [
+    ],
+    "Models" : {
+        "Transform" : {
+            "data" : {
+                "scale" : {
+                    "x" : 5,
+                    "y" : 5,
+                    "z" : 5,
+                },
+                "translation" : {
+                    "x" : 0,
+                    "y" : 0,
+                    "z" : 0,
+                },
+                "rotation" : {
+                    "x" : 0,
+                    "y" : 0,
+                    "z" : 0,
+                }
+            }
+        },
+        "Model3D" : {
+            "meshSource" : {
+                "Name" : "cube",
+                "Type" : "obj"
+            }
+        },
+        "Material" : {
+            "specularity" : 1.0,
+            "diffuse" : {
+                "r" : 1.0,
+                "g" : 1.0,
+                "b" : 0.3,
+                "a" : 0.0,
+            },
+            "emissive" : {
+                "r" : 1.0,
+                "g" : 1.0,
+                "b" : 1.0,
+                "a" : 1.0,
+            }
+        }
+    },
+    "Views" : {
+        
+    },
+    "Controllers" : {
+    }
+}

@@ -1,0 +1,50 @@
+{
+    "Name" : "Bunny",
+    "Children" : [
+    ],
+    "Models" : {
+        "Transform" : {
+            "data" : {
+                "scale" : {
+                    "x" : 2,
+                    "y" : 2,
+                    "z" : 2,
+                },
+                "translation" : {
+                    "x" : 0,
+                    "y" : 0,
+                    "z" : 0,
+                },
+                "rotation" : {
+                    "x" : 0,
+                    "y" : 0,
+                    "z" : 0,
+                }
+            }
+        },
+        "Model3D" : {
+            "meshSource" : {
+                "Name" : "bunny",
+                "Type" : "obj"
+            }
+        },
+        "Material" : {
+            "specularity" : 1.0,
+            "diffuse" : {
+                "x" : 1.0,
+                "y" : 1.0,
+                "z" : 1.0,
+            },
+            "emissive" : {
+                "x" : 1.0,
+                "y" : 1.0,
+                "z" : 1.0,
+            }
+        }
+    },
+    "Views" : {
+        
+    },
+    "Controllers" : {
+    }
+}

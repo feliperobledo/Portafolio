@@ -41,13 +41,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "CS562Core/EntityCreator.m"
-            timestampString = "464749967.656398"
+            filePath = "CS562CoreTests/EntityCreatorTests.m"
+            timestampString = "464820358.898133"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "156"
-            endingLineNumber = "156"
-            landmarkName = "-serializeEntity:fromDictionary:"
+            startingLineNumber = "159"
+            endingLineNumber = "159"
+            landmarkName = "-checkEntity:equalDictionary:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -57,14 +57,76 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "CS562Core/EntityCreator.m"
-            timestampString = "464749992.990836"
+            filePath = "CS562CoreTests/EntityCreatorTests.m"
+            timestampString = "464820358.898133"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "147"
-            endingLineNumber = "147"
-            landmarkName = "-serializeEntity:fromDictionary:"
+            startingLineNumber = "161"
+            endingLineNumber = "161"
+            landmarkName = "-checkEntity:equalDictionary:"
             landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[EntityCreatorTests checkEntity:equalDictionary:]"
+                  moduleName = "CS562CoreTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/feliperobledo/Portafolio/CS562Core/CS562CoreTests/EntityCreatorTests.m"
+                  timestampString = "464820152.282695"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "158"
+                  endingLineNumber = "158"
+                  offsetFromSymbolStart = "3830">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[EntityCreatorTests checkEntity:equalDictionary:]"
+                  moduleName = "CS562CoreTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/feliperobledo/Portafolio/CS562Core/CS562CoreTests/EntityCreatorTests.m"
+                  timestampString = "464820152.282899"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "158"
+                  endingLineNumber = "158"
+                  offsetFromSymbolStart = "4235">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[EntityCreatorTests checkEntity:equalDictionary:]"
+                  moduleName = "CS562CoreTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/feliperobledo/Portafolio/CS562Core/CS562CoreTests/EntityCreatorTests.m"
+                  timestampString = "464820152.283034"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "158"
+                  endingLineNumber = "158"
+                  offsetFromSymbolStart = "4300">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[EntityCreatorTests checkEntity:equalDictionary:]"
+                  moduleName = "CS562CoreTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/feliperobledo/Portafolio/CS562Core/CS562CoreTests/EntityCreatorTests.m"
+                  timestampString = "464820152.283164"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "158"
+                  endingLineNumber = "158"
+                  offsetFromSymbolStart = "4437">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

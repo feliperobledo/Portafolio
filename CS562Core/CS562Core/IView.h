@@ -16,10 +16,12 @@
     @private
 }
 
+-(id) init;
 -(id) initWithOwner:(Entity*)owner;
 -(id) initWithOwner:(Entity*)owner usingSerializer:(NSDictionary*)ser;
 -(id) initWithDictionary:(NSDictionary*)dict;
 -(void) serializeWith:(NSObject*)ser;
+-(void) postInit;
 
 // all other public methods are child-class dependent and should be used to inform
 //     the controller of changes.

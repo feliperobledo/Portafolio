@@ -27,7 +27,7 @@
 // Have this connector emit a signal with specific data
 -(void) emmit:(NSString*)signalName withData:(NSDictionary*)data;
 
--(BOOL)couldProperBeSetWithSpecialSetter:(NSString*)propName withData:(NSObject*)data;
+-(BOOL) couldProperBeSetWithSpecialSetter:(NSString*)propName withData:(NSObject*)data;
 
 @end 
 

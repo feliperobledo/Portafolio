@@ -10,6 +10,8 @@
 
 typedef uint32 MeshID;
 
+@class Mesh;
+
 @interface MeshStore : IModel
 
 @property NSArray* meshObjFiles;
@@ -22,6 +24,8 @@ typedef uint32 MeshID;
 -(id) initWithDictionary:(NSDictionary*)dict;
 -(void) serializeWith:(NSObject*)ser;
 -(void) postInit;
+
+-(Mesh*)getMeshFromName:(NSString*)meshSource;
 
 // Test method
 -(BOOL) loadAllMeshDataCreateHalfEdgeMesh;

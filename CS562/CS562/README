@@ -15,3 +15,80 @@ your framework does copy the header files when built by going to your project
 settings -> Build Phases and dragging all the Project headers to the public
 section (note that these headers should be the same ones you mention in your
 master header). This should be it!
+
+GBUFFER PROBLEMS:
+
+I need help. My geometry is wrong, and I don't understand why. When I add my
+plane .obj, then nothing loads, which is not the case when I load the bunny. I
+seriously need help to get unstuck.
+
+1. I checked that I would get the same results by manually binding the index vbo,
+and I did. Thus binding the element array buffer is working.
+
+2. I have also tried changing the order of my vertex attributes in the shader,
+but that results in the same result.
+
+3. I checked that with glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, ...) that
+the id of the element buffer attached to the meshe's vao is the same as the
+one I create.
+
+4. So the GLKit performs operations on matrices as column major, and GLSL performs
+matrix operations as column major.
+
+5. So I tried using the GLKMatrix4MakeLookAt, and the produced matrix is the same
+as my own matrix, except for some floating point difference.
+
+7. So I chcked my perspective matrix calculation, and there are no changes from
+the code I used for CS300, so that looks fine.
+
+SOLVED IT!
+
+I was using normals as geometry...
+Need to figure out why opengl is not following my layout specifications
+
+SHADOW MAPPING PROBLEMS:
+
+1. I thought my transformation matrix to light space was wrong. I wrote code
+   that creates a transformation matrix like my Transform component does but
+   using the light's direction. I then inverted the matrix and got the same
+   result as when I use the built-in LookAt function. So my matrix math seems
+   to not be the problem.
+
+2. I don't know if this is a problem, but using glFramebufferTexture2D with a
+   framebuffer that only has a depth attachment may cause issues. I switched
+   to glFramebufferTexture instead, but I don't know if this is a problem.
+
+3. I have checked the contents of the shadow texture by blitting it to the
+   final frambuffer that I will be displaying. This means that the texture may
+   not be beeing bound correctly.
+
+4. It is weird that my lighting shader that considers shadows does not output
+   red color at the end. What is going on there?
+
+5. Awesome! I got the shadow texture working! The biggest problem I had was to
+   set the face to cull back to the back face. That is why non of my stuff was
+   being drawn. The quad I send to render everything on was being culled.
+   Bummer...
+   Now I have to figure out why my shadow mapping is not working...
+
+
+
+PROJECT 5
+
+The paper I have chosen to implement is titled "Approximating Translucency for
+a Fast, Cheap and Convincing Subsurface Scattering Look". The idea of the paper
+is to mock SSS without going through the computation intensity of the original
+technique. The authors don't want to use BSSRDFs since they are too expensive.
+The author explains that they chose to use a combination of BRDF + BTDF with
+some elements of BSSRDF.
+This technique does not rely on additional depth maps or texture space blurs,
+which brings some savings on memory.
+Key points:
+1. The light traveling inside the object is affected by the object thickness
+2. ??? (I don't get it)
+Hardest part seems to be the precomputer Local Thickness Map
+This project will require that I change my GBuffer somewhat
+
+
+
+

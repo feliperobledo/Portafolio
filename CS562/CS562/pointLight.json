@@ -1,0 +1,42 @@
+{
+    "Name" : "Light",
+    "Children" : [
+    ],
+    "Models" : {
+        "Transform" : {
+            
+            "data" : {
+                "scale" : {
+                    "x" : 1,
+                    "y" : 1,
+                    "z" : 1
+                },
+                "translation" : {
+                    "x" : 0,
+                    "y" : 0,
+                    "z" : 0
+                },
+                "rotation" : {
+                    "x" : 0,
+                    "y" : 0,
+                    "z" : 0,
+                }
+            }
+        },
+        "PointLight" : {
+            "color" : {
+                "r" : 1.0,
+                "g" : 1.0,
+                "b" : 1.0,
+                "a" : 1.0,
+            },
+            "range" : 75.0,
+            "attenuation" : 30.0,
+        }
+    },
+    "Views" : {
+        
+    },
+    "Controllers" : {
+    }
+}

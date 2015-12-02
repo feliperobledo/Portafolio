@@ -1,0 +1,39 @@
+{
+    "Name" : "Camera",
+    "Children" : [
+    ],
+    "Models" : {
+        "Transform" : {
+            "data" : {
+                "scale" : {
+                    "x" : 1.0,
+                    "y" : 1.0,
+                    "z" : 1.0
+                },
+                "translation" : {
+                    "x" : 0.0,
+                    "y" : 0.0,
+                    "z" : -10.0
+                },
+                "rotation" : {
+                    "x" : 0.0,
+                    "y" : 0.0,
+                    "z" : 0.0,
+                }
+            }
+        },
+        "PerspectiveView" : {
+            "near" : 1.0,
+            "far" : 500.0,
+            "fov" : 65.0
+        }
+    },
+    "Views" : {
+        
+    },
+    "Controllers" : {
+        "FirstPersonControls" : {
+            
+        },
+    }
+}

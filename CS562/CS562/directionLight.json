@@ -1,0 +1,76 @@
+{
+    "Name" : "Light",
+    "Children" : [
+    ],
+    "Models" : {
+        "Transform" : {
+            "data" : {
+                "scale" : {
+                    "x" : 1,
+                    "y" : 1,
+                    "z" : 1
+                },
+                "translation" : {
+                    "x" : 0,
+                    "y" : 0,
+                    "z" : 0
+                },
+                "rotation" : {
+                    "x" : 0,
+                    "y" : 0,
+                    "z" : 0,
+                },
+            },
+        },
+        "Model3D" : {
+            "meshSource" : {
+                "Name" : "sphere",
+                "Type" : "obj"
+            }
+        },
+        "Material" : {
+            "specularity" : 1.0,
+            "diffuse" : {
+                "r" : 1.0,
+                "g" : 1.0,
+                "b" : 0.3,
+                "a" : 0.0,
+            },
+            "emissive" : {
+                "r" : 1.0,
+                "g" : 1.0,
+                "b" : 1.0,
+                "a" : 1.0,
+            }
+        },
+        "DirectionalLight" : {
+            "color" : {
+                "r" : 0.5,
+                "g" : 0.5,
+                "b" : 0.5,
+                "a" : 1.0,
+            },
+            "direction" : {
+                "x" : 0.0,
+                "y" : -1.0,
+                "z" : 0.0,
+            },
+        }
+    },
+    "Views" : {
+        "ShadowCastingLight" : {
+            
+        }
+    },
+    "Controllers" : {
+        "LinearTrackBall" : {
+            "distance" : 45.0,
+            "speed" : 15.0,
+            "lookAt" : {
+                "x" : 0,
+                "y" : 0,
+                "z" : -10,
+            },
+        }
+    }
+}

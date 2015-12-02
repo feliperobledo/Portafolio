@@ -12,7 +12,6 @@
 
 @interface ViewController : NSViewController
 
-@property EntityCreator* _entityCreator;
 @property Entity* _engine;
 
 -(void)loadView;
@@ -21,7 +20,7 @@
 -(void)viewDidLoad;
 -(void)setRepresentedObject:(id)representedObject;
 
--(void)gameLoopUpdate;
+-(void)gameLoopUpdate:(NSTimer*)timer;
 
 @end
 

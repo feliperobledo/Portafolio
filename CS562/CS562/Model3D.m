@@ -18,7 +18,7 @@ END_SPECIAL_SETTORS
 
 -(id) init {
     if ((self = [super init])) {
-        
+        _meshSource = [[NSString alloc] init];
     }
     return self;
 }
@@ -56,7 +56,7 @@ END_SPECIAL_SETTORS
 -(void)meshSourceSpecialSetter:(NSObject*)data {
     NSLog(@"meshSourceSpecialSetter");
     NSDictionary* dict = (NSDictionary*)data;
-    if(dict == nil) {
+    if(dict != nil) {
         // concatenate the parts of the file source name
         _meshSource = [NSMutableString stringWithString:[dict objectForKey:@"Name"]];
         [_meshSource appendString:@"."];

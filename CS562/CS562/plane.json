@@ -1,0 +1,52 @@
+{
+    "Name" : "Plane",
+    "Children" : [
+    ],
+    "Models" : {
+        "Transform" : {
+            "data" : {
+                "scale" : {
+                    "x" : 5,
+                    "y" : 5,
+                    "z" : 5,
+                },
+                "translation" : {
+                    "x" : 0,
+                    "y" : 0,
+                    "z" : 0,
+                },
+                "rotation" : {
+                    "x" : 0,
+                    "y" : 0,
+                    "z" : 0,
+                }
+            }
+        },
+        "Model3D" : {
+            "meshSource" : {
+                "Name" : "plane",
+                "Type" : "obj"
+            }
+        },
+        "Material" : {
+            "specularity" : 0.5,
+            "diffuse" : {
+                "r" : 0.0,
+                "g" : 0.0,
+                "b" : 1.0,
+                "a" : 0.0,
+            },
+            "emissive" : {
+                "r" : 1.0,
+                "g" : 1.0,
+                "b" : 1.0,
+                "a" : 1.0,
+            }
+        }
+    },
+    "Views" : {
+        
+    },
+    "Controllers" : {
+    }
+}

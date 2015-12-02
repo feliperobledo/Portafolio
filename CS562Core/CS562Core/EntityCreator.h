@@ -28,16 +28,18 @@
 // An array of unsigned long NSNumbers. 
 @property (nonatomic, retain, strong) NSMutableArray* _freeList;
 
--(id) init;
--(uint64) newEmptyEntity:(Entity*)parent;
--(uint64) newEntity:(Entity*)parent fromJSONFile:(NSData*)fileData;
++(uint64) newEmptyEntity:(Entity*)parent;
++(uint64) newEntity:(Entity*)parent fromJSONFile:(NSData*)fileData;
 
 //------------------------------------------------------------------------------
 
--(Entity*) getEntity:(uint64)entityID;
--(NSException*) destroyEntity:(uint64)entityID;
++(Entity*) getEntity:(uint64)entityID;
++(NSException*) destroyEntity:(uint64)entityID;
 
 //------------------------------------------------------------------------------
++(void) serializeModel:(NSString*)name withData:(NSDictionary*)data ofEntity:(Entity*)entity;
++(void) serializeController:(NSString*)name withData:(NSDictionary*)data ofEntity:(Entity*)entity;
++(void) serializeView:(NSString*)name withData:(NSDictionary*)data ofEntity:(Entity*)entity;
 
 // Use upper 32 bits for id version
 +(uint32) getObjectIdVersion:(Entity*)obj;

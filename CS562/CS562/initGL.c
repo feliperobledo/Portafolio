@@ -20,10 +20,10 @@ GLuint* initGL(GLuint* frameBuffers, GLuint* renderBuffer,
     
     glGenTextures(RENDER_PASSES + 1, offscreenTextures);
     GLuint textureID = offscreenTextures[RESULT_TEXTURE];
-    if (textureID == 0)
-    {
+    if (textureID == 0) {
         return NULL;
     }
+    
     
     glBindTexture(GL_TEXTURE_2D, textureID);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0,
@@ -39,6 +39,11 @@ GLuint* initGL(GLuint* frameBuffers, GLuint* renderBuffer,
     glGenFramebuffers(1, frameBuffers);
     glBindFramebuffer(GL_FRAMEBUFFER, frameBuffers[0]);
     
+    glFramebufferTexture2D(GL_FRAMEBUFFER,
+                           GL_DEPTH_ATTACHMENT,
+                           GL_TEXTURE_2D,
+                           textureID, 0);
+    
     // Generate depth render buffer and attach it to frame buffer
     glGenRenderbuffers(1, renderBuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer[0]);
@@ -50,11 +55,6 @@ GLuint* initGL(GLuint* frameBuffers, GLuint* renderBuffer,
                               GL_DEPTH_ATTACHMENT,
                               GL_RENDERBUFFER,
                               renderBuffer[0]);
-    
-    glFramebufferTexture2D(GL_FRAMEBUFFER,
-                           GL_DEPTH_ATTACHMENT,
-                           GL_TEXTURE_2D,
-                           textureID, 0);
 
     
     //Does the GPU support current FBO configuration?

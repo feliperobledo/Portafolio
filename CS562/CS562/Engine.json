@@ -1,62 +1,153 @@
 {
     "Name" : "Engine",
     "Children" : [
-        {
-            "Name" : "TestObject",
-            "Children" : [
-            ],
-            "Models" : {
-                  "Transform" : {
-                      "data" : {
-                          "scale" : {
-                              "x" : 5,
-                              "y" : 5,
-                              "z" : 5,
-                          },
-                          "translation" : {
-                              "x" : 0,
-                              "y" : 0,
-                              "z" : -10,
-                          },
-                          "rotation" : {
-                              "x" : 0,
-                              "y" : 0,
-                              "z" : 0,
-                              "w" : 0,
-                          }
-                      }
-                  },
-                  "Model3D" : {
-                      "meshSource" : {
-                          "Name" : "cube",
-                          "Type" : "obj"
-                      }
-                  }
-            },
-            "Views" : {
-
-            },
-            "Controller" : {
-
-            }
-        }
     ],
     "Models" : {
         "MeshStore" : {
-            
             "meshObjFiles" : [
                 {
                     "Name" : "cube",
                     "Type" : "obj"
                 },
+                {
+                    "Name" : "bunny",
+                    "Type" : "obj"
+                },
+                {
+                    "Name" : "plane",
+                    "Type" : "obj"
+                },
+                {
+                    "Name" : "sphere",
+                    "Type" : "obj"
+                },
             ],
-            
-        }
+        },
+        "World" : {
+            "gameObjects" : [
+                    {
+                        "Archetype" : "camera.json",
+                        "Transform" : {
+                            "data" : {
+                                "translation" : {
+                                    "x" : 0,
+                                    "y" : 0,
+                                    "z" : 10,
+                                },
+                            }
+                        }
+                    },
+                    {
+                        "Archetype" : "cube.json",
+                        "Transform" : {
+                            "data" : {
+                                "translation" : {
+                                    "x" : 0,
+                                    "y" : -5,
+                                    "z" : -10,
+                                },
+                                "scale" : {
+                                    "x" : 5,
+                                    "y" : 5,
+                                    "z" : 5,
+                                },
+                                "rotation" : {
+                                    "x" : 0,
+                                    "y" : 0,
+                                    "z" : 0,
+                                },
+                            }
+                        },
+                             "Model3D" : {
+                             "meshSource" : {
+                             "Name" : "bunny",
+                             "Type" : "obj"
+                             }
+                             },
+                    },
+                    {
+                        "Archetype" : "cube.json",
+                        "Transform" : {
+                            "data" : {
+                                "translation" : {
+                                    "x" : 10,
+                                    "y" : 0,
+                                    "z" : -20,
+                                },
+                                "scale" : {
+                                    "x" : 2.5,
+                                    "y" : 2.5,
+                                    "z" : 2.5,
+                                },
+                                "rotation" : {
+                                    "x" : 45,
+                                    "y" : 45,
+                                    "z" : 45,
+                                },
+                            }
+                        },
+                    },
+                    {
+                        "Archetype" : "cube.json",
+                        "Transform" : {
+                            "data" : {
+                                "translation" : {
+                                    "x" : 10,
+                                    "y" : 0,
+                                    "z" : -10,
+                                },
+                                "scale" : {
+                                    "x" : 2.5,
+                                    "y" : 2.5,
+                                    "z" : 2.5,
+                                },
+                                "rotation" : {
+                                    "x" : 0,
+                                    "y" : 0,
+                                    "z" : 0,
+                                },
+                            }
+                        },
+                    },
+                    {
+                        "Archetype" : "plane.json",
+                        "Transform" : {
+                            "data" : {
+                                "translation" : {
+                                    "x" : 0,
+                                    "y" : -10,
+                                    "z" : -10,
+                                },
+                                "scale" : {
+                                    "x" : 50,
+                                    "y" : 50,
+                                    "z" : 50,
+                                }
+                            }
+                        }
+                    },
+            ],
+            "lights" : [
+                    {
+                        "Archetype" : "directionLight.json",
+                        "Transform" : {
+                            "data" : {
+                                "translation" : {
+                                    "x" : 0,
+                                    "y" : 30,
+                                    "z" : -10,
+                                },
+                            }
+                        },
+                    },
+
+            ],
+        },
     },
     "Views" : {
         
     },
-    "Controller" : {
+    "Controllers" : {
         
     }
 }

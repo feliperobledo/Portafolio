@@ -14,23 +14,37 @@
 #import <nsobject-extensions.h>
 #import <malloc/malloc.h>
 
+// Private Methods Interface
+@interface EntityCreator(PrivateMethods)
+    +(NSMutableArray*) getObjectTable;
+    +(NSMutableArray*) getFreeList;
+    +(void) serializeComponent:(NSObject*)component withData:(NSDictionary*)dataDict;
+@end
+
 @implementation EntityCreator
 
-@synthesize _freeList    = FreeList;
-@synthesize _objectTable = OTable;
-
--(id) init {
-    if (self == [super init]) {
-        OTable = [[NSMutableArray alloc] init];
-        FreeList = [[NSMutableArray alloc] init];
++(NSMutableArray*) getObjectTable {
+    static NSMutableArray* objectTable = nil;
+    if( objectTable == nil ) {
+        objectTable = [[NSMutableArray alloc] init];
     }
-    return self;
+    return objectTable;
 }
 
--(uint64) newEmptyEntity:(Entity*)parent {
++(NSMutableArray*) getFreeList {
+    static NSMutableArray* freeList = nil;
+    if( freeList == nil ) {
+        freeList = [[NSMutableArray alloc] init];
+    }
+    return freeList;
+}
+
++(uint64) newEmptyEntity:(Entity*)parent {
     Entity* newEntity = nil;
     
     // there are no free id's to re-use, make more
+    NSMutableArray *FreeList = [EntityCreator getFreeList],
+                   *OTable   = [EntityCreator getObjectTable];
     if([FreeList count] == 0) {
         NSMutableArray* chunk = [[NSMutableArray alloc] initWithCapacity:CHUNK_SIZE];
         
@@ -59,7 +73,7 @@
     return [newEntity getID] == [freeID unsignedLongValue] ? [freeID unsignedLongValue] : INVALID_ID;
 }
 
--(uint64) newEntity:(Entity*)parent fromJSONFile:(NSData*)fileData {
++(uint64) newEntity:(Entity*)parent fromJSONFile:(NSData*)fileData {
     NSError* err = [NSError alloc];
     id obj = [NSJSONSerialization JSONObjectWithData:fileData options:NSJSONReadingAllowFragments error:&err];
 
@@ -86,7 +100,7 @@
     return entityID;
 }
 
--(Entity*) newEntity:(Entity*)parent fromDict:(NSDictionary*)dict{
++(Entity*) newEntity:(Entity*)parent fromDict:(NSDictionary*)dict{
     uint64 entityID = [self newEmptyEntity:parent];
     if (entityID == INVALID_ID) {
         NSLog(@"Could not create a new empty entity or there are no free IDs");
@@ -99,12 +113,11 @@
         return nil;
     }
     
-    [self serializeEntity:entity fromDictionary:dict];
-    
+    [EntityCreator serializeEntity:entity fromDictionary:dict];
     return entity;
 }
 
--(void) serializeEntity:(Entity*)entity fromDictionary:(NSDictionary*)dict {
++(void) serializeEntity:(Entity*)entity fromDictionary:(NSDictionary*)dict {
     for(NSString* key in dict) {
         if([key isEqualToString:@"Name"]) {
             
@@ -134,32 +147,7 @@
                 NSDictionary* componentData = [components objectForKey:componentClassName];
                 
                 id component = [[componentClass alloc] init];
-                
-                // Get all properties from current model, controller or view
-                unsigned int count = 0;
-                objc_property_t* propertyArray = class_copyPropertyList(componentClass, &count);
-                
-                for(int i = 0; i < count; ++i) {
-                    objc_property_t prop = propertyArray[i];
-                    
-                    NSString* propName = [[NSString alloc] initWithCString:property_getName(prop) encoding:NSUTF8StringEncoding] ;
-                    
-                    id data = [componentData valueForKey:propName];
-                    if (data == nil) {
-                        NSLog(@"\'%s\' does NOT have property \'%s\'",[componentClassName UTF8String],[propName UTF8String]);
-                        continue;
-                    }
-                    
-                    NSLog(@"\'%s\' has \'%s\'",[componentClassName UTF8String],[propName UTF8String]);
-                    
-                    // Set the property with either generically or with the use of a special settor
-                    NSObject* temp = (NSObject*)component;
-                    if([temp couldProperBeSetWithSpecialSetter:propName withData:data] == NO) {
-                        [component setValue:data forKey:propName];
-                    }
-                }
-                
-                free(propertyArray);
+                [EntityCreator serializeComponent:component withData:componentData];
                 
                 if([key isEqualToString:@"Models"]) {
                     [entity addModel:(IModel*)component];
@@ -179,7 +167,9 @@
 
 //------------------------------------------------------------------------------
 
--(Entity*) getEntity:(uint64)entityID {
++(Entity*) getEntity:(uint64)entityID {
+    NSMutableArray *OTable = [EntityCreator getObjectTable];
+    
     uint32 entityIndex = [EntityCreator getIndexFromID:entityID];
     uint32 modifiedIndex = entityIndex - 1;
     
@@ -188,7 +178,8 @@
     return [entity getID] != entityID ? nil: entity;
 }
 
--(NSException*) destroyEntity:(uint64)entityID {
++(NSException*) destroyEntity:(uint64)entityID {
+    NSMutableArray *FreeList = [EntityCreator getFreeList];
     Entity* entity = [self getEntity:entityID];
     
     if(entity == nil) {
@@ -204,6 +195,51 @@
 }
 
 //------------------------------------------------------------------------------
+
++(void) serializeModel:(NSString*)name withData:(NSDictionary*)data ofEntity:(Entity*)entity {
+    NSObject* model = (NSObject*)[entity getModelWithName:name];
+    [EntityCreator serializeComponent:model withData:data];
+}
+
++(void) serializeController:(NSString*)name withData:(NSDictionary*)data ofEntity:(Entity*)entity {
+    NSObject* controller = (NSObject*)[entity getControllerName:name];
+    [EntityCreator serializeComponent:controller withData:data];
+}
+
++(void) serializeView:(NSString*)name withData:(NSDictionary*)data ofEntity:(Entity*)entity {
+    NSObject* view = (NSObject*)[entity getViewWithName:name];
+    [EntityCreator serializeComponent:view withData:data];
+}
+
++(void) serializeComponent:(NSObject*)component withData:(NSDictionary*)dataDict {
+    Class componentClass = [component class];
+    NSString* name = [component className];
+    
+    // Get all properties from current model, controller or view
+    unsigned int count = 0;
+    objc_property_t* propertyArray = class_copyPropertyList(componentClass, &count);
+    
+    for(int i = 0; i < count; ++i) {
+        objc_property_t prop = propertyArray[i];
+        
+        NSString* propName = [[NSString alloc] initWithCString:property_getName(prop) encoding:NSUTF8StringEncoding] ;
+        
+        id data = [dataDict valueForKey:propName];
+        if (data == nil) {
+            NSLog(@"\'%s\' does NOT have property \'%s\'",[name UTF8String],[propName UTF8String]);
+            continue;
+        }
+        
+        NSLog(@"\'%s\' has \'%s\'",[name UTF8String],[propName UTF8String]);
+        
+        // Set the property with either generically or with the use of a special settor
+        if([component couldProperBeSetWithSpecialSetter:propName withData:data] == NO) {
+            [component setValue:data forKey:propName];
+        }
+    }
+    
+    free(propertyArray);
+}
 
 // Use upper 32 bits for id version
 +(uint32) getObjectIdVersion:(Entity*)obj {

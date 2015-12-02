@@ -20,13 +20,8 @@
 #import <Foundation/Foundation.h>
 #import <GLKit/GLKit.h>
 
-@interface Shader : NSObject{
-    GLuint m_ShaderProgram;
-    GLuint m_VertShader;
-    GLuint m_FragShader;
-}
+@interface Shader : NSObject
 
-@property (readonly,nonatomic,getter=program) GLuint m_ShaderProgram;
 @property (nonatomic,strong) NSMutableDictionary* m_Uniforms;//string-integer
 @property (nonatomic,retain) NSString* m_Name;
 
@@ -37,11 +32,16 @@
 -(GLint) getUniform:(NSString*)identifier;
 -(GLint) uniformFromDictionary:(NSString*)identifier;
 -(void) addUniform:(NSString*)identifier Location:(GLint)loc;
--(void) attachShader:(GLuint)shaderId;
+-(void) attachShader:(GLuint)shaderId ofType:(GLenum)type;
+-(void) extractUniformsFromShaders;
 -(void)link;
 -(void)use;
 -(void)unuse;
 -(void)dealloc;
+
+-(GLuint)program;
+-(NSDictionary*) getUniforms;
+-(void)extractOpenGLUniformLocationFromUniforms:(NSDictionary*)uniforms;
 
 //Need whole lot of unifor methods here
 -(void) uniformMatrix:(GLint)uniLocation Instances:(GLuint)i Transpose:(GLboolean)t Data:(const GLfloat*)d;

@@ -54,7 +54,20 @@
 -(void)postInit {
     //Do any other initilization work, such as creating the bindings of all
     //controllers.
-    /**/
+    
+    // Views and Controllers may add extra data Models that we need to
+    //     initialize.
+    for(NSString* key in Views) {
+        IView* view = [Views valueForKey:key];
+        [view postInit];
+    }
+    
+    for (NSString* key in Controllers) {
+        IController* controller = [Controllers valueForKey:key];
+        [controller postInit];
+    }
+    
+    // Any new models added by the Controllers and Views will be initialized
     for (NSString* key in Models) {
         IModel* model = [Models valueForKey:key];
         [model postInit];

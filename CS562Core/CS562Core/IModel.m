@@ -11,21 +11,21 @@
 @implementation IModel
 
 -(id) init {
-    if(self == [super init]){
+    if(self = [super init]){
         
     }
     return self;
 }
 
 -(id) initWithOwner:(Entity*)owner {
-    if(self == [super initWithOwner:owner]){
+    if(self = [super initWithOwner:owner]){
         
     }
     return self;
 }
 
 -(id) initWithOwner:(Entity*)owner usingSerializer:(NSDictionary*)ser {
-    if(self == [super initWithOwner:owner usingSerializer:ser]){
+    if(self = [super initWithOwner:owner usingSerializer:ser]){
         
     }
     return self;

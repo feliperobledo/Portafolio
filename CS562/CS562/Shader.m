@@ -20,9 +20,11 @@
 #import "Shader.h"
 #include <stdio.h>
 
-@implementation Shader
-@synthesize m_ShaderProgram = ShaderProgram;
-
+@implementation Shader{
+    GLuint m_ShaderProgram;
+    GLuint m_VertShader;
+    GLuint m_FragShader;
+}
 
 -(id) init
 {
@@ -35,9 +37,8 @@
 //methods
 -(void) createShaderProgram
 {
-    ShaderProgram = glCreateProgram();
-    if(ShaderProgram == 0)
-    {
+    m_ShaderProgram = glCreateProgram();
+    if(m_ShaderProgram == 0) {
         NSLog(@"Failed to create shader program");
     }
 }
@@ -50,8 +51,9 @@
     //Create the shader object
     shader = glCreateShader(type);
     
-    if(shader == 0)
+    if(shader == 0) {
         return 0;
+    }
     
     //Load the shader source
     glShaderSource(shader,1,&source,NULL);
@@ -61,11 +63,8 @@
     
     //Check the compile status
     glGetShaderiv(shader,GL_COMPILE_STATUS,&compiled);
-    
-    if(!compiled)
-    {
+    if(!compiled) {
         GLint infoLen = 0;
-        
         glGetShaderiv(shader,GL_INFO_LOG_LENGTH,&infoLen);
         
         if(infoLen > 1)
@@ -80,6 +79,8 @@
         
         glDeleteShader(shader);
         return 0;
+    } else {
+        NSLog(@"SUCCESS: Shader compilation successful.");
     }
     
     return shader;
@@ -103,17 +104,14 @@
 
 -(GLint) getUniform:(NSString*)identifier
 {
-    return glGetUniformLocation(self.m_ShaderProgram, [identifier UTF8String]);
+    return glGetUniformLocation(m_ShaderProgram, [identifier UTF8String]);
 }
 
 -(GLint) uniformFromDictionary:(NSString*)identifier
 {
     NSNumber* location = [self.m_Uniforms objectForKey:identifier];
-    if(location != nil)
-    {
-        return [location intValue];
-    }
-    return -1;
+    NSAssert(location != nil, @"ERROR: Querying for a uniform that shader does not have");
+    return [location intValue];
 }
 
 -(void) addUniform:(NSString*)identifier Location:(GLint)loc
@@ -122,35 +120,40 @@
     [self.m_Uniforms setObject:[NSNumber numberWithInteger:uniformLocation] forKey:identifier];
 }
 
--(void) attachShader:(GLuint)shaderId
+-(void) attachShader:(GLuint)shaderId ofType:(GLenum)type
 {
-    glAttachShader(ShaderProgram, shaderId);
+    if (type == GL_FRAGMENT_SHADER) {
+        m_FragShader = shaderId;
+    } else if(type == GL_VERTEX_SHADER) {
+        m_VertShader = shaderId;
+    }
+    glAttachShader(m_ShaderProgram, shaderId);
 }
 
 -(void)link
 {
-    glLinkProgram(ShaderProgram);
+    glLinkProgram(m_ShaderProgram);
     
     GLint linked = 0;
-    glGetProgramiv(ShaderProgram,GL_LINK_STATUS,&linked);
+    glGetProgramiv(m_ShaderProgram,GL_LINK_STATUS,&linked);
     if(!linked)
     {
         GLint infoLen = 0;
         
-        glGetProgramiv(ShaderProgram,GL_INFO_LOG_LENGTH,&infoLen);
+        glGetProgramiv(m_ShaderProgram,GL_INFO_LOG_LENGTH,&infoLen);
         
         if(infoLen > 0)
         {
             char* infoLog = (char*)malloc(sizeof(char)*infoLen);
             
-            glGetProgramInfoLog(ShaderProgram, infoLen, NULL, infoLog);
+            glGetProgramInfoLog(m_ShaderProgram, infoLen, NULL, infoLog);
             printf("Error linking program:\n%s\n",infoLog);
             
             free(infoLog);
         }
         
         printf("Deleting shader program");
-        glDeleteProgram(ShaderProgram);
+        glDeleteProgram(m_ShaderProgram);
     }
     else
     {
@@ -160,7 +163,7 @@
 
 -(void)use
 {
-   glUseProgram(ShaderProgram);
+   glUseProgram(m_ShaderProgram);
 }
 
 -(void)unuse
@@ -168,9 +171,13 @@
     glUseProgram(0);
 }
 
+-(GLuint)program {
+    return m_ShaderProgram;
+}
+
 -(void)flushGL
 {
-    glDeleteProgram(ShaderProgram);
+    glDeleteProgram(m_ShaderProgram);
     glDeleteShader(m_VertShader);
     glDeleteShader(m_FragShader);
 }
@@ -178,6 +185,23 @@
 -(void)dealloc
 {
     [self flushGL];
+}
+
+-(void)extractOpenGLUniformLocationFromUniforms:(NSDictionary*)uniforms {
+    NSAssert(uniforms != nil, @"ERROR: uniforms may not be nil");
+    
+    for(NSString* uniformIdentifier in uniforms) {
+        GLint location = [self getUniform:uniformIdentifier];
+        if(location < 0) {
+            NSLog(@"In %s shader: %s not being used",[self.m_Name UTF8String],[uniformIdentifier UTF8String]);
+        }
+        
+        [self addUniform:uniformIdentifier Location:location];
+    }
+}
+
+-(NSDictionary*) getUniforms {
+    return self.m_Uniforms;
 }
 
 /*******************************UNIFORM OVERLOADS********************************/
