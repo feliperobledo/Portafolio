@@ -66,7 +66,6 @@
 		70ED86521BFBC31F00A35A7B /* ibl.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 70ED86511BFBC31F00A35A7B /* ibl.fsh */; };
 		70EF32F31BF4237100AFED20 /* LinearTrackBall.m in Sources */ = {isa = PBXBuildFile; fileRef = 70EF32F21BF4237100AFED20 /* LinearTrackBall.m */; };
 		70F1F00D1BD9C22000A74CFF /* sphere.obj in Resources */ = {isa = PBXBuildFile; fileRef = 70F1F00B1BD9C22000A74CFF /* sphere.obj */; };
-		70F1F00E1BD9C22000A74CFF /* teapot.obj in Resources */ = {isa = PBXBuildFile; fileRef = 70F1F00C1BD9C22000A74CFF /* teapot.obj */; };
 		70F1F0111BDAB5BB00A74CFF /* ShadowCastingLight.m in Sources */ = {isa = PBXBuildFile; fileRef = 70F1F0101BDAB5BB00A74CFF /* ShadowCastingLight.m */; };
 		70F1F0141BDAC28600A74CFF /* SpotLight.m in Sources */ = {isa = PBXBuildFile; fileRef = 70F1F0131BDAC28600A74CFF /* SpotLight.m */; };
 		70F1F01B1BDD956000A74CFF /* shadowMap_SpotLight.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 70F1F0151BDD956000A74CFF /* shadowMap_SpotLight.fsh */; };
@@ -203,7 +202,6 @@
 		70EF32F11BF4237100AFED20 /* LinearTrackBall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinearTrackBall.h; sourceTree = "<group>"; };
 		70EF32F21BF4237100AFED20 /* LinearTrackBall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinearTrackBall.m; sourceTree = "<group>"; };
 		70F1F00B1BD9C22000A74CFF /* sphere.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sphere.obj; path = Meshes/sphere.obj; sourceTree = "<group>"; };
-		70F1F00C1BD9C22000A74CFF /* teapot.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = teapot.obj; path = Meshes/teapot.obj; sourceTree = "<group>"; };
 		70F1F00F1BDAB5BB00A74CFF /* ShadowCastingLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShadowCastingLight.h; sourceTree = "<group>"; };
 		70F1F0101BDAB5BB00A74CFF /* ShadowCastingLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShadowCastingLight.m; sourceTree = "<group>"; };
 		70F1F0121BDAC28600A74CFF /* SpotLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpotLight.h; sourceTree = "<group>"; };
@@ -473,7 +471,6 @@
 			isa = PBXGroup;
 			children = (
 				70F1F00B1BD9C22000A74CFF /* sphere.obj */,
-				70F1F00C1BD9C22000A74CFF /* teapot.obj */,
 				7055ECE41BD59E2100F2C100 /* plane.obj */,
 				709768611BB0722B007369D4 /* cube.obj */,
 				70FDF7AE1BAC95AB00D24F12 /* dragon.obj */,
@@ -586,7 +583,6 @@
 				707A337E1BF939EF0030EACB /* 14-Hamarikyu_Bridge_B_3k.hdr in Resources */,
 				70E4A7651BD1796000B331FB /* lighting_DirectionalLight.vsh in Resources */,
 				70981DBA1BBAE8CB00D78D4A /* geometry.fsh in Resources */,
-				70F1F00E1BD9C22000A74CFF /* teapot.obj in Resources */,
 				709768621BB0722B007369D4 /* cube.obj in Resources */,
 				70F1F01E1BDD956000A74CFF /* shadowMap.vsh in Resources */,
 				70FDF7B31BAC95AB00D24F12 /* horse.obj in Resources */,
