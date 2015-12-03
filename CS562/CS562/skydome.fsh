@@ -23,9 +23,9 @@ void main(void) {
     //                  forward  right               up
     vec2 uv = vec2( -atan(D.x,D.z) / (2*pi), acos(-D.y) / pi);
     
-    worldPos = vec4(0,0,0,1);
+    // Here we store a -1 to identify this pixel to belong to the
+    //     skydome.
+    worldPos = vec4(0,0,0,-1);
     normal = vec4(0,0,0,1);
     diffuseCol = texture(objectTexture,uv);
-
-    //gl_FragDepth = 0.99f;
 }

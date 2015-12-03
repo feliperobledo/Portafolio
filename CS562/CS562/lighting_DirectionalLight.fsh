@@ -62,7 +62,7 @@ void main() {
     vec4 pos  = texture(positionBuffer,uv), // world space
          norm = texture(normalBuffer,uv),   // world space
          diff = texture(diffuseBuffer, uv),
-         depth = texture(depthBuffer,uv).r;
+         depth = texture(depthBuffer,uv);
     
     vec4 lightViewPos = view * vec4(light.position,1);
     
@@ -86,7 +86,10 @@ void main() {
     
     fragColor = vec4(BRDF,1) * max(dot(N,L),0) * (I * pi);
     
-    if(depth == 1.0f) {
-        return diff;
+    // pos.w contains an id that represents several different objects
+    //      that we only want their diffuse color. In this case we only
+    //      have the skydome.
+    if(pos.w < 0.0) {
+        fragColor = diff;
     }
 }

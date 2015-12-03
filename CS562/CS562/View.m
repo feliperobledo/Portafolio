@@ -666,7 +666,7 @@ GLshort quadFaces[] = {
     glDepthMask(GL_TRUE);
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_DEPTH_TEST);
     
     //glDisable(GL_CULL_FACE);
     glEnable(GL_CULL_FACE);
@@ -722,17 +722,13 @@ GLshort quadFaces[] = {
     
     glDrawElements(GL_TRIANGLES, indices, GL_UNSIGNED_INT,NULL);
 
-    glDisableVertexAttribArray(GLKVertexAttribTexCoord1);
+    //glDisableVertexAttribArray(GLKVertexAttribTexCoord1);
     //glDisableVertexAttribArray(GLKVertexAttribTexCoord0);
-    //glDisableVertexAttribArray(GLKVertexAttribPosition);
-    
+    glDisableVertexAttribArray(GLKVertexAttribPosition);
     
     CheckOpenGLError();
     
     [skydomeShader unuse];
-    
-    glClearDepth(1.0f);
-    glClear(GL_DEPTH_BUFFER_BIT);
 }
 
 -(void) geometryPass:(NSDictionary*)data {
@@ -747,7 +743,6 @@ GLshort quadFaces[] = {
     GLKMatrix4 view, persp;
     [self getView:&view perspective:&persp fromData:data];
     
-    //NSRect pixelBounds = [self convertRectToBacking:[self bounds]];
     [geometryShader use];
     
     [gBuffer bindForWriting];
