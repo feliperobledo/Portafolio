@@ -9,8 +9,10 @@
 #ifndef RenderTargetDefs_h
 #define RenderTargetDefs_h
 
-DEFINE_RENDER_TARGET(geometry)
-DEFINE_RENDER_TARGET(lighting)
+DEFINE_RENDER_TARGET(Geometry)
+DEFINE_RENDER_TARGET(Lighting)
+DEFINE_RENDER_TARGET(AO)
+DEFINE_RENDER_TARGET(Ambient)
 
 
 #endif /* RenderTargetDefs_h */

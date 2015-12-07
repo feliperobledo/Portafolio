@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import <OpenGL/gltypes.h>
 
 #define DEFINE_RENDER_TARGET(x) x ,
 enum RenderTargets {
@@ -15,6 +15,7 @@ enum RenderTargets {
     TOTAL
 };
 #undef DEFINE_RENDER_TARGET
+typedef enum RenderTargets RenderTargets;
 
 #define DEFINE_RENDER_TARGET(x) #x ,
 static const char* RenderTagetsStatic[] = {
@@ -25,8 +26,9 @@ static const char* RenderTagetsStatic[] = {
 
 @interface RenderTarget : NSObject
 
--(id)init;
--(void) start;
--(void) stop;
+-(id)initWithTargetType:(RenderTargets)type andBounds:(NSRect)bounds;
+-(void) bindFor:(GLenum)fboType;
+-(GLuint) renderTexture;
+-(void) dealloc;
 
 @end

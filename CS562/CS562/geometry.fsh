@@ -19,7 +19,9 @@ out vec4 diffuseCol;
 //out vec3 TexCoordOut;
 
 void main() {
-    worldPos = vec4(worldPosOut,1);
+    float d = (view * vec4(worldPosOut,1)).z;
+    
+    worldPos = vec4(worldPosOut,d);
     normal   = vec4(normalize(normalOut),0);
-    diffuseCol = diffuseOut;
+    diffuseCol = vec4(diffuseOut.xyz,0);
 }

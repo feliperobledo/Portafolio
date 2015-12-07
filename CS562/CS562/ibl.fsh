@@ -153,6 +153,7 @@ void main(void) {
     vec3 Irradiance = vec3(0);
     IrradianceFromDir(N,Irradiance);
     vec3 diffuse = (Kd / pi) * Irradiance;
+    //sRGBToLinear(diffuse, diffuse);
     
     /*
         Calculate the specular term by using the monte carlo approximation
@@ -173,7 +174,9 @@ void main(void) {
      
         specular *= (1/40)
     */
-    vec3 H = vec3(0), f = vec3(0), specular = vec3(0),
+    vec3 H = vec3(0),
+         f = vec3(0),
+         specular = vec3(0),
          V = normalize(eye - pos.xyz),
          dir = N,
          lSubi = vec3(0); //Light value of the incoming light
@@ -185,13 +188,14 @@ void main(void) {
     // Direction of the incoming light
     vec3 wSubK = dir;
     
+    // Compute half-vector based on direction of incoming light
+    halfVector(wSubK,V,H);
+    
     // --- Take the light influence ---
     
-    // Calculate the half vector between the view and light direction
     // Calculate UV based on direction
     // Calculate LOD based on D term
     // Get light influence based on level computer
-    halfVector(wSubK,V,H);
     d = D(H,N);
     UVFromSkydome(wSubK,uv);
     float level = CalcLODFromImage(environmentBuffer,1,d);

@@ -31,6 +31,7 @@ float points[] = {
 #import <PointLight.h>
 #import <DirectionalLight.h>
 #import <SpotLight.h>
+#import <RenderTarget.h>
 #import <CS562Core/CS562Core.h>
 #include <initGL.h>
 #include <OpenGL/gl3.h>
@@ -61,6 +62,7 @@ GLshort quadFaces[] = {
 -(void) shadowPass:(NSDictionary*)data;
 -(void) IBL:(NSDictionary*)data;
 -(void) lightPass:(NSDictionary*)data;
+-(void) AO:(NSDictionary*)data;
 -(void) compositePass:(NSDictionary*)data;
 
 -(void) generateShadowMapFor:(Entity*)light withData:(NSDictionary*)data shadowMapShader:(Shader*)shadowMapShader;
@@ -82,6 +84,14 @@ GLshort quadFaces[] = {
     GBuffer* gBuffer;
     GLKTextureInfo* skydomeImage, *irradianceImage;
     NSMutableDictionary* selectionSubmitionDic;
+    
+    // aoBlurPassToShow
+    // 0 - no filtering
+    // 1 - vertical filtering
+    // 2 - 1 + horizontal filtering
+    // 3 - 1 + 2 + show with IBL
+    GLint aoBlurPassToShow;
+    RenderTarget *aoTarget1, *aoTarget2, *iblTarget;
     
     NSPoint prevCoords;
     BOOL slidingCamera;
@@ -291,6 +301,13 @@ GLshort quadFaces[] = {
             [selectionSubmitionDic setObject:@"submitPointLight:uniformsFromShader:" forKey:@"PointLight"];
             [selectionSubmitionDic setObject:@"submitSpotLight:uniformsFromShader:" forKey:@"SpotLight"];
             [selectionSubmitionDic setObject:@"submitDirectionalLight:uniformsFromShader:" forKey:@"DirectionalLight"];
+            
+            aoTarget1  =
+                [[RenderTarget alloc] initWithTargetType:AO andBounds:pixelBounds];
+            aoTarget2  =
+                [[RenderTarget alloc] initWithTargetType:AO andBounds:pixelBounds];
+            iblTarget =
+                [[RenderTarget alloc] initWithTargetType:Ambient andBounds:pixelBounds];
         }
     }
     return self;
@@ -374,6 +391,7 @@ GLshort quadFaces[] = {
             [self drawSkyDome:dataToDraw];
             [self geometryPass:dataToDraw];
             [self shadowPass:dataToDraw];
+            [self AO:dataToDraw];
             [self IBL:dataToDraw];
             //[self lightPass:dataToDraw];
             
@@ -674,6 +692,7 @@ GLshort quadFaces[] = {
         "shadowMap",
         "skydome",
         "ibl",
+        "ao",
         NULL
     };
     
@@ -682,10 +701,7 @@ GLshort quadFaces[] = {
         NSString* temp = [[NSString alloc] initWithCString:shaderProgramNames[i] encoding:NSUTF8StringEncoding];
         
         Shader* shader = [shaderManager newProgramShaderWithVertex:temp Fragment:temp Named:temp];
-        
         NSAssert(shader != nil,@"ERROR! Shader could not compile.");
-        
-        NSString* t = [[NSString alloc] initWithUTF8String:shaderProgramNames[i]];
     }
     
 }
@@ -1019,16 +1035,16 @@ GLshort quadFaces[] = {
     CheckOpenGLError();
     
     GLint uPosBuffer  = [iblShader uniformFromDictionary:@"positionBuffer"],
-    uDiffBuffer = [iblShader uniformFromDictionary:@"diffuseBuffer"],
-    uNorBuffer  = [iblShader uniformFromDictionary:@"normalBuffer"],
-    uEnvBuffer  = [iblShader uniformFromDictionary:@"environmentBuffer"],
-    uIrrBuffer  = [iblShader uniformFromDictionary:@"irradianceBuffer"],
-    uEye        = [iblShader uniformFromDictionary:@"eye"],
-    uRoughness  = [iblShader uniformFromDictionary:@"roughness"],
-    uWinSize    = [iblShader uniformFromDictionary:@"windowSize"],
-    uContrast   = [iblShader uniformFromDictionary:@"contrast"],
-    uExposure   = [iblShader uniformFromDictionary:@"exposure"],
-    uKs         = [iblShader uniformFromDictionary:@"Ks"];
+          uDiffBuffer = [iblShader uniformFromDictionary:@"diffuseBuffer"],
+          uNorBuffer  = [iblShader uniformFromDictionary:@"normalBuffer"],
+          uEnvBuffer  = [iblShader uniformFromDictionary:@"environmentBuffer"],
+          uIrrBuffer  = [iblShader uniformFromDictionary:@"irradianceBuffer"],
+          uEye        = [iblShader uniformFromDictionary:@"eye"],
+          uRoughness  = [iblShader uniformFromDictionary:@"roughness"],
+          uWinSize    = [iblShader uniformFromDictionary:@"windowSize"],
+          uContrast   = [iblShader uniformFromDictionary:@"contrast"],
+          uExposure   = [iblShader uniformFromDictionary:@"exposure"],
+          uKs         = [iblShader uniformFromDictionary:@"Ks"];
     CheckOpenGLError();
     
     glActiveTexture(GL_TEXTURE0);
@@ -1081,6 +1097,22 @@ GLshort quadFaces[] = {
     CheckOpenGLError();
     
     [iblShader unuse];
+}
+
+-(void) AO:(NSDictionary*)data {
+    // compute AO
+    
+    if(aoBlurPassToShow >= 1) {
+        
+    }
+    
+    if(aoBlurPassToShow >= 2) {
+        
+    }
+    
+    if(aoBlurPassToShow == 3) {
+        
+    }
 }
 
 -(void) lightPass:(NSDictionary*)data {

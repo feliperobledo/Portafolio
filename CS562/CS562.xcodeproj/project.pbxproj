@@ -88,6 +88,8 @@
 		70FDF7B41BAC95AB00D24F12 /* horse.obj in Resources */ = {isa = PBXBuildFile; fileRef = 70FDF7AF1BAC95AB00D24F12 /* horse.obj */; };
 		70FDF7B51BAC95AB00D24F12 /* bunny.obj in Resources */ = {isa = PBXBuildFile; fileRef = 70FDF7B01BAC95AB00D24F12 /* bunny.obj */; };
 		70FDF7B61BAC95AB00D24F12 /* bunny.obj in Resources */ = {isa = PBXBuildFile; fileRef = 70FDF7B01BAC95AB00D24F12 /* bunny.obj */; };
+		70FEFC561C153F10003C9B53 /* ao.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 70FEFC551C153F10003C9B53 /* ao.vsh */; };
+		70FEFC581C153F1A003C9B53 /* ao.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 70FEFC571C153F1A003C9B53 /* ao.fsh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -222,6 +224,8 @@
 		70FDF7AE1BAC95AB00D24F12 /* dragon.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dragon.obj; path = Meshes/dragon.obj; sourceTree = "<group>"; };
 		70FDF7AF1BAC95AB00D24F12 /* horse.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = horse.obj; path = Meshes/horse.obj; sourceTree = "<group>"; };
 		70FDF7B01BAC95AB00D24F12 /* bunny.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = bunny.obj; path = Meshes/bunny.obj; sourceTree = "<group>"; };
+		70FEFC551C153F10003C9B53 /* ao.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ao.vsh; sourceTree = "<group>"; };
+		70FEFC571C153F1A003C9B53 /* ao.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ao.fsh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -453,6 +457,8 @@
 				70ED86511BFBC31F00A35A7B /* ibl.fsh */,
 				707188D91BFD784F002909C7 /* skydome.vsh */,
 				707188D71BFD7844002909C7 /* skydome.fsh */,
+				70FEFC551C153F10003C9B53 /* ao.vsh */,
+				70FEFC571C153F1A003C9B53 /* ao.fsh */,
 			);
 			name = Shaders;
 			sourceTree = "<group>";
@@ -561,6 +567,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70FEFC561C153F10003C9B53 /* ao.vsh in Resources */,
 				70ED86501BFBC31300A35A7B /* ibl.vsh in Resources */,
 				70FDF7B11BAC95AB00D24F12 /* dragon.obj in Resources */,
 				70E4A7671BD1796C00B331FB /* lighting_DirectionalLight.fsh in Resources */,
@@ -583,6 +590,7 @@
 				707A337E1BF939EF0030EACB /* 14-Hamarikyu_Bridge_B_3k.hdr in Resources */,
 				70E4A7651BD1796000B331FB /* lighting_DirectionalLight.vsh in Resources */,
 				70981DBA1BBAE8CB00D78D4A /* geometry.fsh in Resources */,
+				70FEFC581C153F1A003C9B53 /* ao.fsh in Resources */,
 				709768621BB0722B007369D4 /* cube.obj in Resources */,
 				70F1F01E1BDD956000A74CFF /* shadowMap.vsh in Resources */,
 				70FDF7B31BAC95AB00D24F12 /* horse.obj in Resources */,
