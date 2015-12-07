@@ -59,6 +59,7 @@ GLshort quadFaces[] = {
 -(void) drawSkyDome:(NSDictionary*)data;
 -(void) geometryPass:(NSDictionary*)data;
 -(void) shadowPass:(NSDictionary*)data;
+-(void) IBL:(NSDictionary*)data;
 -(void) lightPass:(NSDictionary*)data;
 -(void) compositePass:(NSDictionary*)data;
 
@@ -75,10 +76,11 @@ GLshort quadFaces[] = {
 @implementation View
 {
     GLKVector3 gBufferBackgroundColor, sceneBackgroundColor;
+    GLfloat iblExposure, iblContrast;
     GLint  originalFrameBuffer;
     ShaderManager* shaderManager;
     GBuffer* gBuffer;
-    GLKTextureInfo* skydomeImage;
+    GLKTextureInfo* skydomeImage, *irradianceImage;
     NSMutableDictionary* selectionSubmitionDic;
     
     NSPoint prevCoords;
@@ -93,6 +95,7 @@ GLshort quadFaces[] = {
     GLuint vao;
     GLuint shader_programme;
     GLuint textureID;
+    GLuint irradianceID;
 }
 
 // Use this method to allocate and initialize the NSOpenGLPixelFormat object
@@ -150,10 +153,12 @@ GLshort quadFaces[] = {
 {
     self = [super initWithFrame:frameRect];
     if (self != nil) {
-        drawDebug = true;
+        drawDebug = false;
         slidingCamera = false;
         rotatingCamera = false;
-        debugDepthTexture = true;
+        debugDepthTexture = false;
+        
+        iblContrast = iblExposure = 1.0f;
         [[NSNotificationCenter defaultCenter] addObserver:self
                                               selector:@selector(_surfaceNeedsUpdate:)
                                               name:NSViewGlobalFrameDidChangeNotification
@@ -369,7 +374,8 @@ GLshort quadFaces[] = {
             [self drawSkyDome:dataToDraw];
             [self geometryPass:dataToDraw];
             [self shadowPass:dataToDraw];
-            [self lightPass:dataToDraw];
+            [self IBL:dataToDraw];
+            //[self lightPass:dataToDraw];
             
         }
         
@@ -590,8 +596,10 @@ GLshort quadFaces[] = {
     NSFileManager *fm = [NSFileManager defaultManager];
     NSError *error = nil;
     NSArray *directoryAndFileNames = [fm contentsOfDirectoryAtPath:[bundle resourcePath] error:&error];
-    NSPredicate *fltr = [NSPredicate predicateWithFormat:@"self ENDSWITH '.hdr'"];
-    NSArray *onlyHDR= [directoryAndFileNames filteredArrayUsingPredicate:fltr];
+    NSPredicate *fltr = [NSPredicate predicateWithFormat:@"self ENDSWITH '.hdr'"],
+                *fltrIrr = [NSPredicate predicateWithFormat:@"self ENDSWITH '.irrhdr'"];
+    NSArray *onlyHDR = [directoryAndFileNames filteredArrayUsingPredicate:fltr],
+            *onlyIrrHDR = [directoryAndFileNames filteredArrayUsingPredicate:fltrIrr];
     
     //all *.irrhdr have the same filename.
     
@@ -603,19 +611,14 @@ GLshort quadFaces[] = {
      loading *.hdr images.
      
      NSDictionary* options = @{GLKTextureLoaderOriginBottomLeft:@YES, GLKTextureLoaderSRGB:@YES};
-     
-     What about the irradiance map???
      */
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"14-Hamarikyu_Bridge_B_3k" ofType:@"hdr"];
+    NSString *filePath = [bundle pathForResource:@"14-Hamarikyu_Bridge_B_3k" ofType:@"hdr"];
     NSDictionary* options = @{GLKTextureLoaderOriginBottomLeft:@YES,
                               GLKTextureLoaderGenerateMipmaps:@YES};
-    GLKTextureInfo* txtInfo = [GLKTextureLoader textureWithContentsOfFile:filePath options:options error:&error];
     
-    // Should allocate memory for the mipmaps and then create them.
-    glBindTexture(GL_TEXTURE_2D, [txtInfo name]);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    CheckOpenGLError();
+    
+    
+    GLKTextureInfo* txtInfo = [GLKTextureLoader textureWithContentsOfFile:filePath options:options error:&error];
     
     if(error) {
         for(NSString* key in [error userInfo]) {
@@ -627,9 +630,38 @@ GLshort quadFaces[] = {
               txtInfo.name,
               txtInfo.width,
               txtInfo.height);
+        
+        glBindTexture(GL_TEXTURE_2D, [txtInfo name]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        CheckOpenGLError();
+        
+        skydomeImage = txtInfo;
     }
     
-    skydomeImage = txtInfo;
+    
+    
+    filePath = [bundle pathForResource:@"14-Hamarikyu_Bridge_B_3k" ofType:@"irrhdr"];
+    txtInfo = [GLKTextureLoader textureWithContentsOfFile:filePath options:options error:&error];
+    
+    if(error) {
+        for(NSString* key in [error userInfo]) {
+            NSString* errorDescription = [[error userInfo] valueForKey:key];
+            NSLog(@"ERROR: %s",[errorDescription UTF8String]);
+        }
+    } else {
+        NSLog(@"Texture loaded, name: %d, WxH: %d x %d",
+              txtInfo.name,
+              txtInfo.width,
+              txtInfo.height);
+        
+        glBindTexture(GL_TEXTURE_2D, [txtInfo name]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        CheckOpenGLError();
+        
+        irradianceImage = txtInfo;
+    }
 }
 
 -(void) createShaderPrograms {
@@ -641,6 +673,7 @@ GLshort quadFaces[] = {
         "lighting_SpotLight",
         "shadowMap",
         "skydome",
+        "ibl",
         NULL
     };
     
@@ -946,6 +979,108 @@ GLshort quadFaces[] = {
                           GL_COLOR_BUFFER_BIT, GL_LINEAR);
         CheckOpenGLError();
     }
+}
+
+-(void) IBL:(NSDictionary*)data {
+    Shader*    iblShader  = [shaderManager getShader:@"ibl"];
+    [iblShader use];
+    
+    MeshStore* meshStore       = [data valueForKey:@"meshStore"];
+    NSArray*   worldObjectIDs  = [data valueForKey:@"gameObjectIDs"];
+    
+    NSNumber*  cameraID  = [data valueForKey:@"eyeID"];
+    Entity*    camera    = [EntityCreator getEntity:[cameraID unsignedLongLongValue]];
+    Transform* transform = (Transform*)[camera getModelWithName:@"Transform"];
+    GLKVector3 eye       = [transform position];
+    
+    NSRect  screenBounds = [self bounds];
+    GLfloat screenWidth  = screenBounds.size.width * 2,
+    screenHeight = screenBounds.size.height * 2;
+    
+    //TODO: Add a GBuffer render target for specular vec and roughness
+    GLfloat roughness = 5000;
+    GLKVector3 Ks = GLKVector3Make(0.8f,0.8f,0.8f);
+    
+    glBindFramebuffer(GL_FRAMEBUFFER, originalFrameBuffer);
+    glClearColor(0.2f,0.2f,0.2f,1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    CheckOpenGLError();
+    
+    [gBuffer bindForReading];
+    GLuint positionTextureHandle = [gBuffer getTextureHandleFor:GBUFFER_TEXTURE_TYPE_POSITION],
+    diffuseTextureHandle  = [gBuffer getTextureHandleFor:GBUFFER_TEXTURE_TYPE_DIFFUSE],
+    normalTextureHandle   = [gBuffer getTextureHandleFor:GBUFFER_TEXTURE_TYPE_NORMAL];
+    
+    glDisable(GL_BLEND);
+    glDepthMask(GL_TRUE);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    CheckOpenGLError();
+    
+    GLint uPosBuffer  = [iblShader uniformFromDictionary:@"positionBuffer"],
+    uDiffBuffer = [iblShader uniformFromDictionary:@"diffuseBuffer"],
+    uNorBuffer  = [iblShader uniformFromDictionary:@"normalBuffer"],
+    uEnvBuffer  = [iblShader uniformFromDictionary:@"environmentBuffer"],
+    uIrrBuffer  = [iblShader uniformFromDictionary:@"irradianceBuffer"],
+    uEye        = [iblShader uniformFromDictionary:@"eye"],
+    uRoughness  = [iblShader uniformFromDictionary:@"roughness"],
+    uWinSize    = [iblShader uniformFromDictionary:@"windowSize"],
+    uContrast   = [iblShader uniformFromDictionary:@"contrast"],
+    uExposure   = [iblShader uniformFromDictionary:@"exposure"],
+    uKs         = [iblShader uniformFromDictionary:@"Ks"];
+    CheckOpenGLError();
+    
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D,positionTextureHandle);
+    glUniform1i(uPosBuffer,0);
+    CheckOpenGLError();
+    
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D,normalTextureHandle);
+    glUniform1i(uNorBuffer,1);
+    CheckOpenGLError();
+    
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D,diffuseTextureHandle);
+    glUniform1i(uDiffBuffer,2);
+    CheckOpenGLError();
+    
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, [skydomeImage name] );
+    glUniform1i(uEnvBuffer,3);
+    CheckOpenGLError();
+    
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, [irradianceImage name]);
+    glUniform1i(uIrrBuffer,4);
+    CheckOpenGLError();
+    
+    glUniform1f(uRoughness, roughness);
+    glUniform1f(uContrast,  iblContrast);
+    glUniform1f(uExposure,  iblExposure);
+    glUniform3fv(uKs, 1, Ks.v);
+    glUniform3fv(uEye, 1, eye.v);
+    glUniform2f(uWinSize, screenWidth, screenHeight);
+    CheckOpenGLError();
+    
+    // We will render everything to a quad
+    glBindVertexArray (vao);
+    CheckOpenGLError();
+    
+    glEnableVertexAttribArray (GLKVertexAttribPosition);
+    CheckOpenGLError();
+    
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT,0);
+    CheckOpenGLError();
+    
+    glDisableVertexAttribArray(GLKVertexAttribPosition);
+    CheckOpenGLError();
+    
+    glBindVertexArray(0);
+    CheckOpenGLError();
+    
+    [iblShader unuse];
 }
 
 -(void) lightPass:(NSDictionary*)data {

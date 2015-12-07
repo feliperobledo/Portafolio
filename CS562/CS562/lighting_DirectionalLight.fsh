@@ -82,7 +82,7 @@ void main() {
     
     vec3 BRDF = (Kd / pi) +
                     ((f * g * d) /
-                     (4 * max(dot(L,N),0) * max(dot(V,N),0)));
+                     (4 * max(dot(L, N),0) * max(dot(V,N),0)));
     
     fragColor = vec4(BRDF,1) * max(dot(N,L),0) * (I * pi);
     
