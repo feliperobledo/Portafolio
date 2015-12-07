@@ -79,6 +79,7 @@ GLshort quadFaces[] = {
 {
     GLKVector3 gBufferBackgroundColor, sceneBackgroundColor;
     GLfloat iblExposure, iblContrast;
+    GLfloat aoContrast, aoScale, aoRangeOfInfluence;
     GLint  originalFrameBuffer;
     ShaderManager* shaderManager;
     GBuffer* gBuffer;
@@ -169,6 +170,8 @@ GLshort quadFaces[] = {
         debugDepthTexture = false;
         
         iblContrast = iblExposure = 1.0f;
+        aoContrast = aoScale = 1.0f;
+        aoRangeOfInfluence = 5.0f;
         [[NSNotificationCenter defaultCenter] addObserver:self
                                               selector:@selector(_surfaceNeedsUpdate:)
                                               name:NSViewGlobalFrameDidChangeNotification
@@ -392,7 +395,7 @@ GLshort quadFaces[] = {
             [self geometryPass:dataToDraw];
             [self shadowPass:dataToDraw];
             [self AO:dataToDraw];
-            [self IBL:dataToDraw];
+            //[self IBL:dataToDraw];
             //[self lightPass:dataToDraw];
             
         }
@@ -701,7 +704,7 @@ GLshort quadFaces[] = {
         NSString* temp = [[NSString alloc] initWithCString:shaderProgramNames[i] encoding:NSUTF8StringEncoding];
         
         Shader* shader = [shaderManager newProgramShaderWithVertex:temp Fragment:temp Named:temp];
-        NSAssert(shader != nil,@"ERROR! Shader could not compile.");
+        NSAssert1(shader != nil,@"ERROR! Shader could not compile: %s",shaderProgramNames[i]);
     }
     
 }
@@ -1001,8 +1004,6 @@ GLshort quadFaces[] = {
     Shader*    iblShader  = [shaderManager getShader:@"ibl"];
     [iblShader use];
     
-    MeshStore* meshStore       = [data valueForKey:@"meshStore"];
-    NSArray*   worldObjectIDs  = [data valueForKey:@"gameObjectIDs"];
     
     NSNumber*  cameraID  = [data valueForKey:@"eyeID"];
     Entity*    camera    = [EntityCreator getEntity:[cameraID unsignedLongLongValue]];
@@ -1100,7 +1101,65 @@ GLshort quadFaces[] = {
 }
 
 -(void) AO:(NSDictionary*)data {
+    Shader*    aoShader  = [shaderManager getShader:@"ao"];
+    [aoShader use];
+    
+    NSRect  screenBounds = [self bounds];
+    GLfloat screenWidth  = screenBounds.size.width * 2,
+    screenHeight = screenBounds.size.height * 2;
+    
+    glBindFramebuffer(GL_FRAMEBUFFER, originalFrameBuffer);
+    glClearColor(0.2f,0.2f,0.2f,1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    CheckOpenGLError();
     // compute AO
+    //[aoTarget1 bindFor:GL_DRAW_FRAMEBUFFER];
+    
+    [gBuffer bindForReading];
+    GLuint positionTextureHandle = [gBuffer getTextureHandleFor:GBUFFER_TEXTURE_TYPE_POSITION],
+           normalTextureHandle   = [gBuffer getTextureHandleFor:GBUFFER_TEXTURE_TYPE_NORMAL];
+
+    GLint uPosBuffer  = [aoShader uniformFromDictionary:@"positionBuffer"],
+          uNorBuffer  = [aoShader uniformFromDictionary:@"normalBuffer"],
+          uWinSize    = [aoShader uniformFromDictionary:@"windowSize"],
+          uRangeofInf = [aoShader uniformFromDictionary:@"R"],
+          uScale      = [aoShader uniformFromDictionary:@"s"],
+          uContrast   = [aoShader uniformFromDictionary:@"k"];
+    CheckOpenGLError();
+    
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D,positionTextureHandle);
+    glUniform1i(uPosBuffer,0);
+    CheckOpenGLError();
+    
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D,normalTextureHandle);
+    glUniform1i(uNorBuffer,1);
+    CheckOpenGLError();
+    
+    glUniform1f(uRangeofInf, aoRangeOfInfluence);
+    glUniform1f(uContrast,   aoContrast);
+    glUniform1f(uScale,      aoScale);
+    glUniform2f(uWinSize, screenWidth, screenHeight);
+    CheckOpenGLError();
+    
+    // We will render everything to a quad
+    glBindVertexArray (vao);
+    CheckOpenGLError();
+    
+    glEnableVertexAttribArray (GLKVertexAttribPosition);
+    CheckOpenGLError();
+    
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT,0);
+    CheckOpenGLError();
+    
+    glDisableVertexAttribArray(GLKVertexAttribPosition);
+    CheckOpenGLError();
+    
+    glBindVertexArray(0);
+    CheckOpenGLError();
+    
+    [aoShader unuse];
     
     if(aoBlurPassToShow >= 1) {
         

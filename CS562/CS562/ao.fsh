@@ -2,19 +2,13 @@
 
 const float pi = 3.1415926;
 
-/*
- Description: Send quad coordinates to fragment shader
- */
-
 // uniforms
 uniform sampler2D positionBuffer;
 uniform sampler2D normalBuffer;
-uniform sampler2D diffuseBuffer;
-uniform vec3 eye;
 uniform vec2 windowSize;
-uniform float R; //range of influence
-uniform float s; //adjustable scale
-uniform float k; //adjustable contrast
+uniform float R;
+uniform float s;
+uniform float k;
 
 // "varying" coming from vertex shader
 in vec2 transform;
@@ -22,30 +16,27 @@ in vec2 transform;
 // output
 out vec4 aoOut;
 
-float HeavySide(in int a) {
-    if(a >= 0) {
-        return 1.0;
+float HeavySide(in float a) {
+    if(a < 0) {
+        return 0.0;
     } else {
-        return 0.0
+        return 1.0;
     }
 }
 
 void main() {
-    int xPrime = gl_FragCoord.x,
-        yPrime = gl_FragCoord.y;
+    int   xPrime = int(gl_FragCoord.x),
+          yPrime = int(gl_FragCoord.y);
     vec2 xy = vec2(xPrime/windowSize.x,yPrime/windowSize.y);
     
     vec4 pos  = texture(positionBuffer,xy), // world space
          norm = texture(normalBuffer,xy);   // world space
     
     // If we are calculating the ambient for the skydome, simply output white.
-    if(pos.w < 0) {
-        fragColor = vec4(1);
-        return;
-    }
-    
-    // This is supposed to be camera space depth
-    float d = pos.w;
+    //if(pos.w < 0) {
+    //    aoOut = vec4(1);
+    //    return;
+    //}
     
     // select some random points
     
@@ -54,8 +45,9 @@ void main() {
           cSquared = pow(c,2),
           psy      = 0.001,
           gamma    = (30 * xPrime ^ yPrime) + 10 * xPrime * yPrime,
-          d        = pos.z;
-    vec4 N = norm;
+          d        = pos.w; // This is supposed to be camera space depth
+    vec3 N = norm.xyz,
+         P = pos.xyz;
     
     float S = 0.0;
     for(int i = 0; i < n; i++) {
@@ -63,16 +55,21 @@ void main() {
         float h = alpha * R / d;
         float phi = 2.0 * pi * alpha * (7.0 * n / 9.0) + gamma;
         
-        vec2 pSubi = xy + h * vec2(cos(phi),sin(phi));
-        vec2 wSubi = pSubi - xy;
-        float dSubi = texture(normalBuffer,pSubi);
+        vec2 uv = xy + h * vec2(cos(phi),sin(phi));
         
-        float top = max(0, N * wSubi - psy * dSubi)
-                         * HeavySide(R - distance(wSubi)),
-              bot = max(cSquared,max(dot(wSubi,wSubi,0)));
+        vec3  pSubi = texture(positionBuffer,uv).xyz;
+        float dSubi = texture(positionBuffer,uv).w; //view space z of
+        vec3  wSubi = pSubi - P;
+        
+        
+        float top = max(0, max(dot(N,wSubi),0) - psy * dSubi)
+                         * HeavySide(R - length(wSubi)),
+              bot = max(cSquared,max(dot(wSubi,wSubi),0));
         
         S += top/bot;
     }
+    
+    S *= (2.0 * pi * c) / n;
     
     float ao = max( pow( (1 - s * S),k ) ,0 );
     aoOut = vec4(vec3(ao),1);

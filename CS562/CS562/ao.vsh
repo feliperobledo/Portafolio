@@ -1,16 +1,12 @@
 #version 150
 
-/*
- Description: Send quad coordinates to fragment shader
- */
-
 // uniforms
 uniform sampler2D positionBuffer;
 uniform sampler2D normalBuffer;
-uniform sampler2D diffuseBuffer;
-uniform vec3 eye;
 uniform vec2 windowSize;
-uniform float R; //range of influence
+uniform float R;
+uniform float s;
+uniform float k;
 
 // attributes
 in vec2 position;

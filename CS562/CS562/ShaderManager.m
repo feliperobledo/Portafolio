@@ -70,6 +70,7 @@
     }
     
     if( ![self vertShaderUniforms:vertShaderUniforms equalFragShaderUniforms:fragShaderUniforms]) {
+        NSLog(@"Uniforms Mismatch: %@\n%@",vertShaderUniforms,fragShaderUniforms);
         return nil;
     }
     

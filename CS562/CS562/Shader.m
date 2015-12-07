@@ -110,7 +110,9 @@
 -(GLint) uniformFromDictionary:(NSString*)identifier
 {
     NSNumber* location = [self.m_Uniforms objectForKey:identifier];
-    NSAssert(location != nil, @"ERROR: Querying for a uniform that shader does not have");
+    NSAssert1(location != nil,
+              @"ERROR: Querying for a uniform that shader does not have: %s",
+              [identifier UTF8String]);
     return [location intValue];
 }
 
