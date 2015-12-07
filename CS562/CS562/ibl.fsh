@@ -139,7 +139,7 @@ void main(void) {
     
     // If we are calculating the ambient for the skydome, just display the
     //     skydome.
-    if(pos.w < 0) {
+    if(pos.w == -5) {
         fragColor = diff;
         return;
     }
@@ -154,7 +154,8 @@ void main(void) {
     IrradianceFromDir(N,Irradiance);
     vec3 diffuse = (Kd / pi) * Irradiance;
     //sRGBToLinear(diffuse, diffuse);
-    
+    fragColor = vec4(diffuse,1);
+    return;
     /*
         Calculate the specular term by using the monte carlo approximation
         of the integral.
@@ -203,7 +204,7 @@ void main(void) {
     //DebugLevel(int(level));
     //return;
     
-    lSubi     = textureLod(environmentBuffer, uv, level).xyz;
+    lSubi     = textureLod(environmentBuffer, uv, 0).xyz;
     //sRGBToLinear(lSubi, lSubi);
     fragColor = vec4(lSubi,1);
     return;

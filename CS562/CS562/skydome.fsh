@@ -25,7 +25,7 @@ void main(void) {
     
     // Here we store a -1 to identify this pixel to belong to the
     //     skydome.
-    worldPos = vec4(0,0,0,-1);
+    worldPos = vec4(0,0,0,-5);
     normal = vec4(0,0,0,1);
     diffuseCol = texture(objectTexture,uv);
 }

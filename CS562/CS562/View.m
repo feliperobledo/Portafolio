@@ -164,7 +164,7 @@ GLshort quadFaces[] = {
 {
     self = [super initWithFrame:frameRect];
     if (self != nil) {
-        drawDebug = false;
+        drawDebug = true;
         slidingCamera = false;
         rotatingCamera = false;
         debugDepthTexture = false;
@@ -394,8 +394,8 @@ GLshort quadFaces[] = {
             [self drawSkyDome:dataToDraw];
             [self geometryPass:dataToDraw];
             [self shadowPass:dataToDraw];
-            [self AO:dataToDraw];
-            //[self IBL:dataToDraw];
+            //[self AO:dataToDraw];
+            [self IBL:dataToDraw];
             //[self lightPass:dataToDraw];
             
         }
@@ -1016,7 +1016,7 @@ GLshort quadFaces[] = {
     
     //TODO: Add a GBuffer render target for specular vec and roughness
     GLfloat roughness = 5000;
-    GLKVector3 Ks = GLKVector3Make(0.8f,0.8f,0.8f);
+    GLKVector3 Ks = GLKVector3Make(0.08f,0.08f,0.08f);
     
     glBindFramebuffer(GL_FRAMEBUFFER, originalFrameBuffer);
     glClearColor(0.2f,0.2f,0.2f,1);
