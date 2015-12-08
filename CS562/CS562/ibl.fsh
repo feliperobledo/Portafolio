@@ -10,7 +10,6 @@ uniform sampler2D environmentBuffer;
 uniform sampler2D irradianceBuffer;
 uniform vec3 eye;
 uniform vec3 Ks;
-uniform float roughness;
 uniform vec2 windowSize;
 uniform float exposure;
 uniform float contrast;
@@ -22,13 +21,13 @@ in vec2 transform;
 out vec4 fragColor;
 
 // HELPERS ---------------------------------------------------------------------
-void sRGBToLinear(in vec3 C, out vec3 Cout) {
+void LinearTosRGB(in vec3 C, out vec3 Cout) {
     vec3 eC = exposure * C;
     vec3 power = vec3(contrast / 2.2);
     Cout = pow(  eC / (eC + vec3(1,1,1) ), power);
 }
 
-void LinearTosRGB(in vec3 C, out vec3 Cout) {
+void sRGBToLinear(in vec3 C, out vec3 Cout) {
     // I don't know if this is correct
     vec3 eC = exposure * C;
     vec3 power = vec3(2.2 / contrast);
@@ -38,8 +37,8 @@ void LinearTosRGB(in vec3 C, out vec3 Cout) {
 }
 
 void UVFromSkydome(in vec3 D, out vec2 uv) {
-    //                  forward  right               up
-    uv = vec2( -atan(D.x,D.z) / (2*pi), acos(-D.y ) / pi);
+    //           forward  right               up
+    uv = vec2( 0.5 - atan(D.z,D.x) / (2*pi), acos(-D.y ) / pi);
 }
 
 void halfVector(in vec3 L,in vec3 V,out vec3 h) {
@@ -47,7 +46,8 @@ void halfVector(in vec3 L,in vec3 V,out vec3 h) {
 }
 
 void IrradianceFromDir(in vec3 N,out vec3 intensity) {
-    vec2 uv; UVFromSkydome(N,uv);
+    vec2 uv;
+    UVFromSkydome(normalize(N),uv);
     intensity = texture(irradianceBuffer,uv).xyz;
 }
 
@@ -59,7 +59,7 @@ void LightFromDir(in vec3 N,out vec3 color) {
 void F(in vec3 L,in vec3 H,out vec3 f) {
     // Note sure if the dot product in the following formular should be
     //    clamped to 0
-    f = Ks + (1 - Ks) * pow( (1 - max( dot(L,H),0.0) ), 5 );
+    f = Ks + (1 - Ks) * pow( (1 - max( dot(L,H),0) ), 5 );
 }
 
 void G(in vec3 L, in vec3 V, in vec3 N,in vec3 H, out float g) {
@@ -75,20 +75,28 @@ void G(in vec3 L, in vec3 V, in vec3 N,in vec3 H, out float g) {
     g = min( 1.0, min(k,d) );
 }
 
-float D(in vec3 H,in vec3 N) {
-    return ((roughness + 2.0) / (2.0 * pi)) *
-    pow( max( dot(N,H),0 ),roughness );
+float D(in vec3 H,in vec3 N,in float roughness) {
+    float a = (roughness + 2.0),
+          b = pow( max( dot(N,H),0 ),roughness ),
+          c = (2.0 * pi);
+    return a / c * b;
 }
 
 float CalcLODFromImage(in sampler2D text,in int N,in float DofH) {
     // Get the dimensions of the highest level texture
     ivec2 dim = textureSize(text,0);
     
-    // Calculate the log2 of everything I need manually
-    float a  = (log2(dim.x * dim.y / 1.0)) / 2,
-          b  = (log2(DofH)) / 2;
+    float x = log( float(dim.x * dim.y) / float(N) ) / log(2.0),
+          y = log(DofH) / log(2.0);
     
-    return a - b;
+    // Calculate the log2 of everything I need manually
+    float a  = (log2( float(dim.x * dim.y) / float(N) )) * 0.5,
+          b  = (log2(DofH)) * 0.5;
+    
+    //a = x * 0.5;
+    //b = y * 0.5;
+    
+    return (a - b) - 4;
 }
 
 void DebugLevel(in int level) {
@@ -112,7 +120,7 @@ void DebugLevel(in int level) {
             fragColor = vec4(0,1,1,1); //teal
             break;
         case 6:
-            fragColor = vec4(0.8,0.4,0.2,1);
+            fragColor = vec4(0.8,0.4,0.2,1); //orange
             break;
         case 7:
             fragColor = vec4(0.8,0.4,0,1);
@@ -153,9 +161,6 @@ void main(void) {
     vec3 Irradiance = vec3(0);
     IrradianceFromDir(N,Irradiance);
     vec3 diffuse = (Kd / pi) * Irradiance;
-    //sRGBToLinear(diffuse, diffuse);
-    fragColor = vec4(diffuse,1);
-    return;
     /*
         Calculate the specular term by using the monte carlo approximation
         of the integral.
@@ -184,6 +189,7 @@ void main(void) {
     
     float g = 0,
           d = 0,
+          roughness = diff.w, //here is where the rough factor lies
           VDotN = max(dot(V,N),0);
     
     // Direction of the incoming light
@@ -197,17 +203,17 @@ void main(void) {
     // Calculate UV based on direction
     // Calculate LOD based on D term
     // Get light influence based on level computer
-    d = D(H,N);
+    d = D(H,N,roughness);
     UVFromSkydome(wSubK,uv);
     float level = CalcLODFromImage(environmentBuffer,1,d);
     
     //DebugLevel(int(level));
     //return;
     
-    lSubi     = textureLod(environmentBuffer, uv, 0).xyz;
-    //sRGBToLinear(lSubi, lSubi);
-    fragColor = vec4(lSubi,1);
-    return;
+    lSubi     = textureLod(environmentBuffer, uv, level).xyz;
+    //LinearTosRGB(lSubi, lSubi);
+    //fragColor = vec4(lSubi,1);
+    //return;
     
     F(wSubK,H,f);
     
@@ -216,7 +222,7 @@ void main(void) {
     float wSubKDotN = max(dot(wSubK,N),0),
           wSubKDotV = max(dot(wSubK,V),0);
     
-    specular += (g * f / ( 4 * wSubKDotN * VDotN ) ) * lSubi * wSubKDotV;
+    specular += ( (g * f  * lSubi * wSubKDotV ) / ( 4 * wSubKDotN * VDotN ) );
 
     // Calculate final light value by adding the diffuse and specular
     // final = specular + diffuse;
@@ -225,5 +231,5 @@ void main(void) {
     
     // Since we are going to display the result of the ibl to the screen, we
     //     convert color spaces now.
-    //LinearTosRGB(fragColor.xyz,fragColor.xyz);
+    LinearTosRGB(fragColor.xyz,fragColor.xyz);
 }

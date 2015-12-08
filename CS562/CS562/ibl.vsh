@@ -12,7 +12,6 @@ uniform sampler2D environmentBuffer;
 uniform sampler2D irradianceBuffer;
 uniform vec3 eye;
 uniform vec3 Ks;
-uniform float roughness;
 uniform vec2 windowSize;
 uniform float exposure;
 uniform float contrast;

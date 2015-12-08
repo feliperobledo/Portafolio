@@ -43,6 +43,22 @@
 		7073CE721B4A383B00E3FEB8 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7073CE711B4A383B00E3FEB8 /* GLKit.framework */; };
 		707A337E1BF939EF0030EACB /* 14-Hamarikyu_Bridge_B_3k.hdr in Resources */ = {isa = PBXBuildFile; fileRef = 707A337C1BF939EF0030EACB /* 14-Hamarikyu_Bridge_B_3k.hdr */; };
 		707A337F1BF939EF0030EACB /* 14-Hamarikyu_Bridge_B_3k.irrhdr in Resources */ = {isa = PBXBuildFile; fileRef = 707A337D1BF939EF0030EACB /* 14-Hamarikyu_Bridge_B_3k.irrhdr */; };
+		707CD4D21C167D4D00E767A5 /* Alexs_Apt_2k.hdr in Resources */ = {isa = PBXBuildFile; fileRef = 707CD4C21C167D4D00E767A5 /* Alexs_Apt_2k.hdr */; };
+		707CD4D31C167D4D00E767A5 /* Alexs_Apt_2k.irrhdr in Resources */ = {isa = PBXBuildFile; fileRef = 707CD4C31C167D4D00E767A5 /* Alexs_Apt_2k.irrhdr */; };
+		707CD4D41C167D4D00E767A5 /* Arches_E_PineTree_3k.hdr in Resources */ = {isa = PBXBuildFile; fileRef = 707CD4C41C167D4D00E767A5 /* Arches_E_PineTree_3k.hdr */; };
+		707CD4D51C167D4D00E767A5 /* Arches_E_PineTree_3k.irrhdr in Resources */ = {isa = PBXBuildFile; fileRef = 707CD4C51C167D4D00E767A5 /* Arches_E_PineTree_3k.irrhdr */; };
+		707CD4D61C167D4D00E767A5 /* Barce_Rooftop_C_3k.hdr in Resources */ = {isa = PBXBuildFile; fileRef = 707CD4C61C167D4D00E767A5 /* Barce_Rooftop_C_3k.hdr */; };
+		707CD4D71C167D4D00E767A5 /* Barce_Rooftop_C_3k.irrhdr in Resources */ = {isa = PBXBuildFile; fileRef = 707CD4C71C167D4D00E767A5 /* Barce_Rooftop_C_3k.irrhdr */; };
+		707CD4D81C167D4D00E767A5 /* Factory_Catwalk_2k.hdr in Resources */ = {isa = PBXBuildFile; fileRef = 707CD4C81C167D4D00E767A5 /* Factory_Catwalk_2k.hdr */; };
+		707CD4D91C167D4D00E767A5 /* Factory_Catwalk_2k.irrhdr in Resources */ = {isa = PBXBuildFile; fileRef = 707CD4C91C167D4D00E767A5 /* Factory_Catwalk_2k.irrhdr */; };
+		707CD4DA1C167D4D00E767A5 /* MonValley_A_LookoutPoint_2k.hdr in Resources */ = {isa = PBXBuildFile; fileRef = 707CD4CA1C167D4D00E767A5 /* MonValley_A_LookoutPoint_2k.hdr */; };
+		707CD4DB1C167D4D00E767A5 /* MonValley_A_LookoutPoint_2k.irrhdr in Resources */ = {isa = PBXBuildFile; fileRef = 707CD4CB1C167D4D00E767A5 /* MonValley_A_LookoutPoint_2k.irrhdr */; };
+		707CD4DC1C167D4D00E767A5 /* Newport_Loft_Ref.hdr in Resources */ = {isa = PBXBuildFile; fileRef = 707CD4CC1C167D4D00E767A5 /* Newport_Loft_Ref.hdr */; };
+		707CD4DD1C167D4D00E767A5 /* Newport_Loft_Ref.irrhdr in Resources */ = {isa = PBXBuildFile; fileRef = 707CD4CD1C167D4D00E767A5 /* Newport_Loft_Ref.irrhdr */; };
+		707CD4DE1C167D4D00E767A5 /* Playa_Sunrise.hdr in Resources */ = {isa = PBXBuildFile; fileRef = 707CD4CE1C167D4D00E767A5 /* Playa_Sunrise.hdr */; };
+		707CD4DF1C167D4D00E767A5 /* Playa_Sunrise.irrhdr in Resources */ = {isa = PBXBuildFile; fileRef = 707CD4CF1C167D4D00E767A5 /* Playa_Sunrise.irrhdr */; };
+		707CD4E01C167D4D00E767A5 /* Sierra_Madre_B_Ref.hdr in Resources */ = {isa = PBXBuildFile; fileRef = 707CD4D01C167D4D00E767A5 /* Sierra_Madre_B_Ref.hdr */; };
+		707CD4E11C167D4D00E767A5 /* Sierra_Madre_B_Ref.irrhdr in Resources */ = {isa = PBXBuildFile; fileRef = 707CD4D11C167D4D00E767A5 /* Sierra_Madre_B_Ref.irrhdr */; };
 		7084E3AA1BAF78F600C866E7 /* simple.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 7084E3A91BAF78F600C866E7 /* simple.vsh */; };
 		7084E3AC1BAF790200C866E7 /* simple.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 7084E3AB1BAF790200C866E7 /* simple.fsh */; };
 		7084E3B21BAF83A800C866E7 /* Shader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7084E3B11BAF83A800C866E7 /* Shader.m */; };
@@ -175,6 +191,22 @@
 		7073CE711B4A383B00E3FEB8 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		707A337C1BF939EF0030EACB /* 14-Hamarikyu_Bridge_B_3k.hdr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "14-Hamarikyu_Bridge_B_3k.hdr"; path = "HDR/14-Hamarikyu_Bridge_B_3k.hdr"; sourceTree = "<group>"; };
 		707A337D1BF939EF0030EACB /* 14-Hamarikyu_Bridge_B_3k.irrhdr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "14-Hamarikyu_Bridge_B_3k.irrhdr"; path = "HDR/14-Hamarikyu_Bridge_B_3k.irrhdr"; sourceTree = "<group>"; };
+		707CD4C21C167D4D00E767A5 /* Alexs_Apt_2k.hdr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Alexs_Apt_2k.hdr; path = HDR/Alexs_Apt_2k.hdr; sourceTree = "<group>"; };
+		707CD4C31C167D4D00E767A5 /* Alexs_Apt_2k.irrhdr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Alexs_Apt_2k.irrhdr; path = HDR/Alexs_Apt_2k.irrhdr; sourceTree = "<group>"; };
+		707CD4C41C167D4D00E767A5 /* Arches_E_PineTree_3k.hdr */ = {isa = PBXFileReference; lastKnownFileType = file; name = Arches_E_PineTree_3k.hdr; path = HDR/Arches_E_PineTree_3k.hdr; sourceTree = "<group>"; };
+		707CD4C51C167D4D00E767A5 /* Arches_E_PineTree_3k.irrhdr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Arches_E_PineTree_3k.irrhdr; path = HDR/Arches_E_PineTree_3k.irrhdr; sourceTree = "<group>"; };
+		707CD4C61C167D4D00E767A5 /* Barce_Rooftop_C_3k.hdr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Barce_Rooftop_C_3k.hdr; path = HDR/Barce_Rooftop_C_3k.hdr; sourceTree = "<group>"; };
+		707CD4C71C167D4D00E767A5 /* Barce_Rooftop_C_3k.irrhdr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Barce_Rooftop_C_3k.irrhdr; path = HDR/Barce_Rooftop_C_3k.irrhdr; sourceTree = "<group>"; };
+		707CD4C81C167D4D00E767A5 /* Factory_Catwalk_2k.hdr */ = {isa = PBXFileReference; lastKnownFileType = file; name = Factory_Catwalk_2k.hdr; path = HDR/Factory_Catwalk_2k.hdr; sourceTree = "<group>"; };
+		707CD4C91C167D4D00E767A5 /* Factory_Catwalk_2k.irrhdr */ = {isa = PBXFileReference; lastKnownFileType = file; name = Factory_Catwalk_2k.irrhdr; path = HDR/Factory_Catwalk_2k.irrhdr; sourceTree = "<group>"; };
+		707CD4CA1C167D4D00E767A5 /* MonValley_A_LookoutPoint_2k.hdr */ = {isa = PBXFileReference; lastKnownFileType = file; name = MonValley_A_LookoutPoint_2k.hdr; path = HDR/MonValley_A_LookoutPoint_2k.hdr; sourceTree = "<group>"; };
+		707CD4CB1C167D4D00E767A5 /* MonValley_A_LookoutPoint_2k.irrhdr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = MonValley_A_LookoutPoint_2k.irrhdr; path = HDR/MonValley_A_LookoutPoint_2k.irrhdr; sourceTree = "<group>"; };
+		707CD4CC1C167D4D00E767A5 /* Newport_Loft_Ref.hdr */ = {isa = PBXFileReference; lastKnownFileType = file; name = Newport_Loft_Ref.hdr; path = HDR/Newport_Loft_Ref.hdr; sourceTree = "<group>"; };
+		707CD4CD1C167D4D00E767A5 /* Newport_Loft_Ref.irrhdr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Newport_Loft_Ref.irrhdr; path = HDR/Newport_Loft_Ref.irrhdr; sourceTree = "<group>"; };
+		707CD4CE1C167D4D00E767A5 /* Playa_Sunrise.hdr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Playa_Sunrise.hdr; path = HDR/Playa_Sunrise.hdr; sourceTree = "<group>"; };
+		707CD4CF1C167D4D00E767A5 /* Playa_Sunrise.irrhdr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Playa_Sunrise.irrhdr; path = HDR/Playa_Sunrise.irrhdr; sourceTree = "<group>"; };
+		707CD4D01C167D4D00E767A5 /* Sierra_Madre_B_Ref.hdr */ = {isa = PBXFileReference; lastKnownFileType = file; name = Sierra_Madre_B_Ref.hdr; path = HDR/Sierra_Madre_B_Ref.hdr; sourceTree = "<group>"; };
+		707CD4D11C167D4D00E767A5 /* Sierra_Madre_B_Ref.irrhdr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Sierra_Madre_B_Ref.irrhdr; path = HDR/Sierra_Madre_B_Ref.irrhdr; sourceTree = "<group>"; };
 		7084E3A91BAF78F600C866E7 /* simple.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = simple.vsh; sourceTree = "<group>"; };
 		7084E3AB1BAF790200C866E7 /* simple.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = simple.fsh; sourceTree = "<group>"; };
 		7084E3B01BAF83A800C866E7 /* Shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
@@ -423,6 +455,22 @@
 		707A337B1BF938D60030EACB /* Textures */ = {
 			isa = PBXGroup;
 			children = (
+				707CD4C21C167D4D00E767A5 /* Alexs_Apt_2k.hdr */,
+				707CD4C31C167D4D00E767A5 /* Alexs_Apt_2k.irrhdr */,
+				707CD4C41C167D4D00E767A5 /* Arches_E_PineTree_3k.hdr */,
+				707CD4C51C167D4D00E767A5 /* Arches_E_PineTree_3k.irrhdr */,
+				707CD4C61C167D4D00E767A5 /* Barce_Rooftop_C_3k.hdr */,
+				707CD4C71C167D4D00E767A5 /* Barce_Rooftop_C_3k.irrhdr */,
+				707CD4C81C167D4D00E767A5 /* Factory_Catwalk_2k.hdr */,
+				707CD4C91C167D4D00E767A5 /* Factory_Catwalk_2k.irrhdr */,
+				707CD4CA1C167D4D00E767A5 /* MonValley_A_LookoutPoint_2k.hdr */,
+				707CD4CB1C167D4D00E767A5 /* MonValley_A_LookoutPoint_2k.irrhdr */,
+				707CD4CC1C167D4D00E767A5 /* Newport_Loft_Ref.hdr */,
+				707CD4CD1C167D4D00E767A5 /* Newport_Loft_Ref.irrhdr */,
+				707CD4CE1C167D4D00E767A5 /* Playa_Sunrise.hdr */,
+				707CD4CF1C167D4D00E767A5 /* Playa_Sunrise.irrhdr */,
+				707CD4D01C167D4D00E767A5 /* Sierra_Madre_B_Ref.hdr */,
+				707CD4D11C167D4D00E767A5 /* Sierra_Madre_B_Ref.irrhdr */,
 				707A337C1BF939EF0030EACB /* 14-Hamarikyu_Bridge_B_3k.hdr */,
 				707A337D1BF939EF0030EACB /* 14-Hamarikyu_Bridge_B_3k.irrhdr */,
 				701117721BC7074500E351EA /* metal_roof_diff_512x512.tga */,
@@ -567,34 +615,47 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				707CD4DC1C167D4D00E767A5 /* Newport_Loft_Ref.hdr in Resources */,
+				707CD4DD1C167D4D00E767A5 /* Newport_Loft_Ref.irrhdr in Resources */,
 				70FEFC561C153F10003C9B53 /* ao.vsh in Resources */,
+				707CD4D21C167D4D00E767A5 /* Alexs_Apt_2k.hdr in Resources */,
 				70ED86501BFBC31300A35A7B /* ibl.vsh in Resources */,
 				70FDF7B11BAC95AB00D24F12 /* dragon.obj in Resources */,
 				70E4A7671BD1796C00B331FB /* lighting_DirectionalLight.fsh in Resources */,
 				700D0BBB1BA7682B009D9230 /* Sample.json in Resources */,
 				70F1F01B1BDD956000A74CFF /* shadowMap_SpotLight.fsh in Resources */,
 				7060655D1B46FBC700C884F6 /* Images.xcassets in Resources */,
+				707CD4D81C167D4D00E767A5 /* Factory_Catwalk_2k.hdr in Resources */,
 				7055ECE51BD59E2100F2C100 /* plane.obj in Resources */,
 				70F1F01F1BDD956000A74CFF /* shadowMap_PointLight.fsh in Resources */,
 				7007D8861BB3CA18008DCB56 /* camera.json in Resources */,
 				7084E3AC1BAF790200C866E7 /* simple.fsh in Resources */,
 				701117741BC7074500E351EA /* metal_roof_diff_512x512.tga in Resources */,
+				707CD4DF1C167D4D00E767A5 /* Playa_Sunrise.irrhdr in Resources */,
+				707CD4D41C167D4D00E767A5 /* Arches_E_PineTree_3k.hdr in Resources */,
 				70FDC2541BE944FD002E140C /* lighting_SpotLight_shadowed.vsh in Resources */,
+				707CD4D91C167D4D00E767A5 /* Factory_Catwalk_2k.irrhdr in Resources */,
 				70F1F0241BDDB7B300A74CFF /* lighting_DirectionalLight_shadowed.vsh in Resources */,
 				70F1F01D1BDD956000A74CFF /* shadowMap.fsh in Resources */,
 				707188DA1BFD784F002909C7 /* skydome.vsh in Resources */,
 				70E17B4A1BCB194300B2EA45 /* bunny.json in Resources */,
 				70E4A76B1BD1799200B331FB /* lighting_SpotLight.fsh in Resources */,
+				707CD4E11C167D4D00E767A5 /* Sierra_Madre_B_Ref.irrhdr in Resources */,
 				700D0BB91BA767B5009D9230 /* Engine.json in Resources */,
 				70981DB81BBAE8AB00D78D4A /* geometry.vsh in Resources */,
 				707A337E1BF939EF0030EACB /* 14-Hamarikyu_Bridge_B_3k.hdr in Resources */,
 				70E4A7651BD1796000B331FB /* lighting_DirectionalLight.vsh in Resources */,
 				70981DBA1BBAE8CB00D78D4A /* geometry.fsh in Resources */,
+				707CD4DE1C167D4D00E767A5 /* Playa_Sunrise.hdr in Resources */,
+				707CD4E01C167D4D00E767A5 /* Sierra_Madre_B_Ref.hdr in Resources */,
 				70FEFC581C153F1A003C9B53 /* ao.fsh in Resources */,
+				707CD4DB1C167D4D00E767A5 /* MonValley_A_LookoutPoint_2k.irrhdr in Resources */,
 				709768621BB0722B007369D4 /* cube.obj in Resources */,
 				70F1F01E1BDD956000A74CFF /* shadowMap.vsh in Resources */,
+				707CD4D51C167D4D00E767A5 /* Arches_E_PineTree_3k.irrhdr in Resources */,
 				70FDF7B31BAC95AB00D24F12 /* horse.obj in Resources */,
 				706065601B46FBC700C884F6 /* Main.storyboard in Resources */,
+				707CD4DA1C167D4D00E767A5 /* MonValley_A_LookoutPoint_2k.hdr in Resources */,
 				70FDF7B51BAC95AB00D24F12 /* bunny.obj in Resources */,
 				707188D81BFD7844002909C7 /* skydome.fsh in Resources */,
 				70F1F00D1BD9C22000A74CFF /* sphere.obj in Resources */,
@@ -602,11 +663,14 @@
 				70F1F0231BDDB7B300A74CFF /* lighting_DirectionalLight_shadowed.fsh in Resources */,
 				700A1E6F1BC18F3E00AE871C /* lighting_PointLight.fsh in Resources */,
 				70F1F01C1BDD956000A74CFF /* shadowMap_SpotLight.vsh in Resources */,
+				707CD4D71C167D4D00E767A5 /* Barce_Rooftop_C_3k.irrhdr in Resources */,
 				7084E3AA1BAF78F600C866E7 /* simple.vsh in Resources */,
 				7007D8841BB3C620008DCB56 /* cube.json in Resources */,
 				707A337F1BF939EF0030EACB /* 14-Hamarikyu_Bridge_B_3k.irrhdr in Resources */,
 				7055ECE31BD59E0700F2C100 /* plane.json in Resources */,
+				707CD4D61C167D4D00E767A5 /* Barce_Rooftop_C_3k.hdr in Resources */,
 				70E302B81BD7454E002AEB4B /* directionLight.json in Resources */,
+				707CD4D31C167D4D00E767A5 /* Alexs_Apt_2k.irrhdr in Resources */,
 				7073CE701B4A378800E3FEB8 /* README in Resources */,
 				70F1F0201BDD956000A74CFF /* shadowMap_PointLight.vsh in Resources */,
 				70E4A7691BD1798100B331FB /* lighting_SpotLight.vsh in Resources */,

@@ -164,7 +164,7 @@ GLshort quadFaces[] = {
 {
     self = [super initWithFrame:frameRect];
     if (self != nil) {
-        drawDebug = true;
+        drawDebug = false;
         slidingCamera = false;
         rotatingCamera = false;
         debugDepthTexture = false;
@@ -518,6 +518,20 @@ GLshort quadFaces[] = {
             [self emmit:@"moveLeft" withData:nil];
         }
         
+        // Contrast and Scale
+        if([temp isEqualToString:@"q"]) {
+            iblContrast += 1.0f;
+        }
+        if([temp isEqualToString:@"z"]) {
+            iblContrast = (iblContrast - 1.0f) < 0.0 ? 1.0 : iblContrast - 1.0f;
+        }
+        if([temp isEqualToString:@"e"]) {
+            iblExposure += 1.0f;
+        }
+        if([temp isEqualToString:@"c"]) {
+            iblExposure = (iblExposure - 1.0f) < 0.0 ? 1.0 : iblExposure - 1.0f;
+        }
+        
         // Check for space bar
         if ([temp isEqualToString:@"l"]) {
             [self emmit:@"lightMove" withData:nil];
@@ -652,10 +666,10 @@ GLshort quadFaces[] = {
               txtInfo.width,
               txtInfo.height);
         
-        glBindTexture(GL_TEXTURE_2D, [txtInfo name]);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        CheckOpenGLError();
+        //glBindTexture(GL_TEXTURE_2D, [txtInfo name]);
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        //CheckOpenGLError();
         
         skydomeImage = txtInfo;
     }
@@ -676,10 +690,10 @@ GLshort quadFaces[] = {
               txtInfo.width,
               txtInfo.height);
         
-        glBindTexture(GL_TEXTURE_2D, [txtInfo name]);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        CheckOpenGLError();
+        //glBindTexture(GL_TEXTURE_2D, [txtInfo name]);
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        //CheckOpenGLError();
         
         irradianceImage = txtInfo;
     }
@@ -809,6 +823,7 @@ GLshort quadFaces[] = {
     GLint uWorld   = [geometryShader uniformFromDictionary:@"world"],
           uDiffuse = [geometryShader uniformFromDictionary:@"diffuse"],
           uWVP     = [geometryShader uniformFromDictionary:@"wvp"],
+          uSpecu   = [geometryShader uniformFromDictionary:@"roughness"],
           uView    = [geometryShader uniformFromDictionary:@"view"];
     CheckOpenGLError();
     
@@ -835,7 +850,10 @@ GLshort quadFaces[] = {
         Material* material = (Material*)[entity getModelWithName:@"Material"];
         NSAssert(material != nil, @"ERROR: Entity with model does not have a material");
         diffuse = *[material diffuse];
+        GLfloat roughness = [[material specularity] floatValue];
+        
         glUniform4fv(uDiffuse, 1, diffuse.v);
+        glUniform1f(uSpecu, roughness);
         CheckOpenGLError();
         
         // Submit transformation matrices
@@ -1015,8 +1033,7 @@ GLshort quadFaces[] = {
     screenHeight = screenBounds.size.height * 2;
     
     //TODO: Add a GBuffer render target for specular vec and roughness
-    GLfloat roughness = 5000;
-    GLKVector3 Ks = GLKVector3Make(0.08f,0.08f,0.08f);
+    GLKVector3 Ks = GLKVector3Make(0.8f,0.8f,0.8f);
     
     glBindFramebuffer(GL_FRAMEBUFFER, originalFrameBuffer);
     glClearColor(0.2f,0.2f,0.2f,1);
@@ -1041,7 +1058,6 @@ GLshort quadFaces[] = {
           uEnvBuffer  = [iblShader uniformFromDictionary:@"environmentBuffer"],
           uIrrBuffer  = [iblShader uniformFromDictionary:@"irradianceBuffer"],
           uEye        = [iblShader uniformFromDictionary:@"eye"],
-          uRoughness  = [iblShader uniformFromDictionary:@"roughness"],
           uWinSize    = [iblShader uniformFromDictionary:@"windowSize"],
           uContrast   = [iblShader uniformFromDictionary:@"contrast"],
           uExposure   = [iblShader uniformFromDictionary:@"exposure"],
@@ -1073,7 +1089,6 @@ GLshort quadFaces[] = {
     glUniform1i(uIrrBuffer,4);
     CheckOpenGLError();
     
-    glUniform1f(uRoughness, roughness);
     glUniform1f(uContrast,  iblContrast);
     glUniform1f(uExposure,  iblExposure);
     glUniform3fv(uKs, 1, Ks.v);

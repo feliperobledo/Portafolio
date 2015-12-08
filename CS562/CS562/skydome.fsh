@@ -21,7 +21,7 @@ void main(void) {
     //gl_FragDepth = 0.0f;
     vec3 D = normalize(worldPosOut - eye);
     //                  forward  right               up
-    vec2 uv = vec2( -atan(D.x,D.z) / (2*pi), acos(-D.y) / pi);
+    vec2 uv = vec2( 0.5 - atan(D.z,D.x) / (2*pi), acos(-D.y ) / pi);
     
     // Here we store a -1 to identify this pixel to belong to the
     //     skydome.

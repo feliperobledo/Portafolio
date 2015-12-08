@@ -5,6 +5,7 @@ uniform mat4x4 world;
 uniform mat4x4 view;
 uniform mat4x4 wvp;
 uniform vec4 diffuse;
+uniform float roughness;
 
 //uniform mat4x4 persp;
 
