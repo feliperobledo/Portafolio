@@ -148,7 +148,8 @@ void main(void) {
     // If we are calculating the ambient for the skydome, just display the
     //     skydome.
     if(pos.w == -5) {
-        fragColor = diff;
+        LinearTosRGB(diff.xyz,fragColor.xyz);
+        fragColor.w = 1;
         return;
     }
     

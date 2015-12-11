@@ -81,6 +81,7 @@ GLshort quadFaces[] = {
     GLfloat iblExposure, iblContrast;
     GLfloat aoContrast, aoScale, aoRangeOfInfluence;
     GLint  originalFrameBuffer;
+    GLint  mipmapLevelOffset;
     ShaderManager* shaderManager;
     GBuffer* gBuffer;
     GLKTextureInfo* skydomeImage, *irradianceImage;
@@ -172,6 +173,7 @@ GLshort quadFaces[] = {
         iblContrast = iblExposure = 1.0f;
         aoContrast = aoScale = 1.0f;
         aoRangeOfInfluence = 5.0f;
+        mipmapLevelOffset = 0;
         [[NSNotificationCenter defaultCenter] addObserver:self
                                               selector:@selector(_surfaceNeedsUpdate:)
                                               name:NSViewGlobalFrameDidChangeNotification
@@ -394,8 +396,8 @@ GLshort quadFaces[] = {
             [self drawSkyDome:dataToDraw];
             [self geometryPass:dataToDraw];
             [self shadowPass:dataToDraw];
-            //[self AO:dataToDraw];
-            [self IBL:dataToDraw];
+            [self AO:dataToDraw];
+            //[self IBL:dataToDraw];
             //[self lightPass:dataToDraw];
             
         }
@@ -532,9 +534,29 @@ GLshort quadFaces[] = {
             iblExposure = (iblExposure - 1.0f) < 0.0 ? 1.0 : iblExposure - 1.0f;
         }
         
+        // ao - bindings
+        if ([temp isEqualToString:@"r"]) {
+            aoBlurPassToShow = (aoBlurPassToShow + 1) > 3 ? 3 : aoBlurPassToShow + 1;
+            NSLog(@"AO Pass to Show: %d", aoBlurPassToShow);
+        }
+        if ([temp isEqualToString:@"f"]) {
+            aoBlurPassToShow = (aoBlurPassToShow - 1) < 0 ? 0 : aoBlurPassToShow - 1;
+        }
+        
         // Check for space bar
         if ([temp isEqualToString:@"l"]) {
             [self emmit:@"lightMove" withData:nil];
+        }
+        
+        if ([temp isEqualToString:@"y"]) {
+            mipmapLevelOffset += 1;
+        }
+        if ([temp isEqualToString:@"h"]) {
+            mipmapLevelOffset = (mipmapLevelOffset - 1) < 0 ? 0 : mipmapLevelOffset - 1;
+        }
+        
+        if ([temp isEqualToString:@"v"]) {
+            drawDebug = !drawDebug;
         }
     }
     
@@ -710,6 +732,8 @@ GLshort quadFaces[] = {
         "skydome",
         "ibl",
         "ao",
+        "ao_horizontal_filter",
+        "ao_vertical_filter",
         NULL
     };
     
@@ -783,13 +807,9 @@ GLshort quadFaces[] = {
     CheckOpenGLError();
 
     glEnableVertexAttribArray(GLKVertexAttribPosition);
-    //glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
-    //glEnableVertexAttribArray(GLKVertexAttribTexCoord1);
     
     glDrawElements(GL_TRIANGLES, indices, GL_UNSIGNED_INT,NULL);
 
-    //glDisableVertexAttribArray(GLKVertexAttribTexCoord1);
-    //glDisableVertexAttribArray(GLKVertexAttribTexCoord0);
     glDisableVertexAttribArray(GLKVertexAttribPosition);
     
     CheckOpenGLError();
@@ -1123,12 +1143,17 @@ GLshort quadFaces[] = {
     GLfloat screenWidth  = screenBounds.size.width * 2,
     screenHeight = screenBounds.size.height * 2;
     
-    glBindFramebuffer(GL_FRAMEBUFFER, originalFrameBuffer);
+    if(aoBlurPassToShow >= 1) {
+        // FB to draw to
+        [aoTarget1 bindFor:GL_DRAW_FRAMEBUFFER];
+    } else {
+        glBindFramebuffer(GL_FRAMEBUFFER, originalFrameBuffer);
+    }
     glClearColor(0.2f,0.2f,0.2f,1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     CheckOpenGLError();
     // compute AO
-    //[aoTarget1 bindFor:GL_DRAW_FRAMEBUFFER];
+    
     
     [gBuffer bindForReading];
     GLuint positionTextureHandle = [gBuffer getTextureHandleFor:GBUFFER_TEXTURE_TYPE_POSITION],
@@ -1176,14 +1201,142 @@ GLshort quadFaces[] = {
     
     [aoShader unuse];
     
+    // bilateral filter - horizontal
+    GLint uAOTexture = 0,
+          uSFactor = 0,
+          uSqrtPiS2 = 0;
+    GLfloat sFactor = 0.1;
+    GLfloat pi = 3.1415926;
+    float sqrtPiS2 = sqrtf(2 * pi * sFactor);
     if(aoBlurPassToShow >= 1) {
+        // FB to draw to
+        if(aoBlurPassToShow >= 2) {
+            // FB to draw to
+            [aoTarget2 bindFor:GL_DRAW_FRAMEBUFFER];
+        } else {
+            glBindFramebuffer(GL_FRAMEBUFFER, originalFrameBuffer);
+        }
         
+        //[aoTarget1 bindFor:GL_DRAW_FRAMEBUFFER];
+        glClearColor(0.2f,0.2f,0.2f,1);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        CheckOpenGLError();
+        
+        // FB to read from
+        [aoTarget1 bindFor:GL_READ_FRAMEBUFFER];
+        [gBuffer bindForReading];
+        
+        aoShader  = [shaderManager getShader:@"ao_horizontal_filter"];
+        [aoShader use];
+        
+        uWinSize    = [aoShader uniformFromDictionary:@"windowSize"];
+        uAOTexture  = [aoShader uniformFromDictionary:@"prevAOBuffer"];
+        uNorBuffer  = [aoShader uniformFromDictionary:@"normalBuffer"];
+        uSFactor    = [aoShader uniformFromDictionary:@"sFactor"];
+        uSqrtPiS2   = [aoShader uniformFromDictionary:@"sqrtPiS2"];
+        
+        
+        glUniform1f(uSFactor, sFactor);
+        glUniform1f(uSqrtPiS2, sqrtPiS2);
+        //glUniformBlockBinding(<#GLuint program#>, <#GLuint uniformBlockIndex#>, <#GLuint uniformBlockBinding#>)
+        
+        glUniform2f(uWinSize, screenWidth, screenHeight);
+        
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D,normalTextureHandle);
+        glUniform1i(uNorBuffer,0);
+        CheckOpenGLError();
+        
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D,[aoTarget1 renderTexture]);
+        glUniform1i(uAOTexture,1);
+        CheckOpenGLError();
+        
+        // We will render everything to a quad
+        glBindVertexArray (vao);
+        CheckOpenGLError();
+        
+        glEnableVertexAttribArray (GLKVertexAttribPosition);
+        CheckOpenGLError();
+        
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT,0);
+        CheckOpenGLError();
+        
+        glDisableVertexAttribArray(GLKVertexAttribPosition);
+        CheckOpenGLError();
+        
+        glBindVertexArray(0);
+        CheckOpenGLError();
+        
+        [aoShader unuse];
     }
     
+    // bilateral filter - vertical
     if(aoBlurPassToShow >= 2) {
+        // FB to draw to
+        if(aoBlurPassToShow >= 3) {
+            // FB to draw to
+            [aoTarget1 bindFor:GL_DRAW_FRAMEBUFFER];
+        } else {
+            glBindFramebuffer(GL_FRAMEBUFFER, originalFrameBuffer);
+        }
+        
+        //[aoTarget1 bindFor:GL_DRAW_FRAMEBUFFER];
+        glClearColor(0.2f,0.2f,0.2f,1);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        CheckOpenGLError();
+        
+        // FB to read from
+        [aoTarget2 bindFor:GL_READ_FRAMEBUFFER];
+        [gBuffer bindForReading];
+        
+        aoShader  = [shaderManager getShader:@"ao_vertical_filter"];
+        [aoShader use];
+        
+        uWinSize    = [aoShader uniformFromDictionary:@"windowSize"];
+        uAOTexture  = [aoShader uniformFromDictionary:@"prevAOBuffer"];
+        uNorBuffer  = [aoShader uniformFromDictionary:@"normalBuffer"];
+        uSFactor    = [aoShader uniformFromDictionary:@"sFactor"];
+        uSqrtPiS2   = [aoShader uniformFromDictionary:@"sqrtPiS2"];
+        
+        
+        glUniform1f(uSFactor, sFactor);
+        glUniform1f(uSqrtPiS2, sqrtPiS2);
+        //glUniformBlockBinding(<#GLuint program#>, <#GLuint uniformBlockIndex#>, <#GLuint uniformBlockBinding#>)
+        
+        glUniform2f(uWinSize, screenWidth, screenHeight);
+        
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D,normalTextureHandle);
+        glUniform1i(uNorBuffer,0);
+        CheckOpenGLError();
+        
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D,[aoTarget2 renderTexture]);
+        glUniform1i(uAOTexture,1);
+        CheckOpenGLError();
+        
+        // We will render everything to a quad
+        glBindVertexArray (vao);
+        CheckOpenGLError();
+        
+        glEnableVertexAttribArray (GLKVertexAttribPosition);
+        CheckOpenGLError();
+        
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT,0);
+        CheckOpenGLError();
+        
+        glDisableVertexAttribArray(GLKVertexAttribPosition);
+        CheckOpenGLError();
+        
+        glBindVertexArray(0);
+        CheckOpenGLError();
+        
+        [aoShader unuse];
         
     }
     
+    // take IBL image texture and SSAO image texture
     if(aoBlurPassToShow == 3) {
         
     }

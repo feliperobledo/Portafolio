@@ -45,7 +45,7 @@ void main() {
           cSquared = pow(c,2),
           psy      = 0.001,
           gamma    = (30 * xPrime ^ yPrime) + 10 * xPrime * yPrime,
-          d        = pos.w; // This is supposed to be camera space depth
+          d        = norm.w; // This is in camera space depth
     vec3 N = norm.xyz,
          P = pos.xyz;
     

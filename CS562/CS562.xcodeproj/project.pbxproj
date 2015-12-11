@@ -95,6 +95,10 @@
 		70F696461BAB55F600486C6D /* CS562Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70F696441BAB55E400486C6D /* CS562Core.framework */; };
 		70F696471BAB55F600486C6D /* CS562Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 70F696441BAB55E400486C6D /* CS562Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		70F696481BAB58AD00486C6D /* CS562Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70F696441BAB55E400486C6D /* CS562Core.framework */; };
+		70FA9BA31C1A77EB00444523 /* ao_horizontal_filter.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 70FA9BA21C1A77EB00444523 /* ao_horizontal_filter.vsh */; };
+		70FA9BA51C1A78A200444523 /* ao_horizontal_filter.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 70FA9BA41C1A78A200444523 /* ao_horizontal_filter.fsh */; };
+		70FA9BA71C1A9D8F00444523 /* ao_vertical_filter.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 70FA9BA61C1A9D8F00444523 /* ao_vertical_filter.vsh */; };
+		70FA9BA91C1A9DA100444523 /* ao_vertical_filter.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 70FA9BA81C1A9DA100444523 /* ao_vertical_filter.fsh */; };
 		70FD24DC1BFDA03000A03897 /* Skydome.m in Sources */ = {isa = PBXBuildFile; fileRef = 70FD24DB1BFDA03000A03897 /* Skydome.m */; };
 		70FDC2541BE944FD002E140C /* lighting_SpotLight_shadowed.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 70FDC2531BE944FD002E140C /* lighting_SpotLight_shadowed.vsh */; };
 		70FDC2561BE94518002E140C /* lighting_SpotLight_shadowed.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 70FDC2551BE94518002E140C /* lighting_SpotLight_shadowed.fsh */; };
@@ -249,6 +253,10 @@
 		70F1F0211BDDB7B300A74CFF /* lighting_DirectionalLight_shadowed.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = lighting_DirectionalLight_shadowed.fsh; sourceTree = "<group>"; };
 		70F1F0221BDDB7B300A74CFF /* lighting_DirectionalLight_shadowed.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = lighting_DirectionalLight_shadowed.vsh; sourceTree = "<group>"; };
 		70F696441BAB55E400486C6D /* CS562Core.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CS562Core.framework; path = "../../Library/Developer/Xcode/DerivedData/CS562Core-gqvecmhxcyfrpdfkmhgyucqdckgf/Build/Products/Release/CS562Core.framework"; sourceTree = "<group>"; };
+		70FA9BA21C1A77EB00444523 /* ao_horizontal_filter.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ao_horizontal_filter.vsh; sourceTree = "<group>"; };
+		70FA9BA41C1A78A200444523 /* ao_horizontal_filter.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ao_horizontal_filter.fsh; sourceTree = "<group>"; };
+		70FA9BA61C1A9D8F00444523 /* ao_vertical_filter.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ao_vertical_filter.vsh; sourceTree = "<group>"; };
+		70FA9BA81C1A9DA100444523 /* ao_vertical_filter.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ao_vertical_filter.fsh; sourceTree = "<group>"; };
 		70FD24DA1BFDA03000A03897 /* Skydome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skydome.h; sourceTree = "<group>"; };
 		70FD24DB1BFDA03000A03897 /* Skydome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Skydome.m; sourceTree = "<group>"; };
 		70FDC2531BE944FD002E140C /* lighting_SpotLight_shadowed.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = lighting_SpotLight_shadowed.vsh; sourceTree = "<group>"; };
@@ -507,6 +515,10 @@
 				707188D71BFD7844002909C7 /* skydome.fsh */,
 				70FEFC551C153F10003C9B53 /* ao.vsh */,
 				70FEFC571C153F1A003C9B53 /* ao.fsh */,
+				70FA9BA21C1A77EB00444523 /* ao_horizontal_filter.vsh */,
+				70FA9BA41C1A78A200444523 /* ao_horizontal_filter.fsh */,
+				70FA9BA61C1A9D8F00444523 /* ao_vertical_filter.vsh */,
+				70FA9BA81C1A9DA100444523 /* ao_vertical_filter.fsh */,
 			);
 			name = Shaders;
 			sourceTree = "<group>";
@@ -615,6 +627,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70FA9BA71C1A9D8F00444523 /* ao_vertical_filter.vsh in Resources */,
 				707CD4DC1C167D4D00E767A5 /* Newport_Loft_Ref.hdr in Resources */,
 				707CD4DD1C167D4D00E767A5 /* Newport_Loft_Ref.irrhdr in Resources */,
 				70FEFC561C153F10003C9B53 /* ao.vsh in Resources */,
@@ -638,6 +651,7 @@
 				70F1F0241BDDB7B300A74CFF /* lighting_DirectionalLight_shadowed.vsh in Resources */,
 				70F1F01D1BDD956000A74CFF /* shadowMap.fsh in Resources */,
 				707188DA1BFD784F002909C7 /* skydome.vsh in Resources */,
+				70FA9BA31C1A77EB00444523 /* ao_horizontal_filter.vsh in Resources */,
 				70E17B4A1BCB194300B2EA45 /* bunny.json in Resources */,
 				70E4A76B1BD1799200B331FB /* lighting_SpotLight.fsh in Resources */,
 				707CD4E11C167D4D00E767A5 /* Sierra_Madre_B_Ref.irrhdr in Resources */,
@@ -652,6 +666,7 @@
 				707CD4DB1C167D4D00E767A5 /* MonValley_A_LookoutPoint_2k.irrhdr in Resources */,
 				709768621BB0722B007369D4 /* cube.obj in Resources */,
 				70F1F01E1BDD956000A74CFF /* shadowMap.vsh in Resources */,
+				70FA9BA91C1A9DA100444523 /* ao_vertical_filter.fsh in Resources */,
 				707CD4D51C167D4D00E767A5 /* Arches_E_PineTree_3k.irrhdr in Resources */,
 				70FDF7B31BAC95AB00D24F12 /* horse.obj in Resources */,
 				706065601B46FBC700C884F6 /* Main.storyboard in Resources */,
@@ -665,6 +680,7 @@
 				70F1F01C1BDD956000A74CFF /* shadowMap_SpotLight.vsh in Resources */,
 				707CD4D71C167D4D00E767A5 /* Barce_Rooftop_C_3k.irrhdr in Resources */,
 				7084E3AA1BAF78F600C866E7 /* simple.vsh in Resources */,
+				70FA9BA51C1A78A200444523 /* ao_horizontal_filter.fsh in Resources */,
 				7007D8841BB3C620008DCB56 /* cube.json in Resources */,
 				707A337F1BF939EF0030EACB /* 14-Hamarikyu_Bridge_B_3k.irrhdr in Resources */,
 				7055ECE31BD59E0700F2C100 /* plane.json in Resources */,

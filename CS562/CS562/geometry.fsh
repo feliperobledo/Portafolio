@@ -22,7 +22,7 @@ out vec4 diffuseCol;
 void main() {
     float d = (view * vec4(worldPosOut,1)).z;
     
-    worldPos = vec4(worldPosOut,d);
-    normal   = vec4(normalize(normalOut),0);
+    worldPos = vec4(worldPosOut,0);
+    normal   = vec4(normalize(normalOut),d);
     diffuseCol = vec4(diffuseOut.xyz,roughness);
 }
