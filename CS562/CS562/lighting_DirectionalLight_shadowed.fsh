@@ -62,7 +62,9 @@ void main() {
     // the [-1,1] NDC quad will have been transformed to screen space at
     // this point, which is why this works.
     vec2 uv = vec2(gl_FragCoord.x/windowSize.x,gl_FragCoord.y/windowSize.y);
-
+    fragColor = texture(depthBuffer,uv);
+    return;
+    
     vec4 pos  = texture(positionBuffer,uv), // world space
          norm = texture(normalBuffer,uv),   // world space
          diff = texture(diffuseBuffer, uv);
@@ -96,11 +98,14 @@ void main() {
                            0.5, 0.5, 0.5, 1.0);
     
     vec4 temp = LP * pos;
+    
+    // HalfMatrix shifts [-1,1] to [0,1]
     vec4 posInLightSpace = halfMatrix * LP * pos;
     
-    // performing perspective divide done between vertex to fragment shader
+    // Perform Perspective-Divide
     vec3 shadowCoord = posInLightSpace.xyz / posInLightSpace.w;
     
+    // Perspective-Divide gives us a range of [0,1]
     vec4 lightSpaceDepth = texture(depthBuffer,shadowCoord.xy);
     float divisor = 100.0 - 1.0;
     float lightDepth = lightSpaceDepth.r;
@@ -123,34 +128,4 @@ void main() {
     }
     
     fragColor.xyz *= visibility;
-    
-    
-    //fragColor.xyz = vec3(pixelDepth); // correct
-    //fragColor.xyz = vec3(lightDepth);
-    //fragColor.xyz = vec3(shadowCoord.xy,0); // correct!
-    
-    //float color = texture(depthBuffer,uv).r;
-    //fragColor = vec4(color,color,color,1);
-    
-    
-    
-    /*
-    vec2 poissonDisk[4] = vec2[](
-                                 vec2( -0.94201624, -0.39906216 ),
-                                 vec2( 0.94558609, -0.76890725 ),
-                                 vec2( -0.094184101, -0.92938870 ),
-                                 vec2( 0.34495938, 0.29387760 )
-                                 );
-    float spread = 700.0;
-    for (int i=0;i<4;i++){
-        float depth = texture( depthBuffer, shadowIndex.xy + poissonDisk[i]/spread).r;
-        if ( (pixelDepth - depth) >= EPSILON ){
-            visibility-=0.2;
-        }
-    }
-    
-    fragColor.xyz *= visibility;
-    */
-     
-    // uncomment the following to see the shadow map
 }

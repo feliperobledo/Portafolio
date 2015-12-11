@@ -66,7 +66,6 @@
 }
 
 -(void) postInit {
-    BOOL testColor = NO;
     width = height = 1024;
     
     GLint fbObject = 0;
@@ -79,44 +78,32 @@
     // Create depth texture (Need a way to get screen size for this view)
     glGenTextures(1, &depthTexture);
     glBindTexture(GL_TEXTURE_2D, depthTexture);
-    
-    if(testColor) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
-    } else {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, height, 0, GL_RED, GL_FLOAT, NULL);
-        //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
-        //glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-    }
 
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, height, 0, GL_RED, GL_FLOAT, NULL);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER,
+                           GL_COLOR_ATTACHMENT0,
+                           GL_TEXTURE_2D,
+                           depthTexture,
+                           0);
     
-    GLfloat border[]={1.0f,0.0f,0.0f,0.0f};
-    glTexParameterfv(GL_TEXTURE_2D,GL_TEXTURE_BORDER_COLOR, border);
+    GLuint depth = 0;
+    glGenTextures(1, &depth);
+    glBindTexture(GL_TEXTURE_2D, depth);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glFramebufferTexture(GL_DRAW_FRAMEBUFFER,
+                         GL_DEPTH_ATTACHMENT,
+                         depth,
+                         0);
     
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_COMPARE_MODE,
-                    GL_COMPARE_REF_TO_TEXTURE);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_COMPARE_FUNC,
-                    GL_LESS);
-    
-    
-    
-    if(testColor) {
-        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER,
-                               GL_COLOR_ATTACHMENT0,
-                               GL_TEXTURE_2D,
-                               depthTexture,
-                               0);
-    } else {
-        
-        //glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,depthTexture,0);
-         
-        
-        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D, depthTexture, 0);
-    }
+    // When accessing the textures inside a shader
+    GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0 };
+    glDrawBuffers(1, DrawBuffers);
+    CheckOpenGLError();
     
     // Check
     GLenum status;
@@ -202,19 +189,20 @@
     right = GLKVector3CrossProduct(direction,up);
     right = GLKVector3Normalize(right);
     
-    up = GLKVector3CrossProduct(direction, right);
+    up = GLKVector3CrossProduct(right, direction);
     up = GLKVector3Normalize(up);
     
     GLKVector3 target = GLKVector3Add(pos, direction);
+
     
     GLKMatrix4 t = GLKMatrix4MakeLookAt(pos.x, pos.y, pos.z,
                                 target.x, target.y, target.z,
                                 up.x, up.y, up.z);
     
-    GLboolean isInvertible = YES;
+    bool isInvertible = YES;
     GLKMatrix4 inverse = GLKMatrix4Invert(t, &isInvertible);
     if(!isInvertible) {
-        NSLog(@"ERROR: Light matrix is not invertible.");
+        //NSLog(@"ERROR: Light matrix is not invertible.");
         // As far as I can tell, this case is beint hit when the light
         //     right above the the scene and the direction vector is -y axis.
         up = GLKVector3Make(1, 0 , 0);
@@ -227,9 +215,9 @@
         
         GLKVector3 target = GLKVector3Add(pos, direction);
         
-        return GLKMatrix4MakeLookAt(pos.x, pos.y, pos.z,
-                                            target.x, target.y, target.z,
-                                            up.x, up.y, up.z);
+        t = GLKMatrix4MakeLookAt(pos.x, pos.y, pos.z,
+                                 target.x, target.y, target.z,
+                                  up.x, up.y, up.z);
     }
     
     return t;

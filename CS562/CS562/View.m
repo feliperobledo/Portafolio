@@ -396,9 +396,9 @@ GLshort quadFaces[] = {
             [self drawSkyDome:dataToDraw];
             [self geometryPass:dataToDraw];
             [self shadowPass:dataToDraw];
-            [self AO:dataToDraw];
+            //[self AO:dataToDraw];
             //[self IBL:dataToDraw];
-            //[self lightPass:dataToDraw];
+            [self lightPass:dataToDraw];
             
         }
         
@@ -906,14 +906,13 @@ GLshort quadFaces[] = {
 }
 
 -(void) shadowPass:(NSDictionary*)data {
-    return;
-    // Setting blending on
+    //return;
     glDisable(GL_BLEND);
     
-    // Set depth testing off
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
-    glCullFace(GL_FRONT);
     
     NSDictionary* lightsInWorld = [data objectForKey:@"lights"];
     
@@ -945,11 +944,12 @@ GLshort quadFaces[] = {
     glViewport(0, 0,
                (GLint)NSWidth(pixelBounds),
                (GLint)NSHeight(pixelBounds));
+    
+    glDisable(GL_CULL_FACE);
 }
 
 -(void) generateShadowMapFor:(Entity*)light withData:(NSDictionary*)data shadowMapShader:(Shader*)shadowMapShader {
     const GLuint VERTEX_COUNT = 3;
-    BOOL debugTexture = NO;
     
     NSArray*   worldObjectIDs  = [data valueForKey:@"gameObjectIDs"];
     MeshStore* meshStore       = [data valueForKey:@"meshStore"];
@@ -958,22 +958,13 @@ GLshort quadFaces[] = {
     ShadowCastingLight *shadowCasterView = (ShadowCastingLight*)[light getViewWithName:@"ShadowCastingLight"];
     CGSize size = [shadowCasterView getSize];
     [shadowCasterView bindForWriting];
-    
-    if(debugTexture) {
-        glBindFramebuffer(GL_FRAMEBUFFER, originalFrameBuffer);
-    } else {
-        glViewport(0, 0, size.width, size.height);
-    }
 
+    glViewport(0, 0, size.width, size.height);
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
     
     GLKMatrix4 lightTrans = [shadowCasterView getEyeTransformation];
     GLKMatrix4 lightPersp = [shadowCasterView getPerspective];
-    
-    // TODO: some of this logic changes for point lights since the shadow mapping
-    //       for them is done from 2 views , 2 hemispheres. For simplicity I will
-    //       perform directional light first, then spot light.
     
     for(NSNumber* entityID in worldObjectIDs) {
         uint64 temp = [entityID unsignedLongLongValue];
@@ -1023,18 +1014,6 @@ GLshort quadFaces[] = {
         CheckOpenGLError();
         
         glDisableVertexAttribArray(GLKVertexAttribPosition);
-    }
-    
-    if( false ) {
-        // This shows that my shadow buffer IS being written to,
-        // and I am copying the contents of it to the framebuffer
-        // where the final result goes
-        [shadowCasterView bindForReading];
-        glReadBuffer(GL_COLOR_ATTACHMENT0);
-        glBlitFramebuffer(0, 0, size.width, size.height,
-                          0, 0, 1600, 1600,
-                          GL_COLOR_BUFFER_BIT, GL_LINEAR);
-        CheckOpenGLError();
     }
 }
 
@@ -1238,7 +1217,6 @@ GLshort quadFaces[] = {
         
         glUniform1f(uSFactor, sFactor);
         glUniform1f(uSqrtPiS2, sqrtPiS2);
-        //glUniformBlockBinding(<#GLuint program#>, <#GLuint uniformBlockIndex#>, <#GLuint uniformBlockBinding#>)
         
         glUniform2f(uWinSize, screenWidth, screenHeight);
         
@@ -1302,7 +1280,6 @@ GLshort quadFaces[] = {
         
         glUniform1f(uSFactor, sFactor);
         glUniform1f(uSqrtPiS2, sqrtPiS2);
-        //glUniformBlockBinding(<#GLuint program#>, <#GLuint uniformBlockIndex#>, <#GLuint uniformBlockBinding#>)
         
         glUniform2f(uWinSize, screenWidth, screenHeight);
         
@@ -1393,7 +1370,7 @@ GLshort quadFaces[] = {
     //     for every instance of this light type
     //          pass uniform data
     //          render
-    BOOL useShadowCast = false;
+    BOOL useShadowCast = true;
     CheckOpenGLError();
     for(NSString* lightType in lightsInWorld) {
         NSArray* lightEntityIDs = [lightsInWorld objectForKey:lightType];
