@@ -14,7 +14,8 @@ uniform sampler2D positionBuffer;
 uniform sampler2D diffuseBuffer;
 uniform sampler2D normalBuffer;
 uniform sampler2D depthBuffer;
-uniform mat4 LP;
+uniform mat4 lightView;
+uniform mat4 persp;
 uniform mat4 view;
 uniform LightData light;
 uniform vec3 eye;
@@ -97,35 +98,41 @@ void main() {
                            0.0, 0.0, 0.5, 0.0,
                            0.5, 0.5, 0.5, 1.0);
     
-    vec4 temp = LP * pos;
+    vec4 temp = persp * lightView * pos;
     
     // HalfMatrix shifts [-1,1] to [0,1]
-    vec4 posInLightSpace = halfMatrix * LP * pos;
+    vec4 shadowCoord = halfMatrix * persp * lightView * pos;
     
     // Perform Perspective-Divide
-    vec3 shadowCoord = posInLightSpace.xyz / posInLightSpace.w;
+    vec2 shadowIndex = shadowCoord.xy / shadowCoord.w;
     
     // Perspective-Divide gives us a range of [0,1]
-    vec4 lightSpaceDepth = texture(depthBuffer,shadowCoord.xy);
+    vec4 lightSpaceCoord = texture(depthBuffer,shadowIndex.xy);
+    //fragColor = vec4(lightSpaceCoord.r);
+    //return;
+    
     float divisor = 100.0 - 1.0;
-    float lightDepth = lightSpaceDepth.r;
+    float currFragLightSpaceDepth = lightSpaceCoord.r;
     
     // This makes sure that that the index to the depth buffer is valid
     // This makes sure to not consider geometry behind the light
-    bool mask = shadowCoord.x > 1 && shadowCoord.x < 0 ||
-                shadowCoord.y > 1 && shadowCoord.y < 0 ||
-                posInLightSpace.w < 0;
+    bool mask = shadowIndex.x > 1 && shadowIndex.x < 0 ||
+                shadowIndex.y > 1 && shadowIndex.y < 0 ||
+                shadowCoord.w < 0;
     
     // bias helps us remove possible shadow acne
     float bias = 0.005;// * tan(acos(dot(N,L)));
     // Herron says this should use the w, but it is not working with it. z does
     //     work.
-    float pixelDepth = ((posInLightSpace.w / divisor));
+    float currFragmentDepth = ((shadowCoord.w / divisor));
     
     float visibility = 1.0;
-    if (!mask && (lightDepth  <  (pixelDepth - EPSILON))){
+    if (!mask && (currFragLightSpaceDepth  <  (currFragmentDepth - EPSILON))){
         visibility = 0.5;
     }
     
+    //fragColor = vec4(shadowCoord.xy,0,1);
+    //fragColor = vec4(currFragmentDepth);
+    //fragColor = vec4(currFragLightSpaceDepth);
     fragColor.xyz *= visibility;
 }

@@ -34,6 +34,10 @@ void main() {
     vec3  N = texture(normalBuffer,uv).xyz;
     float d = texture(normalBuffer,uv).w;
     
+    if (texture(normalBuffer,uv).w < 0) {
+        newFilteredAO = vec4(1);
+    };
+    
     //newFilteredAO = vec4(N,1);
     //newFilteredAO = texture(prevAOBuffer,uv);
     //newFilteredAO = vec4(1,0,0,1);

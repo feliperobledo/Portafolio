@@ -32,11 +32,11 @@ void main() {
     vec4 pos  = texture(positionBuffer,xy), // world space
          norm = texture(normalBuffer,xy);   // world space
     
-    // If we are calculating the ambient for the skydome, simply output white.
-    //if(pos.w < 0) {
-    //    aoOut = vec4(1);
-    //    return;
-    //}
+    //If we are calculating the ambient for the skydome, simply output white.
+    if(pos.w < 0) {
+        aoOut = vec4(1,1,1,-1);
+        return;
+    }
     
     // select some random points
     

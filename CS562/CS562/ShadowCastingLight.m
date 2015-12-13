@@ -82,6 +82,8 @@
     glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, height, 0, GL_RED, GL_FLOAT, NULL);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
@@ -118,7 +120,7 @@
             break;
         case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
             printf("GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT\n");
-            break;
+             break;
         default:
             printf("ERROR: Unidentified status number %d\n",status);
             break;
@@ -186,11 +188,11 @@
     direction = GLKVector3Normalize(direction);
     up = GLKVector3Make(0, 1, 0);
     
-    right = GLKVector3CrossProduct(direction,up);
-    right = GLKVector3Normalize(right);
+    //right = GLKVector3CrossProduct(direction,up);
+    //right = GLKVector3Normalize(right);
     
-    up = GLKVector3CrossProduct(right, direction);
-    up = GLKVector3Normalize(up);
+    //up = GLKVector3CrossProduct(right, direction);
+    //up = GLKVector3Normalize(up);
     
     GLKVector3 target = GLKVector3Add(pos, direction);
 
@@ -207,13 +209,13 @@
         //     right above the the scene and the direction vector is -y axis.
         up = GLKVector3Make(1, 0 , 0);
         
-        right = GLKVector3CrossProduct(up,direction);
-        right = GLKVector3Normalize(right);
+        //right = GLKVector3CrossProduct(up,direction);
+        //right = GLKVector3Normalize(right);
         
-        up = GLKVector3CrossProduct(direction, right);
-        up = GLKVector3Normalize(up);
+        //up = GLKVector3CrossProduct(direction, right);
+        //up = GLKVector3Normalize(up);
         
-        GLKVector3 target = GLKVector3Add(pos, direction);
+        //GLKVector3 target = GLKVector3Add(pos, direction);
         
         t = GLKMatrix4MakeLookAt(pos.x, pos.y, pos.z,
                                  target.x, target.y, target.z,

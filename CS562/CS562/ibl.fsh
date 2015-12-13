@@ -8,6 +8,8 @@ uniform sampler2D diffuseBuffer;
 uniform sampler2D normalBuffer;
 uniform sampler2D environmentBuffer;
 uniform sampler2D irradianceBuffer;
+uniform sampler2D aoBuffer;
+uniform int levelOffset;
 uniform vec3 eye;
 uniform vec3 Ks;
 uniform vec2 windowSize;
@@ -96,7 +98,7 @@ float CalcLODFromImage(in sampler2D text,in int N,in float DofH) {
     //a = x * 0.5;
     //b = y * 0.5;
     
-    return (a - b) - 4;
+    return (a - b) - levelOffset;
 }
 
 void DebugLevel(in int level) {
@@ -143,6 +145,7 @@ void main(void) {
     vec2 uv = vec2(gl_FragCoord.x/windowSize.x,gl_FragCoord.y/windowSize.y);
     vec4 pos  = texture(positionBuffer,uv), // world space
          norm = texture(normalBuffer,uv),   // world space
+         ao   = texture(aoBuffer,uv),
          diff = texture(diffuseBuffer, uv);
     
     // If we are calculating the ambient for the skydome, just display the
@@ -227,10 +230,12 @@ void main(void) {
 
     // Calculate final light value by adding the diffuse and specular
     // final = specular + diffuse;
-    fragColor = vec4(specular + diffuse,1);
+    fragColor = vec4(specular + ao.r * diffuse,1);
     
     
     // Since we are going to display the result of the ibl to the screen, we
     //     convert color spaces now.
     LinearTosRGB(fragColor.xyz,fragColor.xyz);
+    //fragColor = vec4(texture(aoBuffer,uv).xyz * fragColor.xyz,1);
+    //fragColor = texture(aoBuffer,uv);
 }

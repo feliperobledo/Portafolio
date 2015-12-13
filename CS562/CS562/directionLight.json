@@ -63,14 +63,6 @@
         }
     },
     "Controllers" : {
-        "LinearTrackBall" : {
-            "distance" : 45.0,
-            "speed" : 15.0,
-            "lookAt" : {
-                "x" : 0,
-                "y" : 0,
-                "z" : -10,
-            },
-        }
+
     }
 }

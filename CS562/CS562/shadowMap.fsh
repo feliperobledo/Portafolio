@@ -1,6 +1,8 @@
 #version 150
 // uniforms
-uniform mat4 MWLP;
+uniform mat4 world;
+uniform mat4 light;
+uniform mat4 persp;
 
 in vec4 transform;
 

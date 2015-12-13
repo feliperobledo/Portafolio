@@ -10,6 +10,8 @@ uniform sampler2D diffuseBuffer;
 uniform sampler2D normalBuffer;
 uniform sampler2D environmentBuffer;
 uniform sampler2D irradianceBuffer;
+uniform sampler2D aoBuffer;
+uniform int levelOffset;
 uniform vec3 eye;
 uniform vec3 Ks;
 uniform vec2 windowSize;

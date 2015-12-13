@@ -396,9 +396,12 @@ GLshort quadFaces[] = {
             [self drawSkyDome:dataToDraw];
             [self geometryPass:dataToDraw];
             [self shadowPass:dataToDraw];
-            //[self AO:dataToDraw];
-            //[self IBL:dataToDraw];
-            [self lightPass:dataToDraw];
+            [self AO:dataToDraw];
+            // We will only draw the ibl if the AO pass is the correct one.
+            if(aoBlurPassToShow >= 3) {
+                [self IBL:dataToDraw];
+            }
+            //[self lightPass:dataToDraw];
             
         }
         
@@ -541,6 +544,24 @@ GLshort quadFaces[] = {
         }
         if ([temp isEqualToString:@"f"]) {
             aoBlurPassToShow = (aoBlurPassToShow - 1) < 0 ? 0 : aoBlurPassToShow - 1;
+        }
+        
+        if ([temp isEqualToString:@"b"]) {
+            aoScale += 0.1;
+            NSLog(@"New s: %f", aoScale);
+        }
+        if ([temp isEqualToString:@"n"]) {
+            aoScale =  aoScale - 0.1f <= 0.0f ? 0.1f: aoScale - 0.1;
+            NSLog(@"New s: %f", aoScale);
+        }
+        
+        if ([temp isEqualToString:@"p"]) {
+            aoContrast += 1.0;
+            NSLog(@"New k: %f", aoContrast);
+        }
+        if ([temp isEqualToString:@"o"]) {
+            aoContrast =  aoContrast - 1.0f <= 0.0f ? 1.0f : aoContrast - 1.0f;
+            NSLog(@"New k: %f", aoContrast);
         }
         
         // Check for space bar
@@ -906,6 +927,7 @@ GLshort quadFaces[] = {
 }
 
 -(void) shadowPass:(NSDictionary*)data {
+    return;
     //return;
     glDisable(GL_BLEND);
     
@@ -957,8 +979,8 @@ GLshort quadFaces[] = {
     // Get this shadow casting light ready for writing
     ShadowCastingLight *shadowCasterView = (ShadowCastingLight*)[light getViewWithName:@"ShadowCastingLight"];
     CGSize size = [shadowCasterView getSize];
+    
     [shadowCasterView bindForWriting];
-
     glViewport(0, 0, size.width, size.height);
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -1000,8 +1022,13 @@ GLshort quadFaces[] = {
         // MWLP (Model-World-Light-Perspective)
         GLKMatrix4 MWLP = GLKMatrix4Multiply(lightPersp, GLKMatrix4Multiply(lightTrans, world));
         
-        GLint uMWLP = [shadowMapShader uniformFromDictionary:@"MWLP"];
-        glUniformMatrix4fv(uMWLP, 1, GL_FALSE, MWLP.m );
+        GLint uWorld = [shadowMapShader uniformFromDictionary:@"world"],
+              uLight = [shadowMapShader uniformFromDictionary:@"light"],
+              uPersp = [shadowMapShader uniformFromDictionary:@"persp"];
+        
+        glUniformMatrix4fv(uWorld, 1, GL_FALSE, world.m);
+        glUniformMatrix4fv(uLight, 1, GL_FALSE, lightTrans.m);
+        glUniformMatrix4fv(uPersp, 1, GL_FALSE, lightPersp.m);
         CheckOpenGLError();
 
         [shadowCasterView sendUniformForWritingShadowMap:shadowMapShader];
@@ -1044,6 +1071,8 @@ GLshort quadFaces[] = {
     diffuseTextureHandle  = [gBuffer getTextureHandleFor:GBUFFER_TEXTURE_TYPE_DIFFUSE],
     normalTextureHandle   = [gBuffer getTextureHandleFor:GBUFFER_TEXTURE_TYPE_NORMAL];
     
+    [aoTarget1 bindFor:GL_READ_FRAMEBUFFER];
+    
     glDisable(GL_BLEND);
     glDepthMask(GL_TRUE);
     glEnable(GL_DEPTH_TEST);
@@ -1056,10 +1085,12 @@ GLshort quadFaces[] = {
           uNorBuffer  = [iblShader uniformFromDictionary:@"normalBuffer"],
           uEnvBuffer  = [iblShader uniformFromDictionary:@"environmentBuffer"],
           uIrrBuffer  = [iblShader uniformFromDictionary:@"irradianceBuffer"],
+          uAOBuffer   = [iblShader uniformFromDictionary:@"aoBuffer"],
           uEye        = [iblShader uniformFromDictionary:@"eye"],
           uWinSize    = [iblShader uniformFromDictionary:@"windowSize"],
           uContrast   = [iblShader uniformFromDictionary:@"contrast"],
           uExposure   = [iblShader uniformFromDictionary:@"exposure"],
+          uLevelOffset= [iblShader uniformFromDictionary:@"levelOffset"],
           uKs         = [iblShader uniformFromDictionary:@"Ks"];
     CheckOpenGLError();
     
@@ -1088,6 +1119,12 @@ GLshort quadFaces[] = {
     glUniform1i(uIrrBuffer,4);
     CheckOpenGLError();
     
+    glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_2D, [aoTarget1 renderTexture]);
+    glUniform1i(uAOBuffer,5);
+    CheckOpenGLError();
+    
+    glUniform1i(uLevelOffset, mipmapLevelOffset);
     glUniform1f(uContrast,  iblContrast);
     glUniform1f(uExposure,  iblExposure);
     glUniform3fv(uKs, 1, Ks.v);
@@ -1128,7 +1165,7 @@ GLshort quadFaces[] = {
     } else {
         glBindFramebuffer(GL_FRAMEBUFFER, originalFrameBuffer);
     }
-    glClearColor(0.2f,0.2f,0.2f,1);
+    glClearColor(0,0,0,0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     CheckOpenGLError();
     // compute AO
@@ -1184,7 +1221,7 @@ GLshort quadFaces[] = {
     GLint uAOTexture = 0,
           uSFactor = 0,
           uSqrtPiS2 = 0;
-    GLfloat sFactor = 0.1;
+    GLfloat sFactor = 0.01;
     GLfloat pi = 3.1415926;
     float sqrtPiS2 = sqrtf(2 * pi * sFactor);
     if(aoBlurPassToShow >= 1) {
@@ -1197,7 +1234,7 @@ GLshort quadFaces[] = {
         }
         
         //[aoTarget1 bindFor:GL_DRAW_FRAMEBUFFER];
-        glClearColor(0.2f,0.2f,0.2f,1);
+        glClearColor(0,0,0,0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         CheckOpenGLError();
         
@@ -1260,7 +1297,7 @@ GLshort quadFaces[] = {
         }
         
         //[aoTarget1 bindFor:GL_DRAW_FRAMEBUFFER];
-        glClearColor(0.2f,0.2f,0.2f,1);
+        glClearColor(1,1,1,1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         CheckOpenGLError();
         
@@ -1361,8 +1398,7 @@ GLshort quadFaces[] = {
     [gBuffer bindForReading];
     GLuint positionTextureHandle = [gBuffer getTextureHandleFor:GBUFFER_TEXTURE_TYPE_POSITION],
            diffuseTextureHandle  = [gBuffer getTextureHandleFor:GBUFFER_TEXTURE_TYPE_DIFFUSE],
-           normalTextureHandle   = [gBuffer getTextureHandleFor:GBUFFER_TEXTURE_TYPE_NORMAL],
-           depthTextureHandle    = [gBuffer getDepthTextureHandle];
+           normalTextureHandle   = [gBuffer getTextureHandleFor:GBUFFER_TEXTURE_TYPE_NORMAL];
     
     // I need to loop through every type of different light
     // for every type of light
@@ -1370,7 +1406,7 @@ GLshort quadFaces[] = {
     //     for every instance of this light type
     //          pass uniform data
     //          render
-    BOOL useShadowCast = true;
+    BOOL useShadowCast = false;
     CheckOpenGLError();
     for(NSString* lightType in lightsInWorld) {
         NSArray* lightEntityIDs = [lightsInWorld objectForKey:lightType];
@@ -1405,7 +1441,6 @@ GLshort quadFaces[] = {
             GLint posBufferUniform    = [lightShader getUniform:@"positionBuffer"],
             normalBufferUniform = [lightShader getUniform:@"normalBuffer"],
             diffBufferUniform   = [lightShader getUniform:@"diffuseBuffer"],
-            depthBufferUniform  = [lightShader getUniform:@"depthBuffer"],
             viewUniform         = [lightShader getUniform:@"view"],
             eyeUniform          = [lightShader getUniform:@"eye"],
             KsUniform           = [lightShader getUniform:@"Ks"],
@@ -1431,29 +1466,22 @@ GLshort quadFaces[] = {
             glUniform1i(diffBufferUniform,2);
             CheckOpenGLError();
             
-            glActiveTexture(GL_TEXTURE3);
-            glBindTexture(GL_TEXTURE_2D, depthTextureHandle);
-            glUniform1i(depthBufferUniform,3);
-            CheckOpenGLError();
-            
-            // Texture binding is not working...why???
             if(shadowCasterView != nil && useShadowCast) {
-                // Theres something going on with binding these mf texture!
-                
                 GLKMatrix4 lightTrans = [shadowCasterView getEyeTransformation];
                 GLKMatrix4 lightPersp = [shadowCasterView getPerspective];
-                GLKMatrix4 LP = GLKMatrix4Multiply(lightPersp, lightTrans);
                 
                 GLint uDepthBuffer = [lightShader getUniform:@"depthBuffer"],
-                      uLP          = [lightShader getUniform:@"LP"];
+                      uLight = [lightShader uniformFromDictionary:@"lightView"],
+                      uPersp = [lightShader uniformFromDictionary:@"persp"];
                 
                 GLuint depthTextureHandle = [shadowCasterView getTargetHandle];
                 
-                glActiveTexture(GL_TEXTURE4);
+                glActiveTexture(GL_TEXTURE3);
                 glBindTexture(GL_TEXTURE_2D,depthTextureHandle);
-                glUniform1i(uDepthBuffer,4);
+                glUniform1i(uDepthBuffer,3);
                 
-                glUniformMatrix4fv(uLP, 1, GL_FALSE, LP.m);
+                glUniformMatrix4fv(uLight, 1, GL_FALSE, lightTrans.m);
+                glUniformMatrix4fv(uPersp, 1, GL_FALSE, lightPersp.m);
                 CheckOpenGLError();
             }
             
