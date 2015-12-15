@@ -6,6 +6,7 @@ uniform sampler2D normalBuffer;
 uniform float sFactor;
 uniform vec2 windowSize;
 uniform float sqrtPiS2;
+uniform int blurrWidth;
 
 // attributes
 in vec2 position;

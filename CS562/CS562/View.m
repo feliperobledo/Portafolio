@@ -64,6 +64,7 @@ GLshort quadFaces[] = {
 -(void) lightPass:(NSDictionary*)data;
 -(void) AO:(NSDictionary*)data;
 -(void) compositePass:(NSDictionary*)data;
+-(void) testDirectionToUV:(NSDictionary*)data;
 
 -(void) generateShadowMapFor:(Entity*)light withData:(NSDictionary*)data shadowMapShader:(Shader*)shadowMapShader;
 
@@ -93,7 +94,14 @@ GLshort quadFaces[] = {
     // 2 - 1 + horizontal filtering
     // 3 - 1 + 2 + show with IBL
     GLint aoBlurPassToShow;
+    GLint aoRandPointsToSelect;
+    GLint aoSamplingSize;
     RenderTarget *aoTarget1, *aoTarget2, *iblTarget;
+    
+    GLuint iblSampleSize;
+    
+    // ibl random selection of points
+    GLuint hId, bindPoint;
     
     NSPoint prevCoords;
     BOOL slidingCamera;
@@ -171,8 +179,13 @@ GLshort quadFaces[] = {
         debugDepthTexture = false;
         
         iblContrast = iblExposure = 1.0f;
+        iblSampleSize = 1;
+        
         aoContrast = aoScale = 1.0f;
         aoRangeOfInfluence = 5.0f;
+        aoRandPointsToSelect = 7;
+        aoSamplingSize = 2;
+        
         mipmapLevelOffset = 0;
         [[NSNotificationCenter defaultCenter] addObserver:self
                                               selector:@selector(_surfaceNeedsUpdate:)
@@ -313,6 +326,36 @@ GLshort quadFaces[] = {
                 [[RenderTarget alloc] initWithTargetType:AO andBounds:pixelBounds];
             iblTarget =
                 [[RenderTarget alloc] initWithTargetType:Ambient andBounds:pixelBounds];
+            
+            const int PointCount = 40;
+            struct {
+                float N;
+                float hammersley[2*PointCount];
+            } block;
+            block.N = PointCount;
+            
+            int pos = 0;
+            for(int k = 0; k < block.N; k++) {
+                int kk = k;
+                float u = 0.0f;
+                for(float p = 0.5f; kk; p*= 0.5f, kk >>= 1) {
+                    if(kk & 1) {
+                        u += p;
+                    }
+                    float v = (k + 0.5f) / block.N;
+                    if((pos + 2) <= block.N) {
+                        block.hammersley[pos++] = u;
+                        block.hammersley[pos++] = v;
+                    }
+                }
+            }
+            
+            // Creating resources for monte carlo simulation
+            glGenBuffers(1, &hId);
+            bindPoint = 1;
+            glBindBufferBase(GL_UNIFORM_BUFFER, bindPoint, hId);
+            glBufferData(GL_UNIFORM_BUFFER, sizeof(block),&block,GL_STATIC_DRAW);
+            CheckOpenGLError();
         }
     }
     return self;
@@ -395,12 +438,12 @@ GLshort quadFaces[] = {
             
             [self drawSkyDome:dataToDraw];
             [self geometryPass:dataToDraw];
-            [self shadowPass:dataToDraw];
-            [self AO:dataToDraw];
+            //[self shadowPass:dataToDraw];
+            //[self AO:dataToDraw];
             // We will only draw the ibl if the AO pass is the correct one.
-            if(aoBlurPassToShow >= 3) {
+            //if(aoBlurPassToShow >= 3) {
                 [self IBL:dataToDraw];
-            }
+            //}
             //[self lightPass:dataToDraw];
             
         }
@@ -571,13 +614,42 @@ GLshort quadFaces[] = {
         
         if ([temp isEqualToString:@"y"]) {
             mipmapLevelOffset += 1;
+            NSLog(@"Mip-map level: %d", mipmapLevelOffset);
         }
         if ([temp isEqualToString:@"h"]) {
             mipmapLevelOffset = (mipmapLevelOffset - 1) < 0 ? 0 : mipmapLevelOffset - 1;
+            NSLog(@"Mip-map level: %d", mipmapLevelOffset);
         }
         
         if ([temp isEqualToString:@"v"]) {
             drawDebug = !drawDebug;
+        }
+        
+        if ([temp isEqualToString:@"1"]) {
+            ++aoRandPointsToSelect;
+            NSLog(@"Sampling Point Size: %d", aoRandPointsToSelect);
+        }
+        if ([temp isEqualToString:@"2"]) {
+            aoRandPointsToSelect = aoRandPointsToSelect - 1 < 0 ? 1 : aoRandPointsToSelect - 1;
+            NSLog(@"Sampling Point Size: %d", aoRandPointsToSelect);
+        }
+        
+        if ([temp isEqualToString:@"3"]) {
+            ++aoSamplingSize;
+            NSLog(@"Blurr Size: %d", aoSamplingSize);
+        }
+        if ([temp isEqualToString:@"4"]) {
+            aoSamplingSize = aoSamplingSize - 1 < 0 ? 1 : aoSamplingSize - 1;
+            NSLog(@"Blurr Size: %d", aoSamplingSize);
+        }
+        
+        if ([temp isEqualToString:@"5"]) {
+            ++iblSampleSize;
+            NSLog(@"IBL Sample Size: %d", iblSampleSize);
+        }
+        if ([temp isEqualToString:@"6"]) {
+            iblSampleSize = iblSampleSize == 0 ? 1 : iblSampleSize - 1;
+            NSLog(@"IBL Sample Size: %d", iblSampleSize);
         }
     }
     
@@ -690,7 +762,7 @@ GLshort quadFaces[] = {
      
      NSDictionary* options = @{GLKTextureLoaderOriginBottomLeft:@YES, GLKTextureLoaderSRGB:@YES};
      */
-    NSString *filePath = [bundle pathForResource:@"14-Hamarikyu_Bridge_B_3k" ofType:@"hdr"];
+    NSString *filePath = [bundle pathForResource:@"Newport_Loft_Ref" ofType:@"hdr"];
     NSDictionary* options = @{GLKTextureLoaderOriginBottomLeft:@YES,
                               GLKTextureLoaderGenerateMipmaps:@YES};
     
@@ -719,7 +791,7 @@ GLshort quadFaces[] = {
     
     
     
-    filePath = [bundle pathForResource:@"14-Hamarikyu_Bridge_B_3k" ofType:@"irrhdr"];
+    filePath = [bundle pathForResource:@"Newport_Loft_Ref" ofType:@"irrhdr"];
     txtInfo = [GLKTextureLoader textureWithContentsOfFile:filePath options:options error:&error];
     
     if(error) {
@@ -755,6 +827,7 @@ GLshort quadFaces[] = {
         "ao",
         "ao_horizontal_filter",
         "ao_vertical_filter",
+        //"testDirectionToUVMapping",
         NULL
     };
     
@@ -1091,7 +1164,10 @@ GLshort quadFaces[] = {
           uContrast   = [iblShader uniformFromDictionary:@"contrast"],
           uExposure   = [iblShader uniformFromDictionary:@"exposure"],
           uLevelOffset= [iblShader uniformFromDictionary:@"levelOffset"],
+          uSampleSize = [iblShader uniformFromDictionary:@"sampleSize"],
           uKs         = [iblShader uniformFromDictionary:@"Ks"];
+    
+    GLint uHammerley = glGetUniformBlockIndex([iblShader program], "HammersleyBlock");
     CheckOpenGLError();
     
     glActiveTexture(GL_TEXTURE0);
@@ -1124,13 +1200,15 @@ GLshort quadFaces[] = {
     glUniform1i(uAOBuffer,5);
     CheckOpenGLError();
     
+    glUniform1i(uSampleSize, iblSampleSize);
     glUniform1i(uLevelOffset, mipmapLevelOffset);
     glUniform1f(uContrast,  iblContrast);
     glUniform1f(uExposure,  iblExposure);
     glUniform3fv(uKs, 1, Ks.v);
     glUniform3fv(uEye, 1, eye.v);
     glUniform2f(uWinSize, screenWidth, screenHeight);
-    CheckOpenGLError();
+    //glUniformBlockBinding([iblShader program], uHammerley, bindPoint);
+    //CheckOpenGLError();
     
     // We will render everything to a quad
     glBindVertexArray (vao);
@@ -1180,6 +1258,7 @@ GLshort quadFaces[] = {
           uWinSize    = [aoShader uniformFromDictionary:@"windowSize"],
           uRangeofInf = [aoShader uniformFromDictionary:@"R"],
           uScale      = [aoShader uniformFromDictionary:@"s"],
+          uRandPoints = [aoShader uniformFromDictionary:@"randPoints"],
           uContrast   = [aoShader uniformFromDictionary:@"k"];
     CheckOpenGLError();
     
@@ -1193,6 +1272,7 @@ GLshort quadFaces[] = {
     glUniform1i(uNorBuffer,1);
     CheckOpenGLError();
     
+    glUniform1i(uRandPoints, aoRandPointsToSelect);
     glUniform1f(uRangeofInf, aoRangeOfInfluence);
     glUniform1f(uContrast,   aoContrast);
     glUniform1f(uScale,      aoScale);
@@ -1218,6 +1298,7 @@ GLshort quadFaces[] = {
     [aoShader unuse];
     
     // bilateral filter - horizontal
+    GLuint uBlurrWidth = 0;
     GLint uAOTexture = 0,
           uSFactor = 0,
           uSqrtPiS2 = 0;
@@ -1245,6 +1326,7 @@ GLshort quadFaces[] = {
         aoShader  = [shaderManager getShader:@"ao_horizontal_filter"];
         [aoShader use];
         
+        uBlurrWidth = [aoShader uniformFromDictionary:@"blurrWidth"];
         uWinSize    = [aoShader uniformFromDictionary:@"windowSize"];
         uAOTexture  = [aoShader uniformFromDictionary:@"prevAOBuffer"];
         uNorBuffer  = [aoShader uniformFromDictionary:@"normalBuffer"];
@@ -1254,7 +1336,7 @@ GLshort quadFaces[] = {
         
         glUniform1f(uSFactor, sFactor);
         glUniform1f(uSqrtPiS2, sqrtPiS2);
-        
+        glUniform1i(uBlurrWidth,aoSamplingSize);
         glUniform2f(uWinSize, screenWidth, screenHeight);
         
         glActiveTexture(GL_TEXTURE0);
@@ -1308,6 +1390,7 @@ GLshort quadFaces[] = {
         aoShader  = [shaderManager getShader:@"ao_vertical_filter"];
         [aoShader use];
         
+        uBlurrWidth = [aoShader uniformFromDictionary:@"blurrWidth"];
         uWinSize    = [aoShader uniformFromDictionary:@"windowSize"];
         uAOTexture  = [aoShader uniformFromDictionary:@"prevAOBuffer"];
         uNorBuffer  = [aoShader uniformFromDictionary:@"normalBuffer"];
@@ -1317,7 +1400,7 @@ GLshort quadFaces[] = {
         
         glUniform1f(uSFactor, sFactor);
         glUniform1f(uSqrtPiS2, sqrtPiS2);
-        
+        glUniform1i(uBlurrWidth,aoSamplingSize);
         glUniform2f(uWinSize, screenWidth, screenHeight);
         
         glActiveTexture(GL_TEXTURE0);
@@ -1527,6 +1610,76 @@ GLshort quadFaces[] = {
         Entity* entity = [EntityCreator getEntity:temp];
     
     }
+}
+
+-(void) testDirectionToUV:(NSDictionary*)data {
+    Shader*    testUVShader    = [shaderManager getShader:@"testUVShader"];
+    NSNumber*  cameraID        = [data valueForKey:@"eyeID"];
+    MeshStore* meshStore       = [data valueForKey:@"meshStore"];
+    NSArray*   worldObjectIDs  = [data valueForKey:@"gameObjectIDs"];
+    Entity*    camera          = [EntityCreator getEntity:[cameraID unsignedLongLongValue]];
+    
+    GLKMatrix4 view, persp;
+    [self getView:&view perspective:&persp fromData:data];
+    
+    GLint uTexture            = [testUVShader getUniform:@"skydomeImage"],
+          uWVP                = [testUVShader getUniform:@"wvp"],
+          windowSizeUniform   = [testUVShader getUniform:@"windowSize"];
+    
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D,[skydomeImage name]);
+    glUniform1i(uTexture,1);
+    CheckOpenGLError();
+    
+    // Acquire the entity in question
+    Entity *skydome = nil;
+    for(NSNumber* entityID in worldObjectIDs) {
+        // Acquire the entity in question
+        uint64 temp = [entityID unsignedLongLongValue];
+        Entity* entity = [EntityCreator getEntity:temp];
+        if([[entity _name] isEqualToString:@"Skydome"]) {
+            skydome = entity;
+            break;
+        }
+    }
+    
+    // Disregard any entities that are not renderable
+    Model3D* model3d   = (Model3D*)[skydome getModelWithName:@"Model3D"];
+    NSString* meshName = [model3d   meshSource];
+    Mesh* mesh         = [meshStore getMeshFromName:meshName];
+    GLint indices      = [mesh      faceCount] * 3;
+    
+    [mesh bindMesh];
+    
+    // Submit the diffuse color
+    GLKVector4 diffuse; // assumes diffuse color is not a texture
+    Material* material = (Material*)[skydome getModelWithName:@"Material"];
+    NSAssert(material != nil, @"ERROR: Entity with model does not have a material");
+    diffuse = *[material diffuse];
+    GLfloat roughness = [[material specularity] floatValue];
+    CheckOpenGLError();
+    
+    // Submit transformation matrices
+    Transform* entTransform = (Transform*)[skydome getModelWithName:@"Transform"];
+    
+    GLKMatrix4 world = [entTransform transformation];
+    glUniformMatrix4fv(uWVP  , 1, GL_FALSE, GLKMatrix4Multiply(persp,GLKMatrix4Multiply(view, world)).m );
+    CheckOpenGLError();
+    
+    // Fire up shader
+    glEnableVertexAttribArray(GLKVertexAttribPosition);
+    glEnableVertexAttribArray(GLKVertexAttribNormal);
+    glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
+    glEnableVertexAttribArray(GLKVertexAttribTexCoord1);
+    
+    glDrawElements(GL_TRIANGLES, indices, GL_UNSIGNED_INT,NULL);
+    
+    glEnableVertexAttribArray(GLKVertexAttribTexCoord1);
+    glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
+    glDisableVertexAttribArray(GLKVertexAttribNormal);
+    glDisableVertexAttribArray(GLKVertexAttribPosition);
+    
+    CheckOpenGLError();
 }
 
 -(void) getView:(GLKMatrix4*)v perspective:(GLKMatrix4*)p fromData:(NSDictionary*)data {

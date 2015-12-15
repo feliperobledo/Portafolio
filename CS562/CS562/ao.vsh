@@ -7,6 +7,7 @@ uniform vec2 windowSize;
 uniform float R;
 uniform float s;
 uniform float k;
+uniform int randPoints;
 
 // attributes
 in vec2 position;

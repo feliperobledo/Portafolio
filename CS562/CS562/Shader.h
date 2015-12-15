@@ -30,7 +30,7 @@
 -(GLuint) load:(GLenum)type shader:(const char*)source;
 -(NSString*) openShader:(NSString*)filename withExtension:(NSString*)extension;
 -(GLint) getUniform:(NSString*)identifier;
--(GLint) uniformFromDictionary:(NSString*)identifier;
+-(GLuint) uniformFromDictionary:(NSString*)identifier;
 -(void) addUniform:(NSString*)identifier Location:(GLint)loc;
 -(void) attachShader:(GLuint)shaderId ofType:(GLenum)type;
 -(void) extractUniformsFromShaders;

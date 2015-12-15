@@ -9,6 +9,7 @@ uniform vec2 windowSize;
 uniform float R;
 uniform float s;
 uniform float k;
+uniform int randPoints;
 
 // "varying" coming from vertex shader
 in vec2 transform;
@@ -40,7 +41,7 @@ void main() {
     
     // select some random points
     
-    int n = 10;
+    int n = randPoints;
     float c        = 0.1 * R,
           cSquared = pow(c,2),
           psy      = 0.001,

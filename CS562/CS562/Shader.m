@@ -107,7 +107,7 @@
     return glGetUniformLocation(m_ShaderProgram, [identifier UTF8String]);
 }
 
--(GLint) uniformFromDictionary:(NSString*)identifier
+-(GLuint) uniformFromDictionary:(NSString*)identifier
 {
     NSNumber* location = [self.m_Uniforms objectForKey:identifier];
     NSAssert1(location != nil,

@@ -8,6 +8,7 @@ uniform sampler2D normalBuffer;
 uniform float sFactor;
 uniform vec2 windowSize;
 uniform float sqrtPiS2;
+uniform int blurrWidth;
 
 // attributes
 in vec2 transform;
@@ -34,8 +35,9 @@ void main() {
     vec3  N = texture(normalBuffer,uv).xyz;
     float d = texture(normalBuffer,uv).w;
     
-    if (texture(normalBuffer,uv).w < 0) {
-        newFilteredAO = vec4(1);
+    if (texture(prevAOBuffer,uv).w < 0) {
+        newFilteredAO = vec4(1,1,1,-1);
+        return;
     };
     
     //newFilteredAO = vec4(N,1);
@@ -46,7 +48,7 @@ void main() {
     // Optimization: make this a parameter. Precalculate weights in CPU
     //     and send array.
     // glUniformBlockBinding
-    int w = 1;
+    int w = blurrWidth;
     
     // Accounts for the kernel/origin
     int numOfPixels = 2 * w + 1;
@@ -56,7 +58,7 @@ void main() {
     
     vec3  nominator   = vec3(0);
     float denominator = float(0);
-    for(int i = 1; i <= 4; i++) {
+    for(int i = 1; i <= w; i++) {
         float k1 = pow( (i/sFactor), 2 ),
               k2 = pow( (-i/sFactor), 2 );
         
@@ -93,6 +95,9 @@ void main() {
         denominator += W;
     }
     
-    
     newFilteredAO = vec4(nominator / denominator,1);
+    
+    if (denominator == 0) {
+        newFilteredAO = vec4(1,0,0,1);
+    }
 }

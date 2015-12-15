@@ -17,6 +17,8 @@ uniform vec3 Ks;
 uniform vec2 windowSize;
 uniform float exposure;
 uniform float contrast;
+uniform int sampleSize;
+uniform HammersleyBlock { float N; float hammersley[2*100]; };
 
 // attributes
 in vec2 position;
